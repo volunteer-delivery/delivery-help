@@ -12,4 +12,10 @@ function broadcastNewRide(ride) {
     }
 }
 
-module.exports = { initializeSocketServer, broadcastNewRide };
+function broadcastUpdateRide(ride) {
+    if (socketServer) {
+        socketServer.emit("updateRide", ride);
+    }
+}
+
+module.exports = { initializeSocketServer, broadcastNewRide, broadcastUpdateRide };
