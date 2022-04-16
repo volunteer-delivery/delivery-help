@@ -1,3 +1,5 @@
+const { FRONTEND_API_SERVER_URL, FRONTEND_API_BROWSER_URL } = process.env;
+
 export default {
   head: {
     title: 'ДоставкаHUB',
@@ -31,5 +33,10 @@ export default {
 
   device: {
     refreshOnResize: true
+  },
+
+  axios: {
+    baseUrl: FRONTEND_API_SERVER_URL + '/api/v1',
+    browserBaseUrl: FRONTEND_API_BROWSER_URL + '/api/v1',
   }
 }

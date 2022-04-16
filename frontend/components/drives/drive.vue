@@ -46,7 +46,7 @@ export default {
 
   computed: {
     departureTime() {
-      const [, monthNumber, day] = this.drive.departureTime.split('-');
+      const date = new Date(this.drive.departureTime);
 
       const month = [
         'Січня',
@@ -61,9 +61,9 @@ export default {
         'Жовтня',
         'Листопада',
         'Грудня'
-      ][Number(monthNumber) - 1];
+      ][date.getMonth()];
 
-      return `${day} ${month}`;
+      return `${date.getDate()} ${month}`;
     },
 
     driverPhone() {

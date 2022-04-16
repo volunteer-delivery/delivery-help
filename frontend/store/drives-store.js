@@ -1,5 +1,3 @@
-import mock from '../drives-mock.json';
-
 export const state = () => ({
   pending: [],
   active: [],
@@ -7,7 +5,7 @@ export const state = () => ({
 });
 
 export const actions = {
-  load(context) {
+  async load(context) {
     if (context.state.isLoaded) return;
 
     const groups = {
@@ -16,7 +14,9 @@ export const actions = {
       FINISHED: []
     };
 
-    for (const drive of mock) {
+    const response = await this.$axios.get('rides');
+
+    for (const drive of response.data.rides) {
       groups[drive.status].push(drive);
     }
 

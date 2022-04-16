@@ -31,10 +31,10 @@ services:
             - ${FRONTEND_PUBLIC_PORT}:8080
         command: npm run dev
         volumes:
-          - ./frontend:/app
-          - data_frontend_libs:/app/node_modules
+            - ./frontend:/app
+            - data_frontend_libs:/app/node_modules
         env_file:
-          - ./.env
+            - ./.env
 
 volumes:
     data_frontend_libs:
