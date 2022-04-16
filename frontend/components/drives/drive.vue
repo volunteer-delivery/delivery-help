@@ -2,12 +2,12 @@
   <v-card :class="cardClasses" elevation="1">
     <v-card-text>
       <div class="path mb-5">
-        <div class="mb-5 d-flex align-end">
-          <DrivePoint class="path__point" :point="drive.from" />
+        <div class="mb-8 d-flex align-end">
+          <DrivePoint class="path__point path__point--from" :point="drive.from" />
           <span class="path__point-date">, {{ departureTime }}</span>
         </div>
-
-        <DrivePoint class="path__point path__point--destination" :point="drive.destination" />
+        <div class="path__arrow" />
+        <DrivePoint class="path__point" :point="drive.destination" />
       </div>
 
       <p class="subtitle-2 d-flex align-center">
@@ -113,14 +113,32 @@ export default {
   position: relative;
 }
 
-.path::before {
+.path::before,
+.path::after {
   content: "";
   position: absolute;
   display: block;
   border-left: 2px solid #3F51B5;
   left: 7px;
+}
+
+.path::before {
   top: 16px;
-  height: calc(100% - 32px);
+  height: 14px;
+}
+
+.path::after {
+  bottom: 10px;
+  height: 18px;
+}
+
+.path__arrow {
+  position: absolute;
+  display: block;
+  top: calc(50% - 3px);
+  left: 3px;
+  border: 5px solid transparent;
+  border-top-color: #3F51B5;
 }
 
 .path__point {
@@ -152,7 +170,7 @@ export default {
   border: 2px solid #3F51B5;
 }
 
-.path__point--destination::before {
+.path__point--from::before {
   background-color: #3F51B5;
 }
 
