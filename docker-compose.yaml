@@ -1,16 +1,18 @@
 version: '3'
 services:
-    node:
+    backend:
         restart: always
-        build: .
+        build: ./backend
         ports:
-            - ${NODE_PUBLIC_PORT}:8080
-        entrypoint: npm run start:dev
+            - ${BACKEND_PUBLIC_PORT}:8080
+        entrypoint: npm run dev
         volumes:
-            - ./src/:/app/src
+            - ./backend/src/:/app/src
         environment:
             MONGO_USERNAME: ${MONGO_USERNAME}
             MONGO_PASSWORD: ${MONGO_PASSWORD}
+        depends_on:
+            - mongo
     mongo:
         image: mongo:5.0.7
         volumes:
@@ -18,3 +20,9 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    frontend:
+        restart: always
+        build: ./frontend
+        ports:
+            - ${FRONTEND_PUBLIC_PORT}:8080
+        entrypoint: npm run dev
