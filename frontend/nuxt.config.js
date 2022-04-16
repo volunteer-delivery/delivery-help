@@ -17,6 +17,7 @@ export default {
 
   buildModules: [
     '@nuxtjs/vuetify',
+    '@nuxtjs/device'
   ],
 
   modules: [
@@ -25,8 +26,10 @@ export default {
 
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
-    theme: {
-      dark: false
-    }
+    theme: { dark: false }
+  },
+
+  device: {
+    refreshOnResize: true
   }
 }

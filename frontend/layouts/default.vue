@@ -1,12 +1,28 @@
 <template>
   <v-app>
+    <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent>
+      <v-list nav dense>
+        <v-list-item
+          v-for="(item, index) of $options.navItems"
+          :key="item.url"
+          :to="item.url"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
     <v-main>
       <v-container>
         <Nuxt />
       </v-container>
     </v-main>
 
-    <v-bottom-navigation fixed>
+    <v-bottom-navigation fixed v-if="isBottomNavigation">
       <v-btn
         v-for="(item, index) of $options.navItems"
         :key="item.url"
@@ -33,12 +49,19 @@ export default {
       icon: 'mdi-play',
       url: '/active'
     }
-  ]
+  ],
+
+  computed: {
+    isBottomNavigation() {
+      return this.$device.isMobileOrTablet;
+    }
+  }
 }
 </script>
 
 <style>
-.v-item-group.v-bottom-navigation .v-btn.v-btn--active {
-  color: #3F51B5;
+.v-list-item--active .v-icon,
+.v-btn--active .v-icon {
+  color: #3F51B5 !important;
 }
 </style>
