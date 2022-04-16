@@ -1,0 +1,19 @@
+{
+    "name": "dostavka-hub-backend",
+    "version": "1.0.0",
+    "description": "Backend Application for dostavka hub project",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "start:dev": "nodemon --watch src src/index.js"
+    },
+    "author": "Serhii Velychko (velserh@gmail.com)",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "2.0.15"
+    },
+    "dependencies": {
+        "express": "4.17.3",
+        "mongoose": "^6.3.0"
+    }
+}

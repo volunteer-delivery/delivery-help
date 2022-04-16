@@ -1,0 +1,20 @@
+version: '3'
+services:
+    node:
+        restart: always
+        build: .
+        ports:
+            - ${NODE_PUBLIC_PORT}:8080
+        entrypoint: npm run start:dev
+        volumes:
+            - ./src/:/app/src
+        environment:
+            MONGO_USERNAME: ${MONGO_USERNAME}
+            MONGO_PASSWORD: ${MONGO_PASSWORD}
+    mongo:
+        image: mongo:5.0.7
+        volumes:
+            - ./db_data:/data/db
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
