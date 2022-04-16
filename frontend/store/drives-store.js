@@ -1,6 +1,7 @@
 export const state = () => ({
   pending: [],
   active: [],
+  finished: [],
   isLoaded: false,
   filterValues: null,
 
@@ -48,9 +49,9 @@ export const actions = {
     if (context.state.isLoaded) return;
 
     const groups = {
-      PENDING: [],
-      ACTIVE: [],
-      FINISHED: []
+      pending: [],
+      active: [],
+      finished: []
     };
 
     const filter = {
@@ -61,15 +62,14 @@ export const actions = {
     const response = await this.$axios.get('rides');
 
     for (const drive of response.data.rides) {
-      groups[drive.status].push(drive);
+      groups[drive.status.toLowerCase()].push(drive);
 
       filter.countries.add(drive.from.country);
       if (drive.from.city) filter.cities.add(drive.from.city);
       filter.cities.add(drive.destination.city);
     }
 
-    context.commit('setPending', groups.PENDING);
-    context.commit('setActive', groups.ACTIVE);
+    context.commit('setGrouped', groups);
 
     context.commit('setFilterValues', {
       countries: Array.from(filter.countries),
@@ -81,12 +81,9 @@ export const actions = {
 };
 
 export const mutations = {
-  setPending(state, drives) {
-    state.pending = drives;
-  },
-
-  setActive(state, drives) {
-    state.active = drives;
+  setGrouped(state, { pending, active }) {
+    state.pending = pending;
+    state.active = active;
   },
 
   add(state, drive) {

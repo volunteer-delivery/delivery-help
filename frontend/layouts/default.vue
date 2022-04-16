@@ -21,7 +21,7 @@
       />
     </v-navigation-drawer>
 
-    <v-main>
+    <v-main class="layout__main">
       <v-container>
         <Nuxt />
       </v-container>
@@ -100,5 +100,9 @@ export default {
 .v-list-item--active .v-icon,
 .v-btn--active .v-icon {
   color: #3F51B5 !important;
+}
+
+.layout__main {
+  padding-bottom: 56px !important;
 }
 </style>
