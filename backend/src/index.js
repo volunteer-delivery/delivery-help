@@ -1,7 +1,9 @@
+const { createServer } = require("http");
 const express = require('express');
 const mongoose = require('mongoose');
 const { driverRouter, rideRouter } = require('./routers');
 const { rideModel } = require('./models');
+const { initializeSocketServer } = require('./socket');
 const { seedData } = require('./seed');
 
 async function bootstrap() {
@@ -16,8 +18,12 @@ async function bootstrap() {
     const app = express();
     app.use('/api/v1', driverRouter, rideRouter);
 
-    app.listen(8080, () => {
-        console.log('Service started');
+
+    const httpServer = createServer(app);
+    initializeSocketServer(httpServer);
+
+    httpServer.listen(8080, () => {
+        console.log('Server was started');
     });
 };
 

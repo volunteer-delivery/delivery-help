@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { driverModel, rideModel } = require('./models');
+const { broadcastNewRide } = require('./socket');
 const { getRandomDriver, getRandomRides} = require('./seed');
 
 const driverRouter = Router();
@@ -22,6 +23,8 @@ rideRouter.get('/rides/add-random', async (req, res) => {
         driver: driver._id,
         ...getRandomRides()
     });
+
+    broadcastNewRide(ride);
     res.send({ "status": "success" });
 });
 
