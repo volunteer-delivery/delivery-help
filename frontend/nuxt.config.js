@@ -23,7 +23,7 @@ export default {
   ],
 
   modules: [
-    '@nuxtjs/axios',
+    '@nuxtjs/axios'
   ],
 
   vuetify: {

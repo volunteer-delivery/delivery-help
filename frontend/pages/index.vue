@@ -14,7 +14,7 @@
 <script>
 import Drive from "~/components/drives/drive";
 import DrivesFilter from "~/components/drives/drives-filter";
-import DriverFilterMobileTrigger from "~/components/drives/driver-filter-mobile-trigger";
+import DriverFilterMobileTrigger from "~/components/drives/drives-filter-mobile-trigger";
 
 export default {
   components: { Drive },

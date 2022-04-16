@@ -40,10 +40,17 @@
         </v-btn>
       </v-bottom-navigation>
 
-      <component
-        v-if="navigationExtra"
-        :is="navigationExtra.mobileTrigger"
-      />
+      <template v-if="navigationExtra">
+        <v-fade-transition>
+          <component :is="navigationExtra.mobileTrigger" @open="openNavigationExtra" />
+        </v-fade-transition>
+
+        <v-bottom-sheet :value="isNavigationExtraOpened" persistent>
+          <v-card tile>
+            <component :is="navigationExtra.view" @close="closeNavigationExtra" />
+          </v-card>
+        </v-bottom-sheet>
+      </template>
     </template>
   </v-app>
 </template>
@@ -70,6 +77,20 @@ export default {
 
     navigationExtra() {
       return this.$store.state['navigation-store'].extra;
+    },
+
+    isNavigationExtraOpened() {
+      return this.$store.state['navigation-store'].extraOpened;
+    }
+  },
+
+  methods: {
+    openNavigationExtra() {
+      this.$store.commit('navigation-store/openExtra')
+    },
+
+    closeNavigationExtra() {
+      this.$store.commit('navigation-store/closeExtra')
     }
   }
 }
