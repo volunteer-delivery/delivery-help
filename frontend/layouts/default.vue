@@ -3,7 +3,7 @@
     <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent>
       <v-list nav dense>
         <v-list-item
-          v-for="(item, index) of $options.navItems"
+          v-for="item of $options.navItems"
           :key="item.url"
           :to="item.url"
         >
