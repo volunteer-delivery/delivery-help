@@ -14,6 +14,11 @@
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
+
+      <component
+        v-if="navigationExtra"
+        :is="navigationExtra.view"
+      />
     </v-navigation-drawer>
 
     <v-main>
@@ -54,6 +59,10 @@ export default {
   computed: {
     isBottomNavigation() {
       return this.$device.isMobileOrTablet;
+    },
+
+    navigationExtra() {
+      return this.$store.state['navigation-store'].extra;
     }
   }
 }

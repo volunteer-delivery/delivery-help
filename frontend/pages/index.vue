@@ -13,6 +13,8 @@
 
 <script>
 import Drive from "~/components/drives/drive";
+import DrivesFilter from "~/components/drives/drives-filter";
+import DriverFilterMobileTrigger from "~/components/drives/driver-filter-mobile-trigger";
 
 export default {
   components: { Drive },
@@ -25,6 +27,20 @@ export default {
     drives() {
       return this.$store.state['drives-store'].pending;
     }
+  },
+
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.$store.commit('navigation-store/setExtra', {
+        view: DrivesFilter,
+        mobileTrigger: DriverFilterMobileTrigger
+      });
+    });
+  },
+
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('navigation-store/setExtra', null);
+    next();
   }
 };
 </script>
