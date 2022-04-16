@@ -13,7 +13,11 @@
       <p class="subtitle-2 d-flex align-center">
         <v-icon class="mr-1" dense>mdi-account</v-icon>
         {{ drive.driver.name }}
-        <span class="drive__vehicle">, {{ driverVehicle }}</span>
+      </p>
+
+      <p class="subtitle-2 d-flex align-center">
+        <v-icon class="mr-1" dense>mdi-car</v-icon>
+        {{ driverVehicle }}
       </p>
 
       <a class="subtitle-2 d-flex align-center drive__phone" :href="driverPhone">
@@ -66,9 +70,9 @@ export default {
 
     driverVehicle() {
       return {
-        CAR: 'легковушка',
-        VAN: 'грузова',
-        TRUCK: 'фура'
+        CAR: 'Легковушка',
+        VAN: 'Грузова',
+        TRUCK: 'Фура'
       }[this.drive.vehicle];
     }
   }
@@ -100,7 +104,6 @@ export default {
   line-height: 16px;
 }
 
-.drive__vehicle,
 .path__point-date {
   font-size: 14px;
   line-height: 14px;
