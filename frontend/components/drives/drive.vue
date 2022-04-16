@@ -4,7 +4,7 @@
       <div class="path">
         <div class="mb-5 d-flex align-end">
           <DrivePoint class="path__point" :point="drive.from" />
-          <span class="path__point-date">, {{ drive.departureTime }}</span>
+          <span class="path__point-date">, {{ departureTime }}</span>
         </div>
 
         <DrivePoint class="path__point path__point--destination" :point="drive.destination" />
@@ -25,6 +25,29 @@ export default {
 
   props: {
     drive: Object
+  },
+
+  computed: {
+    departureTime() {
+      const [, monthNumber, day] = this.drive.departureTime.split('-');
+
+      const month = [
+        'Січня',
+        'Лютого',
+        'Березня',
+        'Квітня',
+        'Травня',
+        'Червня',
+        'Липня',
+        'Серпня',
+        'Вересня',
+        'Жовтня',
+        'Листопада',
+        'Грудня'
+      ][Number(monthNumber) - 1];
+
+      return `${day} ${month}`;
+    }
   }
 }
 </script>
