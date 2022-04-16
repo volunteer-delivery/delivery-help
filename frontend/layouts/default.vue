@@ -27,17 +27,24 @@
       </v-container>
     </v-main>
 
-    <v-bottom-navigation fixed v-if="isBottomNavigation">
-      <v-btn
-        v-for="(item, index) of $options.navItems"
-        :key="item.url"
-        :to="item.url"
-        :class="{ 'ml-2': index > 0 }"
-      >
-        <span>{{ item.title }}</span>
-        <v-icon>{{ item.icon }}</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
+    <template v-if="isBottomNavigation">
+      <v-bottom-navigation fixed>
+        <v-btn
+          v-for="(item, index) of $options.navItems"
+          :key="item.url"
+          :to="item.url"
+          :class="{ 'ml-2': index > 0 }"
+        >
+          <span>{{ item.title }}</span>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-btn>
+      </v-bottom-navigation>
+
+      <component
+        v-if="navigationExtra"
+        :is="navigationExtra.mobileTrigger"
+      />
+    </template>
   </v-app>
 </template>
 
