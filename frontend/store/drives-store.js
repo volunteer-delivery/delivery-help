@@ -2,6 +2,7 @@ export const state = () => ({
   pending: [],
   active: [],
   isLoaded: false,
+  filterValues: null,
 
   pendingFilter: {
     fromCountry: null,
@@ -17,24 +18,6 @@ export const state = () => ({
 });
 
 export const getters = {
-  filterValues(state) {
-    const fromCountries = new Set();
-    const fromCities = new Set();
-    const destinationCities = new Set();
-
-    for (const drive of state.pending.concat(state.active)) {
-      fromCountries.add(drive.from.country);
-      if (drive.from.city) fromCities.add(drive.from.city);
-      destinationCities.add(drive.destination.city);
-    }
-
-    return {
-      fromCountries: Array.from(fromCountries),
-      fromCities: Array.from(fromCities),
-      destinationCities: Array.from(destinationCities)
-    }
-  },
-
   pendingFiltered({ pending, pendingFilter }) {
     return pending.filter(drive => {
       if (pendingFilter.fromCountry && pendingFilter.fromCountry !== drive.from.country) return false;
@@ -51,6 +34,12 @@ export const getters = {
 
       return true;
     });
+  },
+
+  pendingFilteredSorted(_, getters) {
+    return getters.pendingFiltered.sort((d1, d2) => {
+      return Number(new Date(d1)) - Number(new Date(d2));
+    });
   }
 };
 
@@ -64,14 +53,29 @@ export const actions = {
       FINISHED: []
     };
 
+    const filter = {
+      fromCountries: new Set(),
+      cities: new Set()
+    };
+
     const response = await this.$axios.get('rides');
 
     for (const drive of response.data.rides) {
       groups[drive.status].push(drive);
+
+      filter.fromCountries.add(drive.from.country);
+      if (drive.from.city) filter.cities.add(drive.from.city);
+      filter.cities.add(drive.destination.city);
     }
 
     context.commit('setPending', groups.PENDING);
     context.commit('setActive', groups.ACTIVE);
+
+    context.commit('setFilterValues', {
+      fromCountries: Array.from(filter.fromCountries),
+      cities: Array.from(filter.cities)
+    });
+
     context.commit('setLoaded', true);
   }
 };
@@ -87,5 +91,9 @@ export const mutations = {
 
   setLoaded(state, isLoaded) {
     state.isLoaded = isLoaded;
+  },
+
+  setFilterValues(state, values) {
+    state.filterValues = values;
   }
 }

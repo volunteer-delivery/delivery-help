@@ -25,7 +25,7 @@ export default {
 
   computed: {
     drives() {
-      return this.$store.getters['drives-store/pendingFiltered']
+      return this.$store.getters['drives-store/pendingFilteredSorted']
     }
   },
 
