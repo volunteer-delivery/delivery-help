@@ -7,21 +7,18 @@ export default {
   name: "driver-icon",
 
   props: {
-    driver: Object
+    driver: Object,
+    verified: Boolean
   },
 
   computed: {
-    isVerified() {
-      return this.driver.grade === 'VERIFIED';
-    },
-
     iconName() {
-      return this.isVerified ? 'mdi-account-check' : 'mdi-account';
+      return this.verified ? 'mdi-account-check' : 'mdi-account';
     },
 
     iconClasses() {
       return {
-        'driver-icon--verified': this.isVerified
+        'driver-icon--verified': this.verified
       }
     }
   }

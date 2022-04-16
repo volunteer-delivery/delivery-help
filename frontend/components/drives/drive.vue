@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="1">
+  <v-card :class="cardClasses" elevation="1">
     <v-card-text>
       <div class="path mb-5">
         <div class="mb-5 d-flex align-end">
@@ -11,7 +11,7 @@
       </div>
 
       <p class="subtitle-2 d-flex align-center">
-        <DriverIcon class="mr-1" :driver="drive.driver" />
+        <DriverIcon class="mr-1" :driver="drive.driver" :verified="isVerified" />
         {{ drive.driver.name }}
       </p>
 
@@ -76,12 +76,39 @@ export default {
         VAN: 'Грузова',
         TRUCK: 'Фура'
       }[this.drive.vehicle];
+    },
+
+    isVerified() {
+      return this.drive.driver.grade === 'VERIFIED';
+    },
+
+    cardClasses() {
+      return {
+        'drive--verified': this.isVerified
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.drive--verified {
+  overflow: hidden;
+  position: relative;
+}
+
+.drive--verified::before {
+  content: "";
+  background-image: url("/verified-stamp.png");
+  background-size: contain;
+  transform: rotate(22deg) translate(-4px, -12px);
+  width: 100px;
+  height: 90px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .path {
   position: relative;
 }
