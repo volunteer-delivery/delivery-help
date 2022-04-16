@@ -11,7 +11,7 @@
       </div>
 
       <p class="subtitle-2 d-flex align-center">
-        <v-icon class="mr-1" dense>mdi-account</v-icon>
+        <DriverIcon class="mr-1" :driver="drive.driver" />
         {{ drive.driver.name }}
       </p>
 
@@ -30,11 +30,13 @@
 
 <script>
 import DrivePoint from "~/components/drives/drive-point";
+import DriverIcon from "~/components/drives/driver-icon";
 
 export default {
   name: "drive",
 
   components: {
+    DriverIcon,
     DrivePoint
   },
 
