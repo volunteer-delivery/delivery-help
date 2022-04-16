@@ -16,7 +16,9 @@ async function bootstrap() {
     const app = express();
     app.use('/api/v1', driverRouter, rideRouter);
 
-    app.listen(8080);
+    app.listen(8080, () => {
+        console.log('Service started');
+    });
 };
 
 bootstrap();
