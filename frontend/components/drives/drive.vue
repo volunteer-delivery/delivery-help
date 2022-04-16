@@ -1,7 +1,7 @@
 <template>
   <v-card elevation="1">
     <v-card-text>
-      <div class="path">
+      <div class="path mb-5">
         <div class="mb-5 d-flex align-end">
           <DrivePoint class="path__point" :point="drive.from" />
           <span class="path__point-date">, {{ departureTime }}</span>
@@ -9,6 +9,17 @@
 
         <DrivePoint class="path__point path__point--destination" :point="drive.destination" />
       </div>
+
+      <p class="subtitle-2 d-flex align-center">
+        <v-icon class="mr-1" dense>mdi-account</v-icon>
+        {{ drive.driver.name }}
+        <span class="drive__vehicle">, {{ driverVehicle }}</span>
+      </p>
+
+      <a class="subtitle-2 d-flex align-center drive__phone" :href="driverPhone">
+        <v-icon class="mr-1 drive__phone-icon" dense>mdi-phone</v-icon>
+        {{ drive.driver.phone }}
+      </a>
     </v-card-text>
   </v-card>
 </template>
@@ -47,6 +58,18 @@ export default {
       ][Number(monthNumber) - 1];
 
       return `${day} ${month}`;
+    },
+
+    driverPhone() {
+      return `tel:${this.drive.driver.phone}`;
+    },
+
+    driverVehicle() {
+      return {
+        CAR: 'легковушка',
+        VAN: 'грузова',
+        TRUCK: 'фура'
+      }[this.drive.vehicle];
     }
   }
 }
@@ -77,6 +100,7 @@ export default {
   line-height: 16px;
 }
 
+.drive__vehicle,
 .path__point-date {
   font-size: 14px;
   line-height: 14px;
@@ -98,5 +122,10 @@ export default {
 
 .path__point--destination::before {
   background-color: #3F51B5;
+}
+
+.drive__phone {
+  text-decoration: none;
+  color: inherit;
 }
 </style>
