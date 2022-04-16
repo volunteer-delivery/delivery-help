@@ -1,4 +1,4 @@
-const { FRONTEND_API_SERVER_URL, FRONTEND_API_BROWSER_URL } = process.env;
+const { FRONTEND_API_SERVER_URL, FRONTEND_API_BROWSER_URL, FRONTEND_API_SOCKET_URL } = process.env;
 
 export default {
   head: {
@@ -23,7 +23,12 @@ export default {
   ],
 
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    'nuxt-socket-io'
+  ],
+
+  plugins: [
+    '~/plugins/api-socket'
   ],
 
   vuetify: {
@@ -38,5 +43,15 @@ export default {
   axios: {
     baseUrl: FRONTEND_API_SERVER_URL + '/api/v1',
     browserBaseUrl: FRONTEND_API_BROWSER_URL + '/api/v1',
+  },
+
+  io: {
+    sockets: [
+      {
+        default: true,
+        name: 'api',
+        url: FRONTEND_API_SOCKET_URL
+      }
+    ]
   }
 }
