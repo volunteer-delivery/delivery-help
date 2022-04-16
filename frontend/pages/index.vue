@@ -23,7 +23,7 @@ export default {
 
   computed: {
     drives() {
-      return this.$store.state['drives-store'].drives;
+      return this.$store.state['drives-store'].pending;
     }
   }
 };

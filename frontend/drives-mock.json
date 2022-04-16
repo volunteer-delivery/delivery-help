@@ -15,7 +15,8 @@
       "city": "Київ"
     },
     "departureTime": "2022-04-21",
-    "vehicle": "CAR"
+    "vehicle": "CAR",
+    "status": "PENDING"
   },
   {
     "id": "123e4567-e89b-12d3-a456-426655440001",
@@ -34,6 +35,27 @@
       "city": "Запоріжжя"
     },
     "departureTime": "2022-04-24",
-    "vehicle": "TRUCK"
+    "vehicle": "TRUCK",
+    "status": "PENDING"
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426655440002",
+    "driver": {
+      "id": "331e4567-e89b-12d3-a456-4266554433122",
+      "name": "Ніколай Сергійович",
+      "phone": "+3801432288",
+      "grade": "VERIFIED"
+    },
+    "from": {
+      "country": "Україна",
+      "city": "Ужгород"
+    },
+    "destination": {
+      "country": "Україна",
+      "city": "Запоріжжя"
+    },
+    "departureTime": "2022-04-24",
+    "vehicle": "TRUCK",
+    "status": "ACTIVE"
   }
 ]

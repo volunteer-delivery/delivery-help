@@ -22,12 +22,12 @@ export default {
   },
 
   async asyncData({ store }) {
-    await store.dispatch('running-drives-store/load');
+    await store.dispatch('drives-store/load')
   },
 
   computed: {
     drives() {
-      return this.$store.state['running-drives-store'].drives;
+      return this.$store.state['drives-store'].active;
     }
   }
 }
