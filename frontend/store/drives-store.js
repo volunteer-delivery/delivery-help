@@ -54,7 +54,7 @@ export const actions = {
     };
 
     const filter = {
-      fromCountries: new Set(),
+      countries: new Set(),
       cities: new Set()
     };
 
@@ -63,7 +63,7 @@ export const actions = {
     for (const drive of response.data.rides) {
       groups[drive.status].push(drive);
 
-      filter.fromCountries.add(drive.from.country);
+      filter.countries.add(drive.from.country);
       if (drive.from.city) filter.cities.add(drive.from.city);
       filter.cities.add(drive.destination.city);
     }
@@ -72,7 +72,7 @@ export const actions = {
     context.commit('setActive', groups.ACTIVE);
 
     context.commit('setFilterValues', {
-      fromCountries: Array.from(filter.fromCountries),
+      countries: Array.from(filter.countries),
       cities: Array.from(filter.cities)
     });
 
@@ -87,6 +87,19 @@ export const mutations = {
 
   setActive(state, drives) {
     state.active = drives;
+  },
+
+  add(state, drive) {
+    if (!state.filterValues.countries.includes(drive.from.country)) {
+      state.filterValues.countries.push(drive.from.country);
+    }
+    if (
+      drive.from.city && !state.filterValues.cities.includes(drive.from.city)
+      && !state.filterValues.cities.includes(drive.destination.city)
+    ) {
+      state.filterValues.cities.push(drive.from.country);
+    }
+    state.pending.push(drive);
   },
 
   setLoaded(state, isLoaded) {
