@@ -36,3 +36,9 @@ export default {
   ]
 }
 </script>
+
+<style>
+.v-item-group.v-bottom-navigation .v-btn.v-btn--active {
+  color: #3F51B5;
+}
+</style>
