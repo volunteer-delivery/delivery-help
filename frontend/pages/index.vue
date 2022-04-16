@@ -1,9 +1,29 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-        ДоставкаHUB
-      </v-card>
+      <Drive
+        v-for="drive of drives"
+        :key="drive.id"
+        :drive="drive"
+      />
     </v-col>
   </v-row>
 </template>
+
+<script>
+import Drive from "~/components/drives/drive";
+
+export default {
+  components: { Drive },
+
+  async asyncData({ store }) {
+    await store.dispatch('drives-store/load')
+  },
+
+  computed: {
+    drives() {
+      return this.$store.state['drives-store'].drives;
+    }
+  }
+};
+</script>

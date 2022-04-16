@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar fixed app>
       <v-toolbar-title>
-        ДоставкаHUB
+        Поїздки
       </v-toolbar-title>
     </v-app-bar>
 
