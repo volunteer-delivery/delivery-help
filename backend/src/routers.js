@@ -24,6 +24,7 @@ rideRouter.get('/rides/add-random', async (req, res) => {
         driver: driver._id,
         ...getRandomRides()
     });
+    await ride.populate('driver');
 
     broadcastNewRide(ride);
     res.send({ "status": "success" });
@@ -45,7 +46,7 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
         
         ride.status = status;
         await ride.save();
-
+        await ride.populate('driver');
         broadcastUpdateRide(ride);
 
         res.send({ "message": "Status successfully changed", "ride": ride });
