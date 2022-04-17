@@ -57,7 +57,7 @@ const destinationList = [
     {'country': 'Україна', 'city': 'Суми'}
 ];
 const timeList = ['2022-04-22', '2022-05-01', '2022-04-26', '2022-05-03', '2022-04-20', '2022-04-22', '2022-05-05' ];
-const vehicleList = ['CAR', 'VAN', 'TRUCK', 'CAR', 'CAR', 'CAR' ];
+const vehicleList = ['CAR', 'VAN', 'TRUCK', 'CAR', 'CAR', 'CAR', 'CAR' ];
 const statusList = ['PENDING', 'ACTIVE', 'FINISHED', 'PENDING', 'PENDING', 'PENDING', 'PENDING'];
 
 async function seedData() {
