@@ -47,7 +47,11 @@
 
         <v-bottom-sheet :value="isNavigationExtraOpened" persistent>
           <v-card tile>
-            <component :is="navigationExtra.view" @close="closeNavigationExtra" />
+            <component :is="navigationExtra.view" />
+
+            <v-btn class="layout__close-navigation-extra" icon @click="closeNavigationExtra">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-card>
         </v-bottom-sheet>
       </template>
@@ -104,5 +108,11 @@ export default {
 
 .layout__main {
   padding-bottom: 56px !important;
+}
+
+.layout__close-navigation-extra {
+  position: absolute;
+  top: 16px;
+  right: 16px;
 }
 </style>
