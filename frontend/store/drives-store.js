@@ -10,7 +10,8 @@ export const state = () => ({
     fromCity: null,
     destinationCity: null,
     vehicles: [],
-    departureRange: []
+    departureRange: [],
+    verifiedDriver: null
   }
 });
 
@@ -29,6 +30,7 @@ export const getters = {
       if (pendingFilter.fromCity && pendingFilter.fromCity !== drive.from.city) return false;
       if (pendingFilter.destinationCity && pendingFilter.destinationCity !== drive.destination.city) return false;
       if (pendingFilter.vehicles.length && !pendingFilter.vehicles.includes(drive.vehicle)) return false;
+      if (pendingFilter.verifiedDriver && drive.driver.grade !== 'VERIFIED') return false;
 
       if (pendingFilter.departureRange.length) {
         const departureTime = Number(new Date(drive.departureTime));
