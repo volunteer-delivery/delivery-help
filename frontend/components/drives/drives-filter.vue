@@ -4,14 +4,21 @@
 
     <v-card-text>
       <v-autocomplete
-        class="mb-5"
         label="З країни"
         :items="filterValues.countries"
         auto-select-first
         v-model="filter.fromCountry"
       />
 
-      <v-btn color="primary" block @click="apply">
+      <v-autocomplete
+        label="З міста"
+        :items="filterValues.cities"
+        auto-select-first
+        v-model="filter.fromCity"
+        v-if="isFromUkraine"
+      />
+
+      <v-btn class="mt-3" color="primary" block @click="apply">
         Фільтрувати
       </v-btn>
     </v-card-text>
@@ -33,6 +40,16 @@ export default {
   computed: {
     filterValues() {
       return this.$store.state['drives-store'].filterValues;
+    },
+
+    isFromUkraine() {
+      return this.filter.fromCountry === 'Україна';
+    }
+  },
+
+  watch: {
+    'filter.fromCountry'() {
+      this.filter.fromCity = null;
     }
   },
 
