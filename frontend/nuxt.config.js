@@ -1,3 +1,5 @@
+import colors from 'vuetify/lib/util/colors'
+
 const { FRONTEND_API_SERVER_URL, FRONTEND_API_BROWSER_URL, FRONTEND_API_SOCKET_URL } = process.env;
 
 export default {
@@ -32,8 +34,14 @@ export default {
   ],
 
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-    theme: { dark: false }
+    theme: {
+      dark: false,
+      themes: {
+        light: {
+          primary: colors.indigo.base
+        }
+      }
+    }
   },
 
   device: {
