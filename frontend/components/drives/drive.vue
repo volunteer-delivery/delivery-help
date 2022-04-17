@@ -31,6 +31,8 @@
 <script>
 import DrivePoint from "~/components/drives/drive-point";
 import DriverIcon from "~/components/drives/driver-icon";
+import {formatVehicle} from "~/utils/format-vehicle";
+import {formatDate} from "~/utils/format-date";
 
 export default {
   name: "drive",
@@ -46,24 +48,7 @@ export default {
 
   computed: {
     departureTime() {
-      const date = new Date(this.drive.departureTime);
-
-      const month = [
-        'Січня',
-        'Лютого',
-        'Березня',
-        'Квітня',
-        'Травня',
-        'Червня',
-        'Липня',
-        'Серпня',
-        'Вересня',
-        'Жовтня',
-        'Листопада',
-        'Грудня'
-      ][date.getMonth()];
-
-      return `${date.getDate()} ${month}`;
+      return formatDate(this.drive.departureTime);
     },
 
     driverPhone() {
@@ -71,11 +56,7 @@ export default {
     },
 
     driverVehicle() {
-      return {
-        CAR: 'Легковушка',
-        VAN: 'Грузова',
-        TRUCK: 'Фура'
-      }[this.drive.vehicle];
+      return formatVehicle(this.drive.vehicle);
     },
 
     isVerified() {
