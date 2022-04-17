@@ -1,5 +1,6 @@
 const { Telegraf, session } = require('telegraf');
-const { driverModel, telegramSessionModel } = require('./models');
+const { driverModel, rideModel, telegramSessionModel } = require('./models');
+const { broadcastNewRide } = require('./socket');
 
 function sessionMiddleware(type) {
     return async (ctx, next) => {
@@ -13,6 +14,8 @@ function sessionMiddleware(type) {
         }
         ctx.driver = await driverModel.findOne({ _telegramId: telegramId });
         let session = await telegramSessionModel.findOne({ _telegramId: telegramId });
+        console.log("CTX");
+        console.log(ctx)
         if (!session) {
             session = await telegramSessionModel.create({ _telegramId: telegramId, process: 'IDLE', step: 0 });
         }
@@ -54,7 +57,27 @@ function showMessage(ctx, next) {
             2: () => ctx.reply('Введіть ваш номер телефону')
         },
         "RIDE_REGISTRATION": {
-
+            0: () => ctx.reply('Ви їдити із за кордону, чи якогось Укранського міста?', {
+                reply_markup: {
+                    inline_keyboard: [
+                        [ { text: "Із України", callback_data: "FROM_UKRAINE" } ],
+                        [ { text: "Із за кордону", callback_data: "FROM_ABROAD" } ]
+                    ]
+                }
+            }),
+            1: () => ctx.reply('Введіть назву країни:'),
+            2: () => ctx.reply('Введіть назву міста:'),
+            3: () => ctx.reply('Введіть назву міста куди ви їдите'),
+            4: () => ctx.reply('Укажіть дату у форматі YYYY-MM-DD'),
+            5: () => ctx.reply('Укажіть до чого з цього більше підходить ваш транспорт?', {
+                reply_markup: {
+                    inline_keyboard: [
+                        [ { text: "Легковушка", callback_data: "SET_CAR" } ],
+                        [ { text: "Грузова", callback_data: "SET_VAN" } ],
+                        [ { text: "Фура", callback_data: "SET_TRUCK" } ]
+                    ]
+                }
+            }),
         }
     }
     messagesDict[ctx.session.process][ctx.session.step]();
@@ -92,6 +115,18 @@ async function newUserRoute(ctx, next) {
     }
 }
 
+async function newRideRoute(ctx, next) {
+    ctx.session.process = 'RIDE_REGISTRATION';
+    ctx.session.step = 0;
+    await ctx.session.save();
+
+    if (ctx.driver) {
+        showMessage(ctx, next);
+    } else {
+        ctx.reply('Команда доступна лише для зареєстрованих водіїв');
+    }
+}
+
 async function clearDev(ctx) {
     console.log('clear sessio!')
     if (ctx.driver) {
@@ -119,6 +154,7 @@ async function processMessage(ctx, next) {
                 ctx.session.phone = ctx.message.text;
                 ctx.session.step = 0;
                 ctx.session.process = 'IDLE';
+                await ctx.session.save();
 
                 await driverModel.create({
                     _telegramId: ctx.session._telegramId,
@@ -128,15 +164,66 @@ async function processMessage(ctx, next) {
                 });
                 
                 ctx.reply('Дякуємо за реестрацію');
-
-                await ctx.session.save();
             }
         },
         "RIDE_REGISTRATION": {
-            
+            0: async () => { return next(); },
+            1: async () => { 
+                ctx.session.fromCountry = ctx.message.text;
+                ctx.session.step = 3;
+                await ctx.session.save();
+                showMessage(ctx, next);
+            },
+            2: async () => { 
+                ctx.session.fromCity = ctx.message.text;
+                ctx.session.step = 3;
+                await ctx.session.save();
+                showMessage(ctx, next);
+            },
+            3: async () => { 
+                ctx.session.destinationCity = ctx.message.text;
+                ctx.session.step = 4;
+                await ctx.session.save();
+                showMessage(ctx, next);
+            },
+            4: async () => { 
+                ctx.session.departureTime = ctx.message.text;
+                ctx.session.step = 5;
+                await ctx.session.save();
+                showMessage(ctx, next);
+            },
+            5: async () => { return next(); },
         }
     }
     await actionDict[ctx.session.process][ctx.session.step]();
+}
+
+function setVehicle(vehicleType) {
+    return async(ctx, next) => {
+        ctx.session.vehicle = vehicleType;
+        ctx.session.step = 0;
+        ctx.session.process = 'IDLE';
+        await ctx.session.save();
+
+        const ride = await rideModel.create({
+            driver: ctx.driver._id,
+            from: {
+                country: ctx.session.fromCountry,
+                city: ctx.session.fromCity
+            },
+            destination: {
+                country: 'Україна',
+                city: ctx.session.destinationCity
+            },
+            departureTime: ctx.session.departureTime,
+            vehicle: ctx.session.vehicle,
+            status: 'PENDING'
+        });
+
+        broadcastNewRide(ride);
+
+        ctx.reply('Дякуємо!');
+    }
 }
 
 function initializeBotServer(token) {
@@ -167,8 +254,42 @@ function initializeBotServer(token) {
         showMessage
     );
 
+    bot.action(
+        'FROM_UKRAINE',
+        afterButton,
+        sessionMiddleware('action'),
+        async (ctx, next) => {
+            ctx.session.fromCountry = 'Україна';
+            await ctx.session.save();
+
+            return next();
+        },
+        setProcessAndStepMiddleware("RIDE_REGISTRATION", 2),
+        showMessage
+    );
+
+    bot.action(
+        'FROM_ABROAD',
+        afterButton,
+        sessionMiddleware('action'),
+        async (ctx, next) => {
+            ctx.session.fromСity = null;
+            await ctx.session.save();
+
+            return next();
+        },
+        setProcessAndStepMiddleware("RIDE_REGISTRATION", 1),
+        showMessage
+    );
+
+    bot.command('/ride', sessionMiddleware('chat'), newRideRoute);
     bot.command('/profile', sessionMiddleware('chat'), profileRoute);
     bot.command('/clearDev', sessionMiddleware('chat'), clearDev);
+
+
+    bot.action('SET_CAT', afterButton, sessionMiddleware('action'), setVehicle('CAR'));
+    bot.action('SET_VAN', afterButton, sessionMiddleware('action'), setVehicle('VAN'));
+    bot.action('SET_TRUCK', afterButton, sessionMiddleware('action'), setVehicle('TRUCK'));
 
 
     bot.on('text', sessionMiddleware('chat'), processMessage);

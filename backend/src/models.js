@@ -115,6 +115,28 @@ const telegramSessionSchema = mongoose.Schema({
     phone: {
         type: String,
         required: false
+    },
+
+    fromCountry: {
+        type: String,
+        required: false
+    },
+    fromCity: {
+        type: String,
+        required: false
+    },
+    destinationCity: {
+        type: String,
+        required: false
+    },
+    departureTime: {
+        type: String,
+        required: false
+    },
+    vehicle: {
+        type: String,
+        enum: ['CAR', 'VAN', 'TRUCK'],
+        required: false
     }
 });
 
