@@ -19,9 +19,9 @@ rideRouter.get('/rides', async (req, res) => {
 });
 
 rideRouter.get('/rides/add-random', async (req, res) => {
-    const driver = await driverModel.create(getRandomDriver());
+    // const driver = await driverModel.create(getRandomDriver());
     const ride = await rideModel.create({
-        driver: driver._id,
+        driver: '625b494d486f39caa7987384',
         ...getRandomRides()
     });
     await ride.populate('driver');
@@ -39,11 +39,11 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
         if (!ride) {
             return res.status(404).send({ "message": "Ride not found" });
         }
-    
+
         if (!status) {
             return res.status(406).send({ "message": "Status not provided" });
         }
-        
+
         ride.status = status;
         await ride.save();
         await ride.populate('driver');

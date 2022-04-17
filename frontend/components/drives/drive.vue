@@ -30,9 +30,10 @@
       </a>
     </v-card-text>
 
-    <v-bottom-sheet :value="isDriverDetailsDisplaying" persistent>
+    <v-bottom-sheet :value="isDriverDetailsDisplaying" persistent content-class="driver-details-modal">
       <DriverDetails
         :driver="drive.driver"
+        ref="detailsView"
         @close="isDriverDetailsDisplaying = false"
       />
     </v-bottom-sheet>
@@ -83,6 +84,15 @@ export default {
     cardClasses() {
       return {
         'drive--verified': this.isVerified
+      }
+    }
+  },
+
+  watch: {
+    async isDriverDetailsDisplaying() {
+      if (this.isDriverDetailsDisplaying) {
+        await this.$nextTick();
+        await this.$refs.detailsView.onOpen();
       }
     }
   }

@@ -91,7 +91,7 @@ export const actions = {
     context.commit('replace', drive);
   },
 
-  loadDrivesByDriver(context, driver) {
+  async loadDrivesByDriver(context, driver) {
     return context.state.drives.filter((drive) => {
       return drive.driver.id === driver.id;
     });
@@ -116,7 +116,7 @@ export const mutations = {
   },
 
   add(state, drive) {
-    state.pending.push(drive);
+    state.drives.push(drive);
   },
 
   replace(state, drive) {
