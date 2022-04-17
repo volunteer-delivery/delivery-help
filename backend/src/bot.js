@@ -57,7 +57,7 @@ function showMessage(ctx, next) {
                 }
             }),
             1: () => ctx.reply('Введіть ваше ім\'я'),
-            2: () => ctx.reply('Введіть ваш номер телефону')
+            2: () => ctx.reply('Введіть ваш номер', { reply_markup: { one_time_keyboard: true, keyboard: [[{text: 'Відправити мій телеграм контакт 📲', request_contact: true}]] } } )
         },
         "RIDE_REGISTRATION": {
             0: () => ctx.reply('Ви зараз за кордоном?', {
@@ -136,7 +136,7 @@ async function clearDev(ctx) {
     const s = await telegramSessionModel.deleteMany({});
 
     ctx.reply(`Deleted drivers: ${dm.deletedCount}`)
-    ctx.reply(`Deleted sessions: ${dm.deletedCount}`)
+    ctx.reply(`Deleted sessions: ${s.deletedCount}`)
 }
 
 async function processMessage(ctx, next) {
@@ -252,6 +252,25 @@ function initializeBotServer(token) {
     bot.help(sessionMiddleware('chat'), helpRoute)
     // bot.command('/new', sessionMiddleware('chat'), newUserRoute);
 
+    bot.on('contact', sessionMiddleware('chat'), async(ctx, next) => {
+        ctx.session.phone = ctx.message.contact.phone_number;
+        ctx.session.step = 0;
+        ctx.session.process = 'IDLE';
+        await ctx.session.save();
+
+        ctx.driver = await driverModel.create({
+            _telegramId: ctx.session._telegramId,
+            name: ctx.session.name,
+            phone: ctx.session.phone,
+            grade: 'NOT VERIFIED'
+        });
+
+        ctx.reply('Дякуємо за реестрацію');
+        setTimeout(() => {
+            helpRoute(ctx, next);
+        }, 200);
+    });
+    
     bot.action(
         'USE_PROFILE_NAME',
         afterButton,
