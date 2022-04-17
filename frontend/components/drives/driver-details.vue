@@ -10,9 +10,14 @@
       </v-btn>
     </div>
 
-    <v-card-text>
-      dddd
-    </v-card-text>
+    <div>
+      <v-card-text>
+        <p class="d-flex align-center">
+          <v-icon :color="verifiedIconColor">{{ verifiedIcon }}</v-icon>
+          <span class="ml-2">{{ verifiedMessage }}</span>
+        </p>
+      </v-card-text>
+    </div>
   </v-card>
 </template>
 
@@ -22,6 +27,24 @@ export default {
 
   props: {
     driver: Object
+  },
+
+  computed: {
+    isVerified() {
+      return this.driver.grade === 'VERIFIED';
+    },
+
+    verifiedIcon() {
+      return this.isVerified ? 'mdi-check' : 'mdi-close';
+    },
+
+    verifiedIconColor() {
+      return this.isVerified ? 'primary' : 'error';
+    },
+
+    verifiedMessage() {
+      return this.isVerified ? 'Водій перевірений' : 'Водій не перевірений';
+    }
   }
 }
 </script>

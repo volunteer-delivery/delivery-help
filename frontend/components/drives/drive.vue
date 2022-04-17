@@ -10,7 +10,11 @@
         <DrivePoint class="path__point" :point="drive.destination" />
       </div>
 
-      <button type="button" class="subtitle-2 d-flex align-center drive__driver" @click="isDriverDetailsDisplaying = true">
+      <button
+        type="button"
+        class="subtitle-2 d-flex align-center drive__driver"
+        @click="isDriverDetailsDisplaying = true"
+      >
         <DriverIcon class="mr-1" :driver="drive.driver" :verified="isVerified" />
         {{ drive.driver.name }}
       </button>
@@ -27,7 +31,10 @@
     </v-card-text>
 
     <v-bottom-sheet :value="isDriverDetailsDisplaying" persistent>
-      <DriverDetails :driver="drive.driver" @close="isDriverDetailsDisplaying = false" />
+      <DriverDetails
+        :driver="drive.driver"
+        @close="isDriverDetailsDisplaying = false"
+      />
     </v-bottom-sheet>
   </v-card>
 </template>

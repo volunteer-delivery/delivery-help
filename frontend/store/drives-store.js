@@ -44,7 +44,10 @@ export const getters = {
 
   pendingFilteredSorted(_, getters) {
     return getters.pendingFiltered.sort((d1, d2) => {
-      return Number(new Date(d1)) - Number(new Date(d2));
+      if (d1.driver.grade === d2.driver.grade) {
+        return Number(new Date(d1)) - Number(new Date(d2));
+      }
+      return d1.driver.grade === 'VERIFIED' ? -1 : 1;
     });
   }
 };
@@ -84,6 +87,12 @@ export const actions = {
   update(context, drive) {
     context.commit('patchFilterValues', drive);
     context.commit('replace', drive);
+  },
+
+  loadDrivesByDriver(context, driver) {
+    return context.state.drives.filter((drive) => {
+      return drive.driver.id === driver.id;
+    });
   }
 };
 
