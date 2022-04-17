@@ -9,6 +9,7 @@ function preparePublicSchema(schema) {
         transform: (doc, converted) => {
             delete converted._id;
             delete converted.__v;
+            delete converted._telegramId;
         }
     });
 }
@@ -35,6 +36,11 @@ const driverSchema = new mongoose.Schema({
         enum: ['VERIFIED', 'NOT VERIFIED'],
         default: 'NOT VERIFIED',
         required: true
+    },
+    _telegramId: {
+        type: String,
+        required: false,
+        default: null
     }
 });
 
@@ -86,7 +92,35 @@ const rideSchema = new mongoose.Schema({
 
 preparePublicSchema(rideSchema);
 
+const telegramSessionSchema = mongoose.Schema({
+    _telegramId: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    process: {
+        type: String,
+        enum: ["IDLE", "USER_REGISTRATION", "RIDE_REGISTRATION"],
+        default: "IDLE",
+        required: true
+    },
+    step: {
+        type: Number,
+        required: false
+    },
+    name: {
+        type: String,
+        required: false
+    },
+    phone: {
+        type: String,
+        required: false
+    }
+});
+
+
 const driverModel = mongoose.model('Driver', driverSchema);
 const rideModel = mongoose.model('Ride', rideSchema);
+const telegramSessionModel = mongoose.model('TelegramSession', telegramSessionSchema);
 
-module.exports = { driverModel, rideModel };
+module.exports = { driverModel, rideModel, telegramSessionModel };
