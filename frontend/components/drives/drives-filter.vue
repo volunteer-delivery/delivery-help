@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card-title>Фільтрувати</v-card-title>
+    <v-card-title>Фільтр</v-card-title>
 
     <v-card-text>
       <v-autocomplete

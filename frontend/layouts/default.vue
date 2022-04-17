@@ -1,24 +1,25 @@
 <template>
   <v-app>
     <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent>
-      <v-list nav dense>
-        <v-list-item
-          v-for="item of $options.navItems"
-          :key="item.url"
-          :to="item.url"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+        <v-list class="pt-5" nav dense>
+          <v-list-item
+            v-for="item of $options.navItems"
+            :key="item.url"
+            :to="item.url"
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
 
-      <component
-        v-if="navigationExtra"
-        :is="navigationExtra.view"
-      />
+        <component
+          v-if="navigationExtra"
+          class="pt-10"
+          :is="navigationExtra.view"
+        />
     </v-navigation-drawer>
 
     <v-main class="layout__main">
