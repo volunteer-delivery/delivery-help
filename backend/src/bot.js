@@ -29,13 +29,16 @@ function afterButton(ctx, next) {
     return next();
 }
 
-function helpRoute(ctx) {
+async function helpRoute(ctx, next) {
     if (ctx.driver) {
         ctx.reply('/ride - Поїхали!');
         ctx.reply('/profile - Мій профіль');
     } else {
         ctx.reply('Для початку работи, представтеся');
-        ctx.reply('Запустіть команду /new');
+        ctx.session.process = 'USER_REGISTRATION';
+        ctx.session.step = 0;
+        await ctx.session.save();
+        showMessage(ctx, next);
     }
 }
 
@@ -106,13 +109,12 @@ function profileRoute(ctx) {
 }
 
 async function newUserRoute(ctx, next) {
-    ctx.session.process = 'USER_REGISTRATION';
-    ctx.session.step = 0;
-    await ctx.session.save();
-
     if (ctx.driver) {
         ctx.reply('Реестрація доступна лише новим користувачам');
     } else {
+        ctx.session.process = 'USER_REGISTRATION';
+        ctx.session.step = 0;
+        await ctx.session.save();
         showMessage(ctx, next);
     }
 }
@@ -130,11 +132,11 @@ async function newRideRoute(ctx, next) {
 }
 
 async function clearDev(ctx) {
-    if (ctx.driver) {
-        ctx.driver._telegramId = null;
-        await ctx.driver.save();
-    }
-    ctx.session.remove();
+    const dm = await driverModel.deleteMany({ _telegramId: { $ne: null }});
+    const s = await telegramSessionModel.deleteMany({});
+
+    ctx.reply(`Deleted drivers: ${dm.deletedCount}`)
+    ctx.reply(`Deleted sessions: ${dm.deletedCount}`)
 }
 
 async function processMessage(ctx, next) {
@@ -156,14 +158,17 @@ async function processMessage(ctx, next) {
                 ctx.session.process = 'IDLE';
                 await ctx.session.save();
 
-                await driverModel.create({
+                ctx.driver = await driverModel.create({
                     _telegramId: ctx.session._telegramId,
                     name: ctx.session.name,
                     phone: ctx.session.phone,
                     grade: 'NOT VERIFIED'
                 });
-                
+
                 ctx.reply('Дякуємо за реестрацію');
+                setTimeout(() => {
+                    helpRoute(ctx, next);
+                }, 200);
             }
         },
         "RIDE_REGISTRATION": {
@@ -220,6 +225,8 @@ function setVehicle(vehicleType) {
         broadcastNewRide(ride);
 
         ctx.reply('Дякуємо! Очікуйте на дзвінок координатора');
+
+        helpRoute(ctx, next);
     }
 }
 
@@ -231,17 +238,19 @@ function initializeBotServer(token) {
         return next()
     });
 
-    calendar.setDateListener(async (ctx, date) => {
-        ctx.reply(date);
-        ctx.session.departureTime = ctx.message.text;
+    bot.action(/calendar-telegram-date-[\d-]+/g, afterButton, sessionMiddleware('action'), async (ctx, next) => {
+        let date = ctx.match[0].replace("calendar-telegram-date-", "");
+        ctx.session.departureTime = date;
         ctx.session.step = 5;
         await ctx.session.save();
         showMessage(ctx, next);
     });
+    calendar.setDateListener((ctx, date) => {});
+
 
     bot.start(sessionMiddleware('chat'), helpRoute);
     bot.help(sessionMiddleware('chat'), helpRoute)
-    bot.command('/new', sessionMiddleware('chat'), newUserRoute);
+    // bot.command('/new', sessionMiddleware('chat'), newUserRoute);
 
     bot.action(
         'USE_PROFILE_NAME',
