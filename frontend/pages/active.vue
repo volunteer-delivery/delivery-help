@@ -7,17 +7,21 @@
         :key="drive.id"
         :drive="drive"
       />
+
+      <empty v-if="!drives.length" />
     </v-col>
   </v-row>
 </template>
 
 <script>
 import Drive from "~/components/drives/drive";
+import Empty from "@/components/drives/empty";
 
 export default {
   name: "running",
 
   components: {
+    Empty,
     Drive
   },
 

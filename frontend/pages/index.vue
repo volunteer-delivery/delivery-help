@@ -7,6 +7,7 @@
         :key="drive.id"
         :drive="drive"
       />
+      <empty v-if="!drives.length" />
     </v-col>
   </v-row>
 </template>
@@ -15,9 +16,10 @@
 import Drive from "~/components/drives/drive";
 import DrivesFilter from "~/components/drives/drives-filter";
 import DriverFilterMobileTrigger from "~/components/drives/drives-filter-mobile-trigger";
+import Empty from "@/components/drives/empty";
 
 export default {
-  components: { Drive },
+  components: {Empty, Drive },
 
   async asyncData({ store }) {
     await store.dispatch('drives-store/load')
