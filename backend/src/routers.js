@@ -52,7 +52,7 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
         res.send({ "message": "Status successfully changed", "ride": ride });
     } catch (error) {
         if (error instanceof MongooseError.ValidationError) {
-            return res.status(406).send({ "message": `${status} is invalid status` });
+            return res.status(406).send({ "message": `${status} is invalid status`, error });
         } else if (error instanceof MongooseError.CastError) {
             return res.status(406).send({ "message": `${id} is invalid ride id` });
         } else {
