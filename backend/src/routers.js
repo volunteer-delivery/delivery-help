@@ -3,6 +3,7 @@ const { Error: MongooseError } = require('mongoose');
 const { driverModel, rideModel } = require('./models');
 const { broadcastNewRide, broadcastUpdateRide } = require('./socket');
 const { getRandomDriver, getRandomRides } = require('./seed');
+const e = require("express");
 
 const driverRouter = Router();
 
