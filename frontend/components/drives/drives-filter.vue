@@ -28,6 +28,15 @@
         v-model="filter.destinationCity"
       />
 
+      <v-select
+        label="Тип авто"
+        item-text="title"
+        item-value="value"
+        multiple
+        :items="$options.vehicles"
+        v-model="filter.vehicles"
+      />
+
       <v-btn class="mt-3" color="primary" block @click="apply">
         Фільтрувати
       </v-btn>
@@ -42,6 +51,12 @@ function clone(obj) {
 
 export default {
   name: "drives-filter",
+
+  vehicles: [
+    { value: 'CAR', title: 'Легковушка' },
+    { value: 'VAN', title: 'Грузова' },
+    { value: 'TRUCK', title: 'Фура' }
+  ],
 
   data() {
     const filter = this.$store.state['drives-store'].pendingFilter;
