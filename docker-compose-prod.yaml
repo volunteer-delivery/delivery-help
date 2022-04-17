@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+    backend:
+        restart: always
+        build:
+          context: ./backend
+          dockerfile: ./Dockerfile.production
+        ports:
+            - ${BACKEND_PUBLIC_PORT}:8080
+        command: npm run start
+        environment:
+            MONGO_USERNAME: ${MONGO_USERNAME}
+            MONGO_PASSWORD: ${MONGO_PASSWORD}
+            TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+        depends_on:
+            - mongo
+
+    mongo:
+        image: mongo:5.0.7
+        volumes:
+            - ./db_data:/data/db
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+
+    frontend:
+        restart: always
+        build:
+          context: ./frontend
+          dockerfile: Dockerfile.production
+          args:
+            FRONTEND_API_SERVER_URL: ${FRONTEND_API_SERVER_URL}
+            FRONTEND_API_BROWSER_URL: ${FRONTEND_API_BROWSER_URL}
+            FRONTEND_API_SOCKET_URL: ${FRONTEND_API_SOCKET_URL}
+        ports:
+            - ${FRONTEND_PUBLIC_PORT}:8080
+        command: npm run start
+        environment:
+            PORT: 8080
+            HOST: 0.0.0.0
+        env_file:
+            - ./.env
+
+volumes:
+    data_frontend_libs:
+        driver: local
+    data_backend_libs:
+        driver: local

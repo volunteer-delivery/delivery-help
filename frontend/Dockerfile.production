@@ -1,0 +1,14 @@
+FROM node:16.14-alpine
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+COPY . ./
+
+ARG FRONTEND_API_SERVER_URL
+ARG FRONTEND_API_BROWSER_URL
+ARG FRONTEND_API_SOCKET_URL
+
+RUN npm run build
