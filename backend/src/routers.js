@@ -19,9 +19,9 @@ rideRouter.get('/rides', async (req, res) => {
 });
 
 rideRouter.get('/rides/add-random', async (req, res) => {
-    // const driver = await driverModel.create(getRandomDriver());
+    const driver = await driverModel.create(getRandomDriver());
     const ride = await rideModel.create({
-        driver: '625b494d486f39caa7987384',
+        driver: driver._id,
         ...getRandomRides()
     });
     await ride.populate('driver');

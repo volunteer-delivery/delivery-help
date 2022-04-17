@@ -14,8 +14,7 @@ function sessionMiddleware(type) {
         }
         ctx.driver = await driverModel.findOne({ _telegramId: telegramId });
         let session = await telegramSessionModel.findOne({ _telegramId: telegramId });
-        console.log("CTX");
-        console.log(ctx)
+
         if (!session) {
             session = await telegramSessionModel.create({ _telegramId: telegramId, process: 'IDLE', step: 0 });
         }
@@ -219,7 +218,7 @@ function setVehicle(vehicleType) {
             vehicle: ctx.session.vehicle,
             status: 'PENDING'
         });
-
+        await ride.populate('driver');
         broadcastNewRide(ride);
 
         ctx.reply('Дякуємо!');
