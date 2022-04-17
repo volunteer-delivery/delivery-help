@@ -113,6 +113,12 @@ export default {
 .v-bottom-navigation .v-btn {
   min-width: 80px !important;
   height: 100% !important;
+  background-color: #fff !important;
+}
+
+.v-bottom-navigation .v-btn.v-btn--active {
+  color: #3F51B5 !important;
+  background-color: #f5f5f5 !important;
 }
 
 .layout__main {
