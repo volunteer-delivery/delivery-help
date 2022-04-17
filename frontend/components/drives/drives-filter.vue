@@ -7,6 +7,7 @@
         label="З країни"
         :items="filterValues.countries"
         auto-select-first
+        clearable
         v-model="filter.fromCountry"
       />
 
@@ -14,8 +15,17 @@
         label="З міста"
         :items="filterValues.cities"
         auto-select-first
+        clearable
         v-model="filter.fromCity"
         v-if="isFromUkraine"
+      />
+
+      <v-autocomplete
+        label="До міста"
+        :items="filterValues.cities"
+        auto-select-first
+        clearable
+        v-model="filter.destinationCity"
       />
 
       <v-btn class="mt-3" color="primary" block @click="apply">
