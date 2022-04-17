@@ -98,6 +98,8 @@ export const actions = {
   },
 
   async changeStatus(context, { drive, status }) {
+    if (!confirm('Ви впевнені що хочете змінити статус заявки?')) return;
+
     await this.$axios.patch(`rides/${drive.id}/status`, { status });
   }
 };
