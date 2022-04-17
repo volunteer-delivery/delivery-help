@@ -110,6 +110,11 @@ export default {
   color: #3F51B5 !important;
 }
 
+.v-bottom-navigation .v-btn {
+  min-width: 80px !important;
+  height: 100% !important;
+}
+
 .layout__main {
   padding-bottom: 56px !important;
 }
