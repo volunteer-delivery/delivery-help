@@ -1,7 +1,7 @@
 <template>
   <v-card :class="cardClasses" elevation="1">
     <v-card-text>
-      <div class="path mb-5">
+      <div class="path mb-3">
         <div class="mb-8 d-flex align-end">
           <DrivePoint class="path__point path__point--from" :point="drive.from" />
           <span class="path__point-date">, {{ departureTime }}</span>
@@ -10,10 +10,10 @@
         <DrivePoint class="path__point" :point="drive.destination" />
       </div>
 
-      <p class="subtitle-2 d-flex align-center">
+      <button type="button" class="subtitle-2 d-flex align-center drive__driver" @click="isDriverDetailsDisplaying = true">
         <DriverIcon class="mr-1" :driver="drive.driver" :verified="isVerified" />
         {{ drive.driver.name }}
-      </p>
+      </button>
 
       <p class="subtitle-2 d-flex align-center">
         <v-icon class="mr-1" dense>mdi-car</v-icon>
@@ -25,6 +25,10 @@
         {{ drive.driver.phone }}
       </a>
     </v-card-text>
+
+    <v-bottom-sheet :value="isDriverDetailsDisplaying" persistent>
+      <DriverDetails :driver="drive.driver" @close="isDriverDetailsDisplaying = false" />
+    </v-bottom-sheet>
   </v-card>
 </template>
 
@@ -33,11 +37,13 @@ import DrivePoint from "~/components/drives/drive-point";
 import DriverIcon from "~/components/drives/driver-icon";
 import {formatVehicle} from "~/utils/format-vehicle";
 import {formatDate} from "~/utils/format-date";
+import DriverDetails from "~/components/drives/driver-details";
 
 export default {
   name: "drive",
 
   components: {
+    DriverDetails,
     DriverIcon,
     DrivePoint
   },
@@ -45,6 +51,10 @@ export default {
   props: {
     drive: Object
   },
+
+  data: () => ({
+    isDriverDetailsDisplaying: false
+  }),
 
   computed: {
     departureTime() {
@@ -153,6 +163,15 @@ export default {
 
 .path__point--from::before {
   background-color: #3F51B5;
+}
+
+.drive__driver {
+  border: none;
+  background: none;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  display: block;
+  width: 100%;
 }
 
 .drive__phone {
