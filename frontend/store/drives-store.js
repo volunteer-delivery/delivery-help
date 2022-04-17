@@ -101,6 +101,7 @@ export const actions = {
     if (!confirm('Ви впевнені що хочете змінити статус заявки?')) return;
 
     await this.$axios.patch(`rides/${drive.id}/status`, { status });
+    this.$toast.show('Статус змінено', { duration: 3000 })
   }
 };
 

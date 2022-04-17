@@ -26,7 +26,8 @@ export default {
 
   modules: [
     '@nuxtjs/axios',
-    'nuxt-socket-io'
+    'nuxt-socket-io',
+    ['@nuxtjs/toast', { duration: 5000 }]
   ],
 
   plugins: [

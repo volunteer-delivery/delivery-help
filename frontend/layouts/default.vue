@@ -119,4 +119,6 @@ export default {
   top: 16px;
   right: 16px;
 }
+
+.toasted { font-family: "Roboto", sans-serif; }
 </style>
