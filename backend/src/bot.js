@@ -30,11 +30,11 @@ function afterButton(ctx, next) {
 
 function helpRoute(ctx) {
     if (ctx.driver) {
-        ctx.reply('/ride - Для того щоб заявити намір об поїздки');
-        ctx.reply('/profile - Для того щоб перевірити свій профіль');
+        ctx.reply('/ride - Поїхали!');
+        ctx.reply('/profile - Мій профіль');
     } else {
-        ctx.reply('Для роботи з цим ботом вам потрібно зареєструватися');
-        ctx.reply('Запустіть команду /new');
+        ctx.reply('Для початку работи, представтеся');
+        // ctx.reply('Запустіть команду /new');
     }
 }
 
@@ -44,11 +44,11 @@ function showMessage(ctx, next) {
             0: () => helpRoute(ctx),
         },
         "USER_REGISTRATION": {
-            0: () => ctx.reply('Нам потрібне ваше ім\'я', {
+            0: () => ctx.reply('Як вас звати?', {
                 reply_markup: {
                     inline_keyboard: [
-                        [ { text: `Використати ${ctx.message.chat.first_name} ${ctx.message.chat.last_name}`, callback_data: "USE_PROFILE_NAME" } ],
-                        [ { text: "Ввести ім\'я самостійно", callback_data: "ENTER_NAME" } ]
+                        [ { text: `Це моє ім\'я ${ctx.message.chat.first_name} ${ctx.message.chat.last_name}`, callback_data: "USE_PROFILE_NAME" } ],
+                        [ { text: "Ні, я введу його самостійно", callback_data: "ENTER_NAME" } ]
                     ]
                 }
             }),
@@ -56,24 +56,24 @@ function showMessage(ctx, next) {
             2: () => ctx.reply('Введіть ваш номер телефону')
         },
         "RIDE_REGISTRATION": {
-            0: () => ctx.reply('Ви їдити із за кордону, чи якогось Укранського міста?', {
+            0: () => ctx.reply('Ви зараз за кордоном?', {
                 reply_markup: {
                     inline_keyboard: [
-                        [ { text: "Із України", callback_data: "FROM_UKRAINE" } ],
-                        [ { text: "Із за кордону", callback_data: "FROM_ABROAD" } ]
+                        [ { text: "Так за кордонм", callback_data: "FROM_ABROAD" } ]
+                        [ { text: "Ніт, заре в Україні 🇺🇦 ;)", callback_data: "FROM_UKRAINE" } ],
                     ]
                 }
             }),
-            1: () => ctx.reply('Введіть назву країни:'),
-            2: () => ctx.reply('Введіть назву міста:'),
-            3: () => ctx.reply('Введіть назву міста куди ви їдите'),
-            4: () => ctx.reply('Укажіть дату у форматі YYYY-MM-DD'),
-            5: () => ctx.reply('Укажіть до чого з цього більше підходить ваш транспорт?', {
+            1: () => ctx.reply('Яка країна?'),
+            2: () => ctx.reply('Місто?'),
+            3: () => ctx.reply('Введіть кінцевий населенний пункт призначення'),
+            4: () => ctx.reply('Дата вашої поїздки'),
+            5: () => ctx.reply('Ваш тип авто?', {
                 reply_markup: {
                     inline_keyboard: [
-                        [ { text: "Легковушка", callback_data: "SET_CAR" } ],
-                        [ { text: "Грузова", callback_data: "SET_VAN" } ],
-                        [ { text: "Фура", callback_data: "SET_TRUCK" } ]
+                        [ { text: "Легковушка ( < 2т)", callback_data: "SET_CAR" } ],
+                        [ { text: "Грузова ( < 10т)", callback_data: "SET_VAN" } ],
+                        [ { text: "Фура ( > 10т)", callback_data: "SET_TRUCK" } ]
                     ]
                 }
             }),
@@ -221,7 +221,7 @@ function setVehicle(vehicleType) {
         await ride.populate('driver');
         broadcastNewRide(ride);
 
-        ctx.reply('Дякуємо!');
+        ctx.reply('Дякуємо! Очікуйте на дзвінок координатора');
     }
 }
 
