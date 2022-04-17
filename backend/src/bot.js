@@ -1,4 +1,5 @@
-const { Telegraf, session } = require('telegraf');
+const { Telegraf } = require('telegraf');
+const Calendar = require('telegraf-calendar-telegram');
 const { driverModel, rideModel, telegramSessionModel } = require('./models');
 const { broadcastNewRide } = require('./socket');
 
@@ -34,7 +35,7 @@ function helpRoute(ctx) {
         ctx.reply('/profile - Мій профіль');
     } else {
         ctx.reply('Для початку работи, представтеся');
-        // ctx.reply('Запустіть команду /new');
+        ctx.reply('Запустіть команду /new');
     }
 }
 
@@ -59,15 +60,17 @@ function showMessage(ctx, next) {
             0: () => ctx.reply('Ви зараз за кордоном?', {
                 reply_markup: {
                     inline_keyboard: [
-                        [ { text: "Так за кордонм", callback_data: "FROM_ABROAD" } ]
-                        [ { text: "Ніт, заре в Україні 🇺🇦 ;)", callback_data: "FROM_UKRAINE" } ],
+                        [ { text: "Так за кордонм", callback_data: "FROM_ABROAD" } ],
+                        [ { text: "Ніт, заре в Україні 🇺🇦 ;)", callback_data: "FROM_UKRAINE" } ]
                     ]
                 }
             }),
             1: () => ctx.reply('Яка країна?'),
             2: () => ctx.reply('Місто?'),
             3: () => ctx.reply('Введіть кінцевий населенний пункт призначення'),
-            4: () => ctx.reply('Дата вашої поїздки'),
+            4: () => {
+                ctx.reply('Дата вашої поїздки', ctx.calendar.getCalendar())
+            },
             5: () => ctx.reply('Ваш тип авто?', {
                 reply_markup: {
                     inline_keyboard: [
@@ -127,7 +130,6 @@ async function newRideRoute(ctx, next) {
 }
 
 async function clearDev(ctx) {
-    console.log('clear sessio!')
     if (ctx.driver) {
         ctx.driver._telegramId = null;
         await ctx.driver.save();
@@ -136,7 +138,6 @@ async function clearDev(ctx) {
 }
 
 async function processMessage(ctx, next) {
-    console.log('process', ctx.session.step);
     const actionDict = {
         "IDLE": {
             0: async () => { showMessage(ctx, next); }
@@ -186,9 +187,6 @@ async function processMessage(ctx, next) {
                 showMessage(ctx, next);
             },
             4: async () => { 
-                ctx.session.departureTime = ctx.message.text;
-                ctx.session.step = 5;
-                await ctx.session.save();
                 showMessage(ctx, next);
             },
             5: async () => { return next(); },
@@ -227,10 +225,23 @@ function setVehicle(vehicleType) {
 
 function initializeBotServer(token) {
     const bot = new Telegraf(token);
+    const calendar = new Calendar(bot)
+    bot.use(async (ctx, next) => {
+        ctx.calendar = calendar;
+        return next()
+    });
+
+    calendar.setDateListener(async (ctx, date) => {
+        ctx.reply(date);
+        ctx.session.departureTime = ctx.message.text;
+        ctx.session.step = 5;
+        await ctx.session.save();
+        showMessage(ctx, next);
+    });
+
     bot.start(sessionMiddleware('chat'), helpRoute);
     bot.help(sessionMiddleware('chat'), helpRoute)
     bot.command('/new', sessionMiddleware('chat'), newUserRoute);
-
 
     bot.action(
         'USE_PROFILE_NAME',
