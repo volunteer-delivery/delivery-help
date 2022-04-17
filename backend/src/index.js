@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { driverRouter, rideRouter } = require('./routers');
 const { rideModel } = require('./models');
 const { initializeSocketServer } = require('./socket');
+const { initializeBotServer } = require('./bot');
 const { seedData } = require('./seed');
 
 async function bootstrap() {
@@ -19,13 +20,16 @@ async function bootstrap() {
     app.use(express.json());
     app.use('/api/v1', driverRouter, rideRouter);
 
-
     const httpServer = createServer(app);
     initializeSocketServer(httpServer);
 
     httpServer.listen(8080, () => {
         console.log('Server was started');
     });
+
+    if (process.env.TELEGRAM_BOT_TOKEN) {
+        initializeBotServer(process.env.TELEGRAM_BOT_TOKEN);
+    }
 };
 
 bootstrap();
