@@ -122,5 +122,9 @@ export const mutations = {
 
   setFilterValues(state, values) {
     state.filterValues = values;
+  },
+
+  setPendingFilter(state, filter) {
+    state.pendingFilter = filter;
   }
 }

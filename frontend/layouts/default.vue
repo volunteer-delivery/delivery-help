@@ -47,7 +47,10 @@
 
         <v-bottom-sheet :value="isNavigationExtraOpened" persistent>
           <v-card tile>
-            <component :is="navigationExtra.view" />
+            <component
+              :is="navigationExtra.view"
+              @close="closeNavigationExtra"
+            />
 
             <v-btn class="layout__close-navigation-extra" icon @click="closeNavigationExtra">
               <v-icon>mdi-close</v-icon>

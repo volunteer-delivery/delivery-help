@@ -26,6 +26,10 @@
 </template>
 
 <script>
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
 export default {
   name: "drives-filter",
 
@@ -33,7 +37,7 @@ export default {
     const filter = this.$store.state['drives-store'].pendingFilter;
 
     return {
-      filter: JSON.parse(JSON.stringify(filter))
+      filter: clone(filter)
     };
   },
 
@@ -55,7 +59,8 @@ export default {
 
   methods: {
     apply() {
-      console.log(this.filter);
+      this.$store.commit('drives-store/setPendingFilter', clone(this.filter));
+      this.$emit('close');
     }
   }
 }
