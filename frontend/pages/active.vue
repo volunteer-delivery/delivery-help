@@ -27,7 +27,7 @@ export default {
 
   computed: {
     drives() {
-      return this.$store.state['drives-store'].active;
+      return this.$store.getters["drives-store/active"]
     }
   }
 }

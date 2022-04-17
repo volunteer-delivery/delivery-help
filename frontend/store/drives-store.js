@@ -1,7 +1,7 @@
+import Vue from 'vue';
+
 export const state = () => ({
-  pending: [],
-  active: [],
-  finished: [],
+  drives: [],
   isLoaded: false,
   filterValues: null,
 
@@ -19,7 +19,15 @@ export const state = () => ({
 });
 
 export const getters = {
-  pendingFiltered({ pending, pendingFilter }) {
+  pending(state) {
+    return state.drives.filter(drive => drive.status === 'PENDING');
+  },
+
+  active(state) {
+    return state.drives.filter(drive => drive.status === 'ACTIVE');
+  },
+
+  pendingFiltered({ pendingFilter }, { pending }) {
     return pending.filter(drive => {
       if (pendingFilter.fromCountry && pendingFilter.fromCountry !== drive.from.country) return false;
       if (pendingFilter.fromCity && pendingFilter.fromCity !== drive.from.city) return false;
@@ -48,12 +56,6 @@ export const actions = {
   async load(context) {
     if (context.state.isLoaded) return;
 
-    const groups = {
-      pending: [],
-      active: [],
-      finished: []
-    };
-
     const filter = {
       countries: new Set(),
       cities: new Set()
@@ -62,14 +64,12 @@ export const actions = {
     const response = await this.$axios.get('rides');
 
     for (const drive of response.data.rides) {
-      groups[drive.status.toLowerCase()].push(drive);
-
       filter.countries.add(drive.from.country);
       if (drive.from.city) filter.cities.add(drive.from.city);
       filter.cities.add(drive.destination.city);
     }
 
-    context.commit('setGrouped', groups);
+    context.commit('setDrives', response.data.rides);
 
     context.commit('setFilterValues', {
       countries: Array.from(filter.countries),
@@ -77,16 +77,25 @@ export const actions = {
     });
 
     context.commit('setLoaded', true);
+  },
+
+  add(context, drive) {
+    context.commit('patchFilterValues', drive);
+    context.commit('add', drive);
+  },
+
+  update(context, drive) {
+    context.commit('patchFilterValues', drive);
+    context.commit('replace', drive);
   }
 };
 
 export const mutations = {
-  setGrouped(state, { pending, active }) {
-    state.pending = pending;
-    state.active = active;
+  setDrives(state, drives) {
+    state.drives = drives;
   },
 
-  add(state, drive) {
+  patchFilterValues(state, drive) {
     if (!state.filterValues.countries.includes(drive.from.country)) {
       state.filterValues.countries.push(drive.from.country);
     }
@@ -96,7 +105,15 @@ export const mutations = {
     ) {
       state.filterValues.cities.push(drive.from.country);
     }
+  },
+
+  add(state, drive) {
     state.pending.push(drive);
+  },
+
+  replace(state, drive) {
+    const index = state.drives.findIndex(d => d.id === drive.id);
+    Vue.set(state.drives, index, drive);
   },
 
   setLoaded(state, isLoaded) {
