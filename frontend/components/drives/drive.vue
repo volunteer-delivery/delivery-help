@@ -33,7 +33,7 @@
     <v-card-actions>
       <v-spacer />
 
-      <v-btn color="primary" @click="changeStatus">
+      <v-btn color="primary" outlined @click="changeStatus">
         {{ isPending ? 'В активні' : 'Завершити' }}
       </v-btn>
     </v-card-actions>
