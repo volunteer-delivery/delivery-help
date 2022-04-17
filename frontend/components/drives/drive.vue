@@ -30,6 +30,14 @@
       </a>
     </v-card-text>
 
+    <v-card-actions>
+      <v-spacer />
+
+      <v-btn color="primary" @click="changeStatus">
+        {{ isPending ? 'В активні' : 'Завершити' }}
+      </v-btn>
+    </v-card-actions>
+
     <v-bottom-sheet :value="isDriverDetailsDisplaying" persistent content-class="driver-details-modal">
       <DriverDetails
         :driver="drive.driver"
@@ -85,6 +93,10 @@ export default {
       return {
         'drive--verified': this.isVerified
       }
+    },
+
+    isPending() {
+      return this.drive.status === 'PENDING';
     }
   },
 
@@ -94,6 +106,15 @@ export default {
         await this.$nextTick();
         await this.$refs.detailsView.onOpen();
       }
+    }
+  },
+
+  methods: {
+    changeStatus() {
+      this.$store.dispatch('drives-store/changeStatus', {
+        drive: this.drive,
+        status: this.isPending ? 'ACTIVE' : 'FINISHED'
+      });
     }
   }
 }

@@ -1,6 +1,7 @@
 const { createServer } = require("http");
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const { driverRouter, rideRouter } = require('./routers');
 const { rideModel } = require('./models');
 const { initializeSocketServer } = require('./socket');
@@ -18,6 +19,7 @@ async function bootstrap() {
 
     const app = express();
     app.use(express.json());
+    app.use(cors());
     app.use('/api/v1', driverRouter, rideRouter);
 
     const httpServer = createServer(app);

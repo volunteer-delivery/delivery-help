@@ -95,6 +95,10 @@ export const actions = {
     return context.state.drives.filter((drive) => {
       return drive.driver.id === driver.id;
     });
+  },
+
+  async changeStatus(context, { drive, status }) {
+    await this.$axios.patch(`rides/${drive.id}/status`, { status });
   }
 };
 
