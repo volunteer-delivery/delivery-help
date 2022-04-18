@@ -1,0 +1,20 @@
+---
+- name: backend deploy
+  hosts: backend
+  remote_user: "{{ dh_username }}"
+  vars:
+    dh_username: "{{ lookup('env', 'ANSIBLE_USER') }}"
+    dh_projects_root_path: "/home/{{ dh_username }}/projects"
+    dh_current_release_path: "{{ dh_projects_root_path }}/delivery-help/current"
+    ansistrano_deploy_to: "{{ dh_projects_root_path }}/delivery-help"
+    ansistrano_version_dir: 'releases'
+    ansistrano_current_dir: 'current'
+    ansistrano_keep_releases: 0
+    ansistrano_deploy_via: 'git'
+    ansistrano_allow_anonymous_stats: false
+    ansistrano_git_repo: 'git@github.com:TArch64/dostavka-hub.git'
+    ansistrano_git_branch: 'master'
+    ansistrano_git_identity_key_remote_path: "/home/{{ dh_username }}/.ssh/id_rsa"
+    ansistrano_after_cleanup_tasks_file: '{{ playbook_dir }}/after_deploy.yaml'
+  roles:
+    - role: ansistrano.deploy
