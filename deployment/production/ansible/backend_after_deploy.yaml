@@ -1,7 +1,9 @@
 - name: setup environment variables
   become: true
   become_user: "{{ dh_username }}"
-  shell: cp {{ dh_projects_root_path }}/.env {{ dh_current_release_path }}/.env
+  shell: |
+    cp {{ dh_projects_root_path }}/.env {{ dh_current_release_path }}/.env && \
+    export $(cat {{ dh_current_release_path }}/.env | xargs)
 
 - name: Pull Images
   become: true
