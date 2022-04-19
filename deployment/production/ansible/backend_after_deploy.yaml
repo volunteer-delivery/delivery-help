@@ -1,11 +1,13 @@
 - name: setup environment variables
   become: true
   become_user: "{{ dh_username }}"
+  register: ps
   shell: cp {{ dh_projects_root_path }}/.env {{ dh_current_release_path }}/.env
 
 - name: Pull Images
   become: true
   become_user: "{{ dh_username }}"
+  register: ps
   shell: |
     cd {{ dh_current_release_path }}/deployment/production/backend && \
     export $(cat {{ dh_current_release_path }}/.env | xargs) && \
@@ -15,6 +17,7 @@
 - name: Restart
   become: true
   become_user: "{{ dh_username }}"
+  register: ps
   shell: |
     cd {{ dh_current_release_path }}/deployment/production/backend && \
     export $(cat {{ dh_current_release_path }}/.env | xargs) && \
