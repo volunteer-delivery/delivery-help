@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  backend:
+    restart: always
+    image: ${CR_BASE}/delivery-help-frontend-production:latest
+    command: npm run start
+    environment:
+      PORT: 8080
+      HOST: 0.0.0.0
+    ports:
+      - ${FRONTEND_PUBLIC_PORT}:8080

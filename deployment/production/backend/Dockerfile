@@ -1,9 +1,9 @@
 FROM node:16.14-alpine
-LABEL org.opencontainers.image.source https://github.com/TArch64/dostavka-hub
+LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY ./backend/package.json ./backend/package-lock.json ./
 RUN npm install
 
-COPY . ./
+COPY ./backend ./

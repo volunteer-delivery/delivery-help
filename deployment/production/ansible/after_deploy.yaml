@@ -2,11 +2,11 @@
   become: true
   become_user: "{{ dh_username }}"
   shell: bash -c "cp {{ dh_projects_root_path }}/.env {{ dh_current_release_path }}/.env"
-
-- name: up project
-  become: true
-  become_user: "{{ dh_username }}"
-  shell: bash -c "cd {{ dh_current_release_path }}/deployment/backend && up.sh"
-  register: ps
+#
+#- name: up project
+#  become: true
+#  become_user: "{{ dh_username }}"
+#  shell: bash -c "cd {{ dh_current_release_path }}/deployment/backend && up.sh"
+#  register: ps
 
 - debug: msg={{ ps.stdout }}
