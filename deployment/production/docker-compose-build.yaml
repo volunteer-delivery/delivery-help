@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  backend:
+    image: ${CR_BASE}/delivery-help-backend-production:latest
+    build:
+      context: ../../backend
+      dockerfile: ../deployment/production/backend/Dockerfile
