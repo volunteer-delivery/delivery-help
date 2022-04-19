@@ -8,14 +8,14 @@
   become_user: "{{ dh_username }}"
   shell: |
     cd {{ dh_current_release_path }}/deployment/production/backend && \
-    docker-compose -f ./docker-compose-up.yaml pull
+    docker compose -f ./docker-compose-up.yaml pull
 
 - name: Restart
   become: true
   become_user: "{{ dh_username }}"
   shell: |
     cd {{ dh_current_release_path }}/deployment/production/backend && \
-    docker-compose -f ./docker-compose-up.yaml down && \
-    docker-compose -f ./docker-compose-up.yaml up
+    docker compose -f ./docker-compose-up.yaml down && \
+    docker compose -f ./docker-compose-up.yaml up
 
 - debug: msg={{ ps.stdout }}
