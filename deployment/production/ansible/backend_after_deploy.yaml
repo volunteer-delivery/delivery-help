@@ -23,6 +23,6 @@
     export $(cat {{ dh_current_release_path }}/.env | xargs) && \
     docker compose -f ./docker-compose-up.yaml down && \
     docker compose -f ./docker-compose-up.yaml up -d && \
-    docker compose -f ./docker-compose-up.yaml logs backend
+    echo $(docker compose -f ./docker-compose-up.yaml logs)
 
 - debug: msg={{ ps.stdout }}
