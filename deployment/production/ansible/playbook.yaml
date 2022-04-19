@@ -12,9 +12,9 @@
     ansistrano_keep_releases: 0
     ansistrano_deploy_via: 'git'
     ansistrano_allow_anonymous_stats: false
-    ansistrano_git_repo: 'git@github.com:TArch64/dostavka-hub.git'
-    ansistrano_git_branch: 'master'
+    ansistrano_git_repo: 'git@github.com:TArch64/delivery-help.git'
+    ansistrano_git_branch: 'deployment'
     ansistrano_git_identity_key_remote_path: "/home/{{ dh_username }}/.ssh/id_rsa"
-    ansistrano_after_cleanup_tasks_file: '{{ playbook_dir }}/after_deploy.yaml'
+    ansistrano_after_cleanup_tasks_file: '{{ playbook_dir }}/backend_after_deploy.yaml'
   roles:
     - role: ansistrano.deploy
