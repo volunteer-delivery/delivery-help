@@ -19,6 +19,7 @@
     cd {{ dh_current_release_path }}/deployment/production/backend && \
     export $(cat {{ dh_current_release_path }}/.env | xargs) && \
     docker compose -f ./docker-compose-up.yaml down && \
-    docker compose -f ./docker-compose-up.yaml up
+    docker compose -f ./docker-compose-up.yaml up -d && \
+    docker compose -f ./docker-compose-up.yaml logs backend
 
 - debug: msg={{ ps.stdout }}
