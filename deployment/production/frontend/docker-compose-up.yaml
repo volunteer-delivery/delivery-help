@@ -5,8 +5,6 @@ services:
     restart: always
     image: ${CR_BASE}/delivery-help-frontend-production:latest
     command: npm run start
-    environment:
-      PORT: 8080
-      HOST: 0.0.0.0
+    env_file: ../../../.env
     ports:
-      - 80:8080
+      - 8080:8080
