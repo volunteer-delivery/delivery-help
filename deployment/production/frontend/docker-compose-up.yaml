@@ -9,4 +9,4 @@ services:
       PORT: 8080
       HOST: 0.0.0.0
     ports:
-      - ${FRONTEND_PUBLIC_PORT}:8080
+      - 80:8080

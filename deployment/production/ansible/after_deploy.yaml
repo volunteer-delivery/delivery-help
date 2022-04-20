@@ -9,7 +9,7 @@
   become_user: "{{ dh_username }}"
   register: ps
   shell: |
-    cd {{ dh_current_release_path }}/deployment/production/backend && \
+    cd {{ dh_config_path }} && \
     export $(cat {{ dh_current_release_path }}/.env | xargs) && \
     echo $CR_PASSWORD | docker login ghcr.io -u $CR_USERNAME --password-stdin && \
     docker compose -f ./docker-compose-up.yaml pull
@@ -19,10 +19,9 @@
   become_user: "{{ dh_username }}"
   register: ps
   shell: |
-    cd {{ dh_current_release_path }}/deployment/production/backend && \
+    cd {{ dh_config_path }} && \
     export $(cat {{ dh_current_release_path }}/.env | xargs) && \
     docker compose -f ./docker-compose-up.yaml down && \
-    docker compose -f ./docker-compose-up.yaml up -d && \
-    echo $(docker compose -f ./docker-compose-up.yaml logs)
+    docker compose -f ./docker-compose-up.yaml up -d
 
 - debug: msg={{ ps.stdout }}
