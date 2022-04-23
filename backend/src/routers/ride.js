@@ -1,16 +1,8 @@
 const { Router } = require('express');
 const { Error: MongooseError } = require('mongoose');
-const { driverModel, rideModel } = require('./models');
-const { broadcastNewRide, broadcastUpdateRide } = require('./socket');
-const { getRandomDriver, getRandomRides } = require('./seed');
-const e = require("express");
-
-const driverRouter = Router();
-
-driverRouter.get('/drivers', async (req, res) => {
-    const drivers = await driverModel.find({});
-    res.send({ "drivers": drivers });
-});
+const { driverModel, rideModel } = require('../models');
+const { broadcastNewRide, broadcastUpdateRide } = require('../socket');
+const { getRandomDriver, getRandomRides } = require('../seed');
 
 const rideRouter = Router();
 
@@ -62,4 +54,4 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
     }
 });
 
-module.exports = { driverRouter, rideRouter };
+module.exports = { rideRouter };
