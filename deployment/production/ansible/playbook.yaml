@@ -1,33 +1,12 @@
 ---
-- name: backend deploy
-  hosts: backend
+- name: app
+  hosts: app
   remote_user: "{{ dh_username }}"
   vars:
     dh_username: "{{ lookup('env', 'ANSIBLE_USER') }}"
     dh_projects_root_path: "/home/{{ dh_username }}/projects"
     dh_current_release_path: "{{ dh_projects_root_path }}/delivery-help/current"
-    dh_config_path: "{{ dh_current_release_path }}/deployment/production/backend"
-    ansistrano_deploy_to: "{{ dh_projects_root_path }}/delivery-help"
-    ansistrano_version_dir: 'releases'
-    ansistrano_current_dir: 'current'
-    ansistrano_keep_releases: 0
-    ansistrano_deploy_via: 'git'
-    ansistrano_allow_anonymous_stats: false
-    ansistrano_git_repo: 'git@github.com:TArch64/delivery-help.git'
-    ansistrano_git_branch: 'deployment'
-    ansistrano_git_identity_key_remote_path: "/home/{{ dh_username }}/.ssh/id_rsa"
-    ansistrano_after_cleanup_tasks_file: '{{ playbook_dir }}/after_deploy.yaml'
-  roles:
-    - role: ansistrano.deploy
-
-- name: frontend deploy
-  hosts: frontend
-  remote_user: "{{ dh_username }}"
-  vars:
-    dh_username: "{{ lookup('env', 'ANSIBLE_USER') }}"
-    dh_projects_root_path: "/home/{{ dh_username }}/projects"
-    dh_current_release_path: "{{ dh_projects_root_path }}/delivery-help/current"
-    dh_config_path: "{{ dh_current_release_path }}/deployment/production/frontend"
+    dh_config_path: "{{ dh_current_release_path }}/deployment/production"
     ansistrano_deploy_to: "{{ dh_projects_root_path }}/delivery-help"
     ansistrano_version_dir: 'releases'
     ansistrano_current_dir: 'current'

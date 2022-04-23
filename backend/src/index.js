@@ -32,6 +32,6 @@ async function bootstrap() {
     if (process.env.TELEGRAM_BOT_TOKEN) {
         initializeBotServer(process.env.TELEGRAM_BOT_TOKEN);
     }
-};
+}
 
 bootstrap();

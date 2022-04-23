@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  nginx:
+    restart: always
+    image: nginx:1.21.6-alpine
+    volumes:
+      - ./config.nginx:/etc/nginx/conf.d/default.conf
+    env_file: ../../.env
+    ports:
+      - 80:80
+
+  frontend:
+    restart: always
+    image: ${CR_BASE}/delivery-help-frontend-production:latest
+    command: npm run start
+    env_file: ../../.env
+
+  backend:
+    restart: always
+    image: ${CR_BASE}/delivery-help-backend-production:latest
+    command: npm run start
+    env_file: ../../.env
