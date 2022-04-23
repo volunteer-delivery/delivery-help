@@ -2,10 +2,6 @@ import colors from 'vuetify/lib/util/colors'
 
 const { FRONTEND_API_SERVER_URL, FRONTEND_API_BROWSER_URL, FRONTEND_API_SOCKET_URL } = process.env;
 
-console.log('FRONTEND_API_SERVER_URL', FRONTEND_API_SERVER_URL)
-console.log('FRONTEND_API_BROWSER_URL', FRONTEND_API_BROWSER_URL)
-console.log('FRONTEND_API_SOCKET_URL', FRONTEND_API_SOCKET_URL)
-
 export default {
   head: {
     title: 'DeliveryHelp',
