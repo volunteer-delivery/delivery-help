@@ -27,16 +27,6 @@
               <v-icon :color="verifiedIconColor">{{ verifiedIcon }}</v-icon>
               <span class="ml-2">{{ verifiedMessage }}</span>
             </p>
-
-            <v-dialog v-model="isPassportDisplaying" v-if="isVerified" content-class="driver-details__img-modal">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn plain v-bind="attrs" v-on="on">
-                  Показати тех паспорт авто
-                </v-btn>
-              </template>
-
-              <img style="max-height: 100%" src="/photo_2022-04-17_06-48-11.jpg" />
-            </v-dialog>
           </v-card-text>
 
           <v-divider />
@@ -96,7 +86,6 @@ export default {
 
   data: () => ({
     isLoading: true,
-    isPassportDisplaying: false,
     drives: []
   }),
 
@@ -126,13 +115,6 @@ export default {
 
 .driver-details-lock-scroll {
   overflow: hidden;
-}
-
-.driver-details__img-modal {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: max-content;
 }
 </style>
 
@@ -182,19 +164,5 @@ export default {
   border-left-color: #3F51B5;
   right: -12px;
   top: -5px;
-}
-
-.driver-details__img-modal-content {
-  flex-basis: 0;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.driver-details__img-modal-img {
-  flex-basis: 0;
-  min-height: 0;
-  flex-grow: 1;
-
 }
 </style>
