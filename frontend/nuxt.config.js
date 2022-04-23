@@ -7,7 +7,7 @@ export default {
     title: 'DeliveryHelp',
 
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ua'
     },
 
     meta: [
