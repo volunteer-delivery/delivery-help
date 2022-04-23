@@ -30,7 +30,8 @@ export default {
   modules: [
     '@nuxtjs/axios',
     'nuxt-socket-io',
-    ['@nuxtjs/toast', { duration: 5000 }]
+    ['@nuxtjs/toast', { duration: 5000 }],
+    'cookie-universal-nuxt'
   ],
 
   plugins: [
@@ -40,6 +41,10 @@ export default {
   server: {
     port: 8080,
     host: '0.0.0.0'
+  },
+
+  router: {
+    middleware: 'auth'
   },
 
   vuetify: {

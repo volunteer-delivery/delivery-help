@@ -7,6 +7,10 @@
 <script>
 export default {
   name: 'sign-in',
-  layout: 'auth'
+  layout: 'auth',
+
+  meta: {
+    auth: 'public'
+  }
 }
 </script>
