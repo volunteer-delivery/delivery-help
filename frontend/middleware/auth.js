@@ -9,7 +9,7 @@ function isBrowserCookieExists(cookieName) {
 
 const AUTH_COOKIE = 'dh.auth';
 
-export default function (context) {
+export default function(context) {
   const isPublicRoute = context.route.meta.some(meta => meta.auth === 'public');
   if (isPublicRoute) return;
 

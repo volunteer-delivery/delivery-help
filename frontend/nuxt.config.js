@@ -47,6 +47,10 @@ export default {
     middleware: 'auth'
   },
 
+  css: [
+    '~/styles/global.css'
+  ],
+
   vuetify: {
     theme: {
       dark: false,
