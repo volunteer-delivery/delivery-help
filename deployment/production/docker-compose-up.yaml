@@ -5,15 +5,15 @@ services:
     restart: always
     image: nginx:1.21.6-alpine
     volumes:
-      - ./config.nginx:/etc/nginx/conf.d/default.conf
-    env_file: ../../.env
+      - ./deployment/production/config.nginx:/etc/nginx/conf.d/default.conf
+    env_file: .env
     ports:
       - 80:80
 
   frontend:
     restart: always
     image: ${CR_BASE}/delivery-help-frontend:latest
-    env_file: ../../.env
+    env_file: .env
     environment:
       port: 8080
       host: 0.0.0.0
@@ -21,4 +21,4 @@ services:
   backend:
     restart: always
     image: ${CR_BASE}/delivery-help-backend:latest
-    env_file: ../../.env
+    env_file: .env

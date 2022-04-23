@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 export $(cat .env | xargs) && \
-ansible-playbook -i ./hosts ./ansible/playbook.yaml
+ssh -i "$REMOTE_KEY" "$REMOTE_USER@$REMOTE_HOST" "$(cat ./update-remote.sh)"
