@@ -1,8 +1,26 @@
 const { Router } = require('express');
+const { authService } = require('../services');
 
 const authRouter = Router();
 
-authRouter.post('/auth/sign-in', (req, res) => {
+const messages = {
+    invalidCredentials: 'Невірно введене імʼя користувача або пароль'
+}
+
+authRouter.post('/auth/sign-in', async (req, res) => {
+    const user = await authService.validateCredentials({
+        username: req.body.username.trim(),
+        password: req.body.password.trim()
+    });
+
+    if (!user) {
+        return res.status(403).json({
+            message: messages.invalidCredentials
+        });
+    }
+
+    const token = await authService.generateToken(user);
+    res.cookie('gh.auth', token, { signed: true, httpOnly: true });
     res.json({ success: true });
 });
 
