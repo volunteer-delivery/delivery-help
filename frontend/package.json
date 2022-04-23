@@ -1,7 +1,8 @@
 {
-  "name": "delivery-help",
+  "name": "delivery-help-frontend",
   "version": "1.0.0",
   "private": true,
+  "author": "Taras Turchenko (tarasturchenko1551@gmail.com)",
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
