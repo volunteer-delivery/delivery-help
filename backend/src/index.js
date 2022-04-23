@@ -9,8 +9,8 @@ const { initializeBotServer } = require('./bot');
 const { seedData } = require('./seed');
 
 async function bootstrap() {
-    const { MONGO_USERNAME, MONGO_PASSWORD } = process.env;
-    await mongoose.connect(`mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${MONGO_USERNAME}`);
+    const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST, MONGO_PORT } = process.env;
+    await mongoose.connect(`mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_USERNAME}`);
 
     const rideCount = await rideModel.count();
     if (rideCount == 0) {
@@ -32,6 +32,6 @@ async function bootstrap() {
     if (process.env.TELEGRAM_BOT_TOKEN) {
         initializeBotServer(process.env.TELEGRAM_BOT_TOKEN);
     }
-};
+}
 
 bootstrap();

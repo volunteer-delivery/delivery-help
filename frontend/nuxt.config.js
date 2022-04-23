@@ -4,16 +4,19 @@ const { FRONTEND_API_SERVER_URL, FRONTEND_API_BROWSER_URL, FRONTEND_API_SOCKET_U
 
 export default {
   head: {
-    title: 'ДоставкаHUB',
+    title: 'DeliveryHelp',
+
     htmlAttrs: {
       lang: 'en'
     },
+
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
+
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
@@ -34,6 +37,11 @@ export default {
     '~/plugins/api-socket'
   ],
 
+  server: {
+    port: 8080,
+    host: '0.0.0.0'
+  },
+
   vuetify: {
     theme: {
       dark: false,
@@ -50,8 +58,8 @@ export default {
   },
 
   axios: {
-    baseUrl: FRONTEND_API_SERVER_URL + '/api/v1',
-    browserBaseUrl: FRONTEND_API_BROWSER_URL + '/api/v1',
+    baseUrl: FRONTEND_API_SERVER_URL + '/v1',
+    browserBaseUrl: FRONTEND_API_BROWSER_URL + '/v1',
   },
 
   io: {
