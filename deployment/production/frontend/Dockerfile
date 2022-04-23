@@ -17,3 +17,5 @@ LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
 WORKDIR /app
 
 COPY --from=builder /app /app/
+
+CMD ["npm", "run", "start"]

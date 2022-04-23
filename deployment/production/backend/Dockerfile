@@ -7,3 +7,5 @@ COPY ./backend/package.json ./backend/package-lock.json ./
 RUN npm install
 
 COPY ./backend ./
+
+CMD ["npm", "run", "start"]

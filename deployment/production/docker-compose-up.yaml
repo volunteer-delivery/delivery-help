@@ -12,12 +12,10 @@ services:
 
   frontend:
     restart: always
-    image: ${CR_BASE}/delivery-help-frontend-production:latest
-    command: npm run start
+    image: ${CR_BASE}/delivery-help-frontend:latest
     env_file: ../../.env
 
   backend:
     restart: always
-    image: ${CR_BASE}/delivery-help-backend-production:latest
-    command: npm run start
+    image: ${CR_BASE}/delivery-help-backend:latest
     env_file: ../../.env
