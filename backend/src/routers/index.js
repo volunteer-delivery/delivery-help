@@ -1,5 +1,5 @@
 module.exports = {
-    ...require('./driver'),
-    ...require('./ride'),
-    ...require('./auth'),
+    ...require('./driver-router'),
+    ...require('./ride-router'),
+    ...require('./auth-router'),
 };
