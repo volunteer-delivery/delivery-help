@@ -58,8 +58,8 @@ export default {
   },
 
   axios: {
-    baseUrl: FRONTEND_API_SERVER_URL + '/api/v1',
-    browserBaseUrl: FRONTEND_API_BROWSER_URL + '/api/v1',
+    baseUrl: FRONTEND_API_SERVER_URL + '/v1',
+    browserBaseUrl: FRONTEND_API_BROWSER_URL + '/v1',
   },
 
   io: {
