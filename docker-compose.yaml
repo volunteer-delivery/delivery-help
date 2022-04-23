@@ -5,15 +5,12 @@ services:
     restart: always
     build: ./backend
     ports:
-      - ${BACKEND_PUBLIC_PORT}:8080
+      - 8000:8080
     command: npm run dev
     volumes:
       - ./backend/src/:/app/src
       - data_backend_libs:/app/node_modules
-    environment:
-      MONGO_USERNAME: ${MONGO_USERNAME}
-      MONGO_PASSWORD: ${MONGO_PASSWORD}
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    env_file: .env
     depends_on:
       - mongo
 
@@ -21,24 +18,18 @@ services:
     image: mongo:5.0.7
     volumes:
       - ./db_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    env_file: .env
 
   frontend:
     restart: always
     build: ./frontend
     ports:
-      - ${FRONTEND_PUBLIC_PORT}:8080
+      - 8080:8080
     command: npm run dev
     volumes:
       - ./frontend:/app
       - data_frontend_libs:/app/node_modules
-    environment:
-      PORT: 8080
-      HOST: 0.0.0.0
-    env_file:
-      - ./.env
+    env_file: .env
 
 volumes:
   data_frontend_libs:
