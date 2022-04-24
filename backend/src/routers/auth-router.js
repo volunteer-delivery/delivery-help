@@ -16,7 +16,7 @@ authRouter.post('/auth/sign-in', async (req, res) => {
     });
 
     if (!user) {
-        return res.status(403).json({
+        return res.status(422).json({
             message: messages.invalidCredentials
         });
     }

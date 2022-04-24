@@ -4,7 +4,7 @@ const { driverModel, rideModel, userModel } = require('./models');
 const userList = [
     {
         name: 'beta',
-        password: bcrypt.hashSync('password', 10)
+        _password: bcrypt.hashSync('password', 10)
     }
 ];
 

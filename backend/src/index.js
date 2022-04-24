@@ -8,6 +8,7 @@ const { rideModel } = require('./models');
 const { initializeSocketServer } = require('./socket');
 const { initializeBotServer } = require('./bot');
 const { seedData } = require('./seed');
+const { authMiddleware } = require('./middlewares');
 
 const {
     MONGO_USERNAME,
@@ -31,6 +32,8 @@ async function bootstrap() {
     app.use(cookieParser(BACKEND_SECRET));
     app.use(express.json());
     app.use(cors({ origin: BACKEND_FRONTEND_ORIGIN, credentials: true }));
+
+    app.use('/api/v1', authMiddleware);
     app.use('/api/v1', driverRouter, rideRouter, authRouter);
 
     const httpServer = createServer(app);

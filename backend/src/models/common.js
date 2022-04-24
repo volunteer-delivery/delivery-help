@@ -10,6 +10,7 @@ function preparePublicSchema(schema) {
             delete converted._id;
             delete converted.__v;
             delete converted._telegramId;
+            delete converted._password;
         }
     });
 }
