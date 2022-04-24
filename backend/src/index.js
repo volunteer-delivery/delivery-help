@@ -17,7 +17,7 @@ const {
     MONGO_PORT,
     BACKEND_SECRET,
     TELEGRAM_BOT_TOKEN,
-    BACKEND_FRONTEND_ORIGIN
+    FRONTEND_ORIGIN
 } = process.env;
 
 async function bootstrap() {
@@ -31,7 +31,7 @@ async function bootstrap() {
 
     app.use(cookieParser(BACKEND_SECRET));
     app.use(express.json());
-    app.use(cors({ origin: BACKEND_FRONTEND_ORIGIN, credentials: true }));
+    app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 
     app.use('/api/v1', authMiddleware);
     app.use('/api/v1', driverRouter, rideRouter, authRouter);
