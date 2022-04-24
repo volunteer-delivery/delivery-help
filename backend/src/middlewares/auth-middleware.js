@@ -6,12 +6,13 @@ async function authMiddleware(req, res, next) {
 
     const token = req.signedCookies['dh.auth'];
     const tokenPayload = token && await jwtService.decodeOrNull(token);
+    const user = tokenPayload && await userModel.findById(tokenPayload.userId).exec();
 
-    if (!tokenPayload) {
+    if (!user) {
         return res.status(403).send();
     }
 
-    req.user = await userModel.findById(tokenPayload.userId).exec();
+    req.user = user;
     next();
 }
 
