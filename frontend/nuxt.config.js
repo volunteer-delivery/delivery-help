@@ -22,6 +22,10 @@ export default {
         ]
     },
 
+    build: {
+        extractCSS: true
+    },
+
     buildModules: [
         '@nuxtjs/vuetify',
         '@nuxtjs/device'
