@@ -9,16 +9,17 @@ const { initializeSocketServer } = require('./socket');
 const { initializeBotServer } = require('./bot');
 const { seedData } = require('./seed');
 
-async function bootstrap() {
-    const {
-        MONGO_USERNAME,
-        MONGO_PASSWORD,
-        MONGO_HOST,
-        MONGO_PORT,
-        BACKEND_SECRET,
-        TELEGRAM_BOT_TOKEN
-    } = process.env;
+const {
+    MONGO_USERNAME,
+    MONGO_PASSWORD,
+    MONGO_HOST,
+    MONGO_PORT,
+    BACKEND_SECRET,
+    TELEGRAM_BOT_TOKEN,
+    BACKEND_FRONTEND_ORIGIN
+} = process.env;
 
+async function bootstrap() {
     await mongoose.connect(`mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_USERNAME}`);
 
     const rideCount = await rideModel.count();
@@ -29,7 +30,7 @@ async function bootstrap() {
 
     app.use(cookieParser(BACKEND_SECRET));
     app.use(express.json());
-    app.use(cors());
+    app.use(cors({ origin: BACKEND_FRONTEND_ORIGIN, credentials: true }));
     app.use('/api/v1', driverRouter, rideRouter, authRouter);
 
     const httpServer = createServer(app);

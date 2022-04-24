@@ -5,7 +5,9 @@ const authRouter = Router();
 
 const messages = {
     invalidCredentials: 'Невірно введене імʼя користувача або пароль'
-}
+};
+
+const { BACKEND_AUTH_EXPIRATION } = process.env;
 
 authRouter.post('/auth/sign-in', async (req, res) => {
     const user = await authService.validateCredentials({
@@ -20,7 +22,13 @@ authRouter.post('/auth/sign-in', async (req, res) => {
     }
 
     const token = await authService.generateToken(user);
-    res.cookie('gh.auth', token, { signed: true, httpOnly: true });
+
+    res.cookie('dh.auth', token, {
+        signed: true,
+        httpOnly: true,
+        maxAge: Number(BACKEND_AUTH_EXPIRATION)
+    });
+
     res.json({ success: true });
 });
 

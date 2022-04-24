@@ -15,7 +15,9 @@ const authService = {
     },
 
     generateToken(user) {
-        return jwtService.generate({ userId: user.id }, { expiresIn: BACKEND_AUTH_EXPIRATION })
+        return jwtService.generate({ userId: user.id }, {
+            expiresIn: Number(BACKEND_AUTH_EXPIRATION)
+        })
     }
 };
 
