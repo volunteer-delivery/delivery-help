@@ -19,7 +19,7 @@ const jwtService = {
         });
     },
 
-    decodeSafe(token) {
+    decodeOrNull(token) {
         return this.decode(token).catch(() => null);
     }
 };
