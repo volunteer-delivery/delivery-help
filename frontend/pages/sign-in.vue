@@ -67,6 +67,7 @@ export default {
             try {
                 this.isSubmitting = true;
                 await this.$store.dispatch('auth-store/signIn', this.credentials);
+                await this.$router.push('/');
             } catch (error) {
                 this.$toast.show(error.message);
             } finally {
