@@ -9,7 +9,7 @@ services:
     command: npm run dev
     volumes:
       - ./backend/src/:/app/src
-      - data_backend_libs:/app/node_modules
+      - ./backend/node_modules:/app/node_modules
     env_file: .env
     depends_on:
       - mongo
@@ -28,11 +28,5 @@ services:
     command: npm run dev
     volumes:
       - ./frontend:/app
-      - data_frontend_libs:/app/node_modules
+      - ./frontend/node_modules:/app/node_modules
     env_file: .env
-
-volumes:
-  data_frontend_libs:
-    driver: local
-  data_backend_libs:
-    driver: local

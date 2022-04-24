@@ -1,19 +1,19 @@
 export const state = () => ({
-  extra: null,
-  extraOpened: false
+    extra: null,
+    extraOpened: false
 });
 
 export const mutations = {
-  setExtra(state, extra) {
-    state.extra = extra;
-    state.extraOpened = false;
-  },
+    setExtra(state, extra) {
+        state.extra = extra;
+        state.extraOpened = false;
+    },
 
-  openExtra(state) {
-    state.extraOpened = true;
-  },
+    openExtra(state) {
+        state.extraOpened = true;
+    },
 
-  closeExtra(state) {
-    state.extraOpened = false;
-  }
+    closeExtra(state) {
+        state.extraOpened = false;
+    }
 };

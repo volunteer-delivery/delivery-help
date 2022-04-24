@@ -1,4 +1,12 @@
-const { driverModel, rideModel } = require('./models');
+const bcrypt = require('bcrypt');
+const { driverModel, rideModel, userModel } = require('./models');
+
+const userList = [
+    {
+        name: 'beta',
+        _password: bcrypt.hashSync('password', 10)
+    }
+];
 
 const driverList = [
     {
@@ -61,15 +69,18 @@ const vehicleList = ['CAR', 'VAN', 'TRUCK', 'CAR', 'CAR', 'CAR', 'CAR' ];
 const statusList = ['PENDING', 'ACTIVE', 'FINISHED', 'PENDING', 'PENDING', 'PENDING', 'PENDING'];
 
 async function seedData() {
+    await userModel.insertMany(userList);
+
     const drivers = await driverModel.insertMany(driverList);
-    await drivers.map((driver, i) => rideModel.create({
+
+    await Promise.all(drivers.map((driver, i) => rideModel.create({
         driver: driver._id,
         from: fromList[i],
         destination: destinationList[i],
         departureTime: timeList[i],
         vehicle: vehicleList[i],
         status: statusList[i]
-    }));
+    })));
 }
 
 function getRandomElem(arr) {
@@ -80,7 +91,7 @@ function getRandomDriver() {
     return {
         name: getRandomElem(['Слава', 'Ніколай', 'Максим', 'Олег', 'Олена', 'Сергій', 'Марія']),
         phone: `+380${Math.floor(1000000 + Math.random() * 9000000)}`,
-        grade: getRandomElem['NOT VERIFIED', 'VERIFIED']
+        grade: getRandomElem(['NOT VERIFIED', 'VERIFIED'])
     }
 }
 

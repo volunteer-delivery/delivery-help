@@ -1,22 +1,14 @@
 const { Router } = require('express');
 const { Error: MongooseError } = require('mongoose');
-const { driverModel, rideModel } = require('./models');
-const { broadcastNewRide, broadcastUpdateRide } = require('./socket');
-const { getRandomDriver, getRandomRides } = require('./seed');
-const e = require("express");
-
-const driverRouter = Router();
-
-driverRouter.get('/drivers', async (req, res) => {
-    const drivers = await driverModel.find({});
-    res.send({ "drivers": drivers });
-});
+const { driverModel, rideModel } = require('../models');
+const { broadcastNewRide, broadcastUpdateRide } = require('../socket');
+const { getRandomDriver, getRandomRides } = require('../seed');
 
 const rideRouter = Router();
 
 rideRouter.get('/rides', async (req, res) => {
     const rides = await rideModel.find({}).populate('driver');
-    res.send({ "rides": rides });
+    res.send({ 'rides': rides });
 });
 
 rideRouter.get('/rides/add-random', async (req, res) => {
@@ -28,7 +20,7 @@ rideRouter.get('/rides/add-random', async (req, res) => {
     await ride.populate('driver');
 
     broadcastNewRide(ride);
-    res.send({ "status": "success" });
+    res.send({ 'status': 'success' });
 });
 
 rideRouter.patch('/rides/:id/status', async (req, res) => {
@@ -38,11 +30,11 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
         console.log(id);
         const ride = await rideModel.findById(id);
         if (!ride) {
-            return res.status(404).send({ "message": "Ride not found" });
+            return res.status(404).send({ 'message': 'Ride not found' });
         }
 
         if (!status) {
-            return res.status(406).send({ "message": "Status not provided" });
+            return res.status(406).send({ 'message': 'Status not provided' });
         }
 
         ride.status = status;
@@ -50,16 +42,16 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
         await ride.populate('driver');
         broadcastUpdateRide(ride);
 
-        res.send({ "message": "Status successfully changed", "ride": ride });
+        res.send({ 'message': 'Status successfully changed', 'ride': ride });
     } catch (error) {
         if (error instanceof MongooseError.ValidationError) {
-            return res.status(406).send({ "message": `${status} is invalid status`, error });
+            return res.status(406).send({ 'message': `${status} is invalid status`, error });
         } else if (error instanceof MongooseError.CastError) {
-            return res.status(406).send({ "message": `${id} is invalid ride id` });
+            return res.status(406).send({ 'message': `${id} is invalid ride id` });
         } else {
-            return res.status(500).send({ "message": "Something goes wrong!", "error": error });
+            return res.status(500).send({ 'message': 'Something goes wrong!', 'error': error });
         }
     }
 });
 
-module.exports = { driverRouter, rideRouter };
+module.exports = { rideRouter };
