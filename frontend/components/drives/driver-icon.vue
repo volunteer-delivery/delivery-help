@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import { mdiAccount, mdiAccountCheck } from '@mdi/js';
+
 export default {
     name: 'driver-icon',
 
@@ -13,7 +15,7 @@ export default {
 
     computed: {
         iconName() {
-            return this.verified ? 'mdi-account-check' : 'mdi-account';
+            return this.verified ? mdiAccountCheck : mdiAccount;
         },
 
         iconClasses() {

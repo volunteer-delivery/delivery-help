@@ -8,7 +8,7 @@
                     </v-card-title>
 
                     <v-btn icon @click="close">
-                        <v-icon>mdi-close</v-icon>
+                        <v-icon>{{ $options.icons.mdiClose }}</v-icon>
                     </v-btn>
                 </div>
 
@@ -55,13 +55,21 @@
 </template>
 
 <script>
+import { mdiCheck, mdiClose } from '@mdi/js';
 import DrivePoint from '@/components/drives/drive-point';
 import { formatDate } from '@/utils/format-date';
 
 export default {
     name: 'driver-details',
 
-    components: { DrivePoint },
+    components: {
+        DrivePoint
+    },
+
+    icons: {
+        mdiClose,
+        mdiCheck
+    },
 
     props: {
         driver: Object
@@ -73,7 +81,7 @@ export default {
         },
 
         verifiedIcon() {
-            return this.isVerified ? 'mdi-check' : 'mdi-close';
+            return this.isVerified ? mdiCheck : mdiClose;
         },
 
         verifiedIconColor() {

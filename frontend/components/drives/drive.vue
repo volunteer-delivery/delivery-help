@@ -20,12 +20,12 @@
             </button>
 
             <p class="subtitle-2 d-flex align-center">
-                <v-icon class="mr-1" dense>mdi-car</v-icon>
+                <v-icon class="mr-1" dense>{{ $options.icons.mdiCar }}</v-icon>
                 {{ driverVehicle }}
             </p>
 
             <a class="subtitle-2 d-flex align-center drive__phone" :href="driverPhone">
-                <v-icon class="mr-1 drive__phone-icon" dense>mdi-phone</v-icon>
+                <v-icon class="mr-1 drive__phone-icon" dense>{{ $options.icons.mdiPhone }}</v-icon>
                 {{ drive.driver.phone }}
             </a>
         </v-card-text>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { mdiCar, mdiPhone } from '@mdi/js';
 import DrivePoint from '~/components/drives/drive-point';
 import DriverIcon from '~/components/drives/driver-icon';
 import { formatVehicle } from '~/utils/format-vehicle';
@@ -62,6 +63,11 @@ export default {
         DriverDetails,
         DriverIcon,
         DrivePoint
+    },
+
+    icons: {
+        mdiCar,
+        mdiPhone
     },
 
     props: {

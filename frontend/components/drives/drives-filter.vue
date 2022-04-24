@@ -48,8 +48,8 @@
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
                         :value="departureTimeTriggerText"
+                        :prepend-icon="$options.icons.mdiCalendar"
                         label="Дата поїздки"
-                        prepend-icon="mdi-calendar"
                         readonly
                         v-bind="attrs"
                         v-on="on"
@@ -81,6 +81,7 @@
 <script>
 import { formatVehicle } from '~/utils/format-vehicle';
 import { formatDate } from '~/utils/format-date';
+import { mdiCalendar } from '@mdi/js';
 
 function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
@@ -88,6 +89,10 @@ function clone(obj) {
 
 export default {
     name: 'drives-filter',
+
+    icons: {
+        mdiCalendar
+    },
 
     vehicles: ['CAR', 'VAN', 'TRUCK'].map(type => ({
         value: type,

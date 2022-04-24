@@ -64,6 +64,12 @@ export default {
                     primary: colors.indigo.base
                 }
             }
+        },
+        icons: {
+            iconfont: 'mdiSvg',
+        },
+        defaultAssets: {
+            icons: false
         }
     },
 

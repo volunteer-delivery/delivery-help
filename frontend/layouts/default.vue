@@ -54,7 +54,7 @@
                         />
 
                         <v-btn class="layout__close-navigation-extra" icon @click="closeNavigationExtra">
-                            <v-icon>mdi-close</v-icon>
+                            <v-icon>{{ $options.icons.mdiClose }}</v-icon>
                         </v-btn>
                     </v-card>
                 </v-bottom-sheet>
@@ -64,16 +64,22 @@
 </template>
 
 <script>
+import { mdiCar, mdiClose, mdiPlay } from '@mdi/js';
+
 export default {
+    icons: {
+        mdiClose
+    },
+
     navItems: [
         {
             title: 'Нові',
-            icon: 'mdi-car',
+            icon: mdiCar,
             url: '/'
         },
         {
             title: 'Активні',
-            icon: 'mdi-play',
+            icon: mdiPlay,
             url: '/active'
         }
     ],
