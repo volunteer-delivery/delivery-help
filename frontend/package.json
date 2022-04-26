@@ -1,24 +1,24 @@
 {
-  "name": "delivery-help-frontend",
-  "version": "1.0.0",
-  "private": true,
-  "author": "Taras Turchenko (tarasturchenko1551@gmail.com)",
-  "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
-  },
-  "dependencies": {
-    "@mdi/js": "^6.6.96",
-    "@nuxtjs/axios": "^5.13.6",
-    "@nuxtjs/device": "^2.1.0",
-    "@nuxtjs/toast": "^3.3.1",
-    "@nuxtjs/vuetify": "^1.12.1",
-    "cookie-universal-nuxt": "^2.1.5",
-    "core-js": "^3.15.1",
-    "nuxt": "^2.15.7",
-    "nuxt-socket-io": "^2.0.3",
-    "vuetify": "^2.5.5"
-  }
+    "name": "delivery-help-frontend",
+    "version": "1.0.0",
+    "private": true,
+    "author": "Taras Turchenko (tarasturchenko1551@gmail.com)",
+    "scripts": {
+        "dev": "nuxt",
+        "build": "nuxt build",
+        "start": "nuxt start",
+        "generate": "nuxt generate"
+    },
+    "dependencies": {
+        "@mdi/js": "^6.6.96",
+        "@nuxtjs/axios": "^5.13.6",
+        "@nuxtjs/device": "^2.1.0",
+        "@nuxtjs/toast": "^3.3.1",
+        "@nuxtjs/vuetify": "^1.12.1",
+        "cookie-universal-nuxt": "^2.1.5",
+        "core-js": "^3.15.1",
+        "nuxt": "^2.15.7",
+        "nuxt-socket-io": "^2.0.3",
+        "vuetify": "^2.5.5"
+    }
 }
