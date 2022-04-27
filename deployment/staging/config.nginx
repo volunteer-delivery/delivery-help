@@ -1,7 +1,5 @@
 server {
     server_name staging.delivery-help.com.ua;
-    listen 443 ssl default_server;
-    listen [::]:443 ssl default_server;
     access_log  off;
     autoindex off;
     client_max_body_size 100M;
