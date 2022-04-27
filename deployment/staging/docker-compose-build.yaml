@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  backend:
+    image: ${CR_BASE}/delivery-help-backend-staging:latest
+    build:
+      context: ../..
+      dockerfile: ./deployment/staging/backend/Dockerfile
+
+  frontend:
+    image: ${CR_BASE}/delivery-help-frontend-staging:latest
+    build:
+      context: ../..
+      dockerfile: ./deployment/staging/frontend/Dockerfile

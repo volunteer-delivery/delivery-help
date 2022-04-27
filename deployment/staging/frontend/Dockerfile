@@ -7,7 +7,7 @@ COPY ./frontend/package.json ./frontend/package-lock.json ./
 RUN npm install --production
 
 COPY ./frontend/. ./
-COPY ./deployment/production/frontend/.env /secrets/.env
+COPY ./deployment/staging/frontend/.env /secrets/.env
 
 RUN export $(cat /secrets/.env | xargs) && npm run build
 

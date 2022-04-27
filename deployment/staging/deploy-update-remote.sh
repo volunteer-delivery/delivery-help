@@ -1,7 +1,7 @@
 project_repository='git@github.com:TArch64/delivery-help.git';
 project_branch='main';
 project_dir="$HOME/projects/delivery-help";
-docker_compose_file="$project_dir/deployment/production/docker-compose-up.yaml";
+docker_compose_file="$project_dir/deployment/staging/docker-compose-up.yaml";
 
 function exec_docker() {
     docker compose --file "$docker_compose_file"  --project-directory "$project_dir" $1
