@@ -23,7 +23,26 @@ export default {
     },
 
     build: {
-        extractCSS: true
+        extractCSS: true,
+
+        babel: {
+            presets({ isServer }, [ preset, options ]) {
+                if (!isServer && preset.includes('@nuxt/babel-preset-app')) {
+                    options.targets = {
+                        browsers: [
+                            'last 4 chrome version',
+                            'last 4 firefox version',
+                            'last 4 edge version',
+                            'last 1 and_chr version',
+                            'ios_saf >= 14.5',
+                            'Safari >= 13.1',
+                            'Firefox ESR',
+                            'not dead'
+                        ]
+                    };
+                }
+            }
+        }
     },
 
     buildModules: [
