@@ -4,7 +4,6 @@ server {
     autoindex off;
     client_max_body_size 100M;
     charset utf-8;
-
     root /app;
 
     location /api/ {
@@ -27,6 +26,9 @@ server {
     }
 
     location / {
+        gzip_static on;
+        expires 365d;
+        add_header Cache-Control "public";
         try_files $uri $uri/index.html;
     }
 }
