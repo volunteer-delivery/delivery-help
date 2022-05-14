@@ -3,6 +3,9 @@ server {
     access_log  off;
     autoindex off;
     client_max_body_size 100M;
+    charset utf-8;
+
+    root /app;
 
     location /api/ {
         proxy_pass http://backend:8080/api/;
@@ -16,7 +19,14 @@ server {
         proxy_set_header Host $host;
     }
 
+    location ~* \.(?:ico|gif|jpe?g|png|woff2?|eot|otf|ttf|svg|js|css)$ {
+        add_header Pragma public;
+        add_header Cache-Control "public";
+
+        try_files $uri $uri/;
+    }
+
     location / {
-        proxy_pass http://frontend:8080/;
+        try_files $uri $uri/index.html;
     }
 }
