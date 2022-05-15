@@ -1,12 +1,19 @@
 server {
     listen 80;
-    server_name 3.143.224.240;
-    return 301 https://staging.delivery-help.com.ua$request_uri;
+    server_name $NGINX_IP;
+
+    location =/ {
+        return 301 https://$NGINX_DOMAIN$request_uri;
+    }
+
+    location / {
+        return 301 https://$NGINX_DOMAIN$request_uri;
+    }
 }
 
 server {
     listen 80 default_server;
-    server_name staging.delivery-help.com.ua;
+    server_name $NGINX_DOMAIN;
 
     autoindex off;
     client_max_body_size 100M;
