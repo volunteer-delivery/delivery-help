@@ -40,6 +40,10 @@ server {
         gzip_static on;
         expires 365d;
         add_header Cache-Control "public";
-        try_files $uri $uri/index.html /;
+        try_files $uri $uri/index.html @home;
+    }
+
+    location @home {
+        return 301 /;
     }
 }
