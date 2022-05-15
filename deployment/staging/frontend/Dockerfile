@@ -20,4 +20,4 @@ COPY --from=builder /app/dist /app/
 COPY --from=builder /secrets/.env /secrets/
 COPY ./deployment/staging/config.nginx /etc/nginx/templates/default.conf.template
 
-CMD ['export', '$(cat /secrets/.env | xargs)', '&&', 'nginx', '-g', 'daemon off;']
+CMD ['export $(cat /secrets/.env | xargs)', '&&', 'nginx', '-g', 'daemon off;']
