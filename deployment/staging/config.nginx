@@ -1,7 +1,10 @@
 server {
     listen 80;
     server_name $NGINX_IP;
-    return 302 https://$NGINX_DOMAIN$request_uri;
+
+    location / {
+        return 302 https://$NGINX_DOMAIN$request_uri;
+    }
 }
 
 server {
@@ -37,6 +40,6 @@ server {
         gzip_static on;
         expires 365d;
         add_header Cache-Control "public";
-        try_files $uri $uri/index.html;
+        try_files $uri $uri/index.html /;
     }
 }
