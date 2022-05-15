@@ -1,10 +1,4 @@
 server {
-    listen 80;
-    server_name $NGINX_IP;
-    return 301 https://$NGINX_DOMAIN$request_uri;
-}
-
-server {
     listen 80 default_server;
     server_name $NGINX_DOMAIN;
 
