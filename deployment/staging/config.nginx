@@ -1,7 +1,14 @@
 server {
-    listen 80 http;
+    listen 80;
     server_name $NGINX_IP;
-    return 301 https://$NGINX_DOMAIN$request_uri;
+
+    location =/ {
+        return 301 https://$NGINX_DOMAIN$request_uri;
+    }
+
+    location / {
+        return 301 https://$NGINX_DOMAIN$request_uri;
+    }
 }
 
 server {
@@ -27,7 +34,6 @@ server {
 
     location ~* \.(?:ico|gif|jpe?g|png|woff2?|eot|otf|ttf|svg|js|css)$ {
         add_header Pragma public;
-        expires 365d;
         add_header Cache-Control "public";
 
         try_files $uri $uri/;
