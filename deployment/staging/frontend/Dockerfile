@@ -17,6 +17,8 @@ LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
 WORKDIR /app
 
 COPY --from=builder /app/dist /app/
+COPY --from=builder /secrets/.env /secrets/
+RUN export $(cat /secrets/.env | xargs)
 COPY ./deployment/staging/config.nginx /etc/nginx/templates/default.conf.template
 
 CMD ["nginx", "-g", "daemon off;"]
