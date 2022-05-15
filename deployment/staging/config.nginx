@@ -1,13 +1,12 @@
 server {
     listen 80;
-    server_name 3.143.224.240;
-
-    return 302 https://staging.delivery-help.com.ua$request_uri;
+    server_name $NGINX_IP;
+    return 302 https://$NGINX_DOMAIN$request_uri;
 }
 
 server {
     listen 80 default_server;
-    server_name staging.delivery-help.com.ua;
+    server_name $NGINX_DOMAIN;
 
     access_log  off;
     autoindex off;
