@@ -1,6 +1,6 @@
 import colors from 'vuetify/lib/util/colors';
 
-const { FRONTEND_API_URL, FRONTEND_SOCKET_URL, FRONTEND_DOMAIN } = process.env;
+const { FRONTEND_API_URL, FRONTEND_SOCKET_URL } = process.env;
 
 const BROWSERSLIST = [
     'last 4 chrome version',
@@ -13,41 +13,24 @@ const BROWSERSLIST = [
     'not dead'
 ];
 
-const scripts = [];
-
-if (FRONTEND_DOMAIN) {
-    scripts.push({
-        hid: 'ip-redirect',
-        type: 'text/javascript',
-        charset: 'utf-8',
-        innerHTML: [
-            `console.log('Redirecting to domain')`,
-            `if(window.location.hostname!=='${FRONTEND_DOMAIN}'){`,
-            `window.location='https://${FRONTEND_DOMAIN}'`,
-            '}'
-        ].join('')
-    });
-}
-
 export default {
     ssr: false,
     target: 'static',
 
     head: {
         title: 'DeliveryHelp',
+
         htmlAttrs: { lang: 'ua' },
-        __dangerouslyDisableSanitizers: ['script'],
 
         meta: [
             { charset: 'utf-8' },
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+            { 'http-equiv': 'Content-Security-Policy', content: "default-src 'unsafe-inline' 'self'; style-src-elem 'unsafe-inline' 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;" }
         ],
 
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-        ],
-
-        script: scripts
+        ]
     },
 
     build: {
