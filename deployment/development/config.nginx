@@ -19,13 +19,8 @@ server {
         proxy_set_header Host $host;
     }
 
-    location ~* \.(?:ico|gif|jpe?g|png|woff2?|eot|otf|ttf|svg|js|css)$ {
-        add_header Pragma public;
-        add_header Cache-Control "public";
-        try_files $uri $uri/;
-    }
-
     location / {
         proxy_pass http://frontend:8080/;
+        proxy_cache off;
     }
 }
