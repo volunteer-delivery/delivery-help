@@ -1,9 +1,9 @@
 <template>
-    <v-card :class="cardClasses" elevation="1">
+    <v-card class="drive" :class="cardClasses" elevation="1">
         <v-card-text>
-            <div class="path mb-3">
-                <div class="mb-8 d-flex align-end">
-                    <DrivePoint class="path__point path__point--from" :point="drive.from"/>
+            <div class="path mb-3 font-weight-medium">
+                <div class="mb-8 d-flex align-end path__point">
+                    <DrivePoint class="ma-0" :point="drive.from"/>
                     <span class="path__point-date">, {{ departureTime }}</span>
                 </div>
                 <div class="path__arrow"/>
@@ -127,6 +127,18 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 600px) {
+    .drive {
+        border-radius: 0;
+        box-shadow: none !important;
+        border-bottom: 1px solid rgb(0 0 0 / 20%);
+    }
+
+    .drive:last-child {
+        border-bottom: none
+    }
+}
+
 .drive--verified {
     overflow: hidden;
     position: relative;
@@ -136,7 +148,7 @@ export default {
     content: "";
     background-image: url("/verified-stamp.png");
     background-size: contain;
-    transform: rotate(22deg) translate(-4px, -12px);
+    transform: rotate(22deg) translate(3px, 11px);
     width: 100px;
     height: 90px;
     position: absolute;
@@ -163,7 +175,7 @@ export default {
 }
 
 .path::after {
-    bottom: 10px;
+    bottom: 11px;
     height: 18px;
 }
 
@@ -182,13 +194,13 @@ export default {
     display: flex;
     margin: 0;
     color: #424242;
-    font-size: 16px;
-    line-height: 16px;
+    font-size: 18px;
+    line-height: 18px;
 }
 
 .path__point-date {
-    font-size: 14px;
-    line-height: 14px;
+    font-size: 16px;
+    line-height: 16px;
     color: #757575;
 }
 
@@ -205,7 +217,7 @@ export default {
     border: 2px solid #3F51B5;
 }
 
-.path__point--from::before {
+.path__point:first-child::before {
     background-color: #3F51B5;
 }
 
@@ -216,10 +228,10 @@ export default {
     margin-bottom: 8px;
     display: block;
     width: 100%;
+    text-decoration: underline;
 }
 
 .drive__phone {
-    text-decoration: none;
     color: inherit;
 }
 </style>

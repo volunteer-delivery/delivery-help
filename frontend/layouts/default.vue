@@ -128,7 +128,8 @@ export default {
 }
 
 .layout__main {
-    padding-bottom: 56px !important;
+    padding-top: 24px !important;
+    padding-bottom: 96px !important;
 }
 
 .layout__close-navigation-extra {

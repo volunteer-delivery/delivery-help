@@ -1,28 +1,15 @@
 <template>
-    <v-row justify="center" align="center">
-        <v-col class="pt-7" cols="12" sm="8" md="6">
-            <Drive
-                class="mb-4"
-                v-for="drive of drives"
-                :key="drive.id"
-                :drive="drive"
-            />
-
-            <empty v-if="!drives.length"/>
-        </v-col>
-    </v-row>
+    <DriveList :drives="drives" />
 </template>
 
 <script>
-import Drive from '~/components/drives/drive';
-import Empty from '@/components/drives/empty';
+import DriveList from '~/components/drives/drive-list';
 
 export default {
     name: 'running',
 
     components: {
-        Empty,
-        Drive
+        DriveList
     },
 
     async asyncData({ store }) {
