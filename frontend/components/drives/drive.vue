@@ -1,6 +1,6 @@
 <template>
     <v-card class="drive" :class="cardClasses" elevation="1">
-        <v-card-text>
+        <v-card-text class="pb-0">
             <div class="path mb-3 font-weight-medium">
                 <div class="mb-8 d-flex align-end path__point">
                     <DrivePoint class="ma-0" :point="drive.from"/>
@@ -12,25 +12,25 @@
 
             <button
                 type="button"
-                class="subtitle-2 d-flex align-center drive__driver"
+                class="subtitle-2 d-flex align-center drive__driver pt-2 pb-2 pr-2"
                 @click="isDriverDetailsDisplaying = true"
             >
                 <DriverIcon class="mr-1" :driver="drive.driver" :verified="isVerified"/>
                 {{ drive.driver.name }}
             </button>
 
-            <p class="subtitle-2 d-flex align-center">
+            <p class="subtitle-2 d-flex align-center mb-0">
                 <v-icon class="mr-1" dense>{{ $options.icons.mdiCar }}</v-icon>
                 {{ driverVehicle }}
             </p>
+        </v-card-text>
 
-            <a class="subtitle-2 d-flex align-center drive__phone" :href="driverPhone">
+        <v-card-actions class="pb-4 pb-sm-2">
+            <a class="subtitle-2 d-flex align-center drive__phone pl-2" :href="driverPhone">
                 <v-icon class="mr-1 drive__phone-icon" dense>{{ $options.icons.mdiPhone }}</v-icon>
                 {{ drive.driver.phone }}
             </a>
-        </v-card-text>
 
-        <v-card-actions>
             <v-spacer/>
 
             <v-btn color="primary" outlined @click="changeStatus">
@@ -139,12 +139,12 @@ export default {
     }
 }
 
-.drive--verified {
+.drive {
     overflow: hidden;
     position: relative;
 }
 
-.drive--verified::before {
+.drive::before {
     content: "";
     background-image: url("/verified-stamp.png");
     background-size: contain;
@@ -154,6 +154,11 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.drive:not(.drive--verified)::before {
+    filter: grayscale(100%);
+    opacity: 0.05;
 }
 
 .path {
@@ -224,14 +229,17 @@ export default {
 .drive__driver {
     border: none;
     background: none;
-    padding: 8px 0;
     margin-bottom: 8px;
     display: block;
-    width: 100%;
     text-decoration: underline;
 }
 
 .drive__phone {
+    color: rgba(0, 0, 0, 0.6);
+    align-self: stretch;
+}
+
+.drive__phone-icon {
     color: inherit;
 }
 </style>
