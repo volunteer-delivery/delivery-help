@@ -21,10 +21,10 @@ if (FRONTEND_DOMAIN) {
         type: 'text/javascript',
         charset: 'utf-8',
         innerHTML: [
-            `(() => {console.log('Redirecting to domain');`,
+            `console.log('Redirecting to domain')`,
             `if(window.location.hostname!=='${FRONTEND_DOMAIN}'){`,
             `window.location='https://${FRONTEND_DOMAIN}'`,
-            '}})()'
+            '}'
         ].join('')
     });
 }
