@@ -52,8 +52,7 @@ export default {
     modules: [
         '@nuxtjs/axios',
         'nuxt-socket-io',
-        ['@nuxtjs/toast', { duration: 5000 }],
-        'cookie-universal-nuxt'
+        ['@nuxtjs/toast', { duration: 5000 }]
     ],
 
     plugins: [

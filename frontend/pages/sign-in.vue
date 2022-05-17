@@ -10,6 +10,7 @@
                     <v-card-text>
                         <v-text-field
                             label="Користувач"
+                            autocapitalize="off"
                             v-model="credentials.username"
                             :rules="$options.validations.username"
                         />
@@ -17,6 +18,7 @@
                         <v-text-field
                             label="Пароль"
                             type="password"
+                            autocapitalize="off"
                             v-model="credentials.password"
                             :rules="$options.validations.password"
                         />

@@ -1,7 +1,7 @@
 <template>
     <v-card class="drive" :class="cardClasses" elevation="1">
         <v-card-text class="pb-0">
-            <div class="path mb-3 font-weight-medium">
+            <div class="path mb-4 font-weight-medium">
                 <div class="mb-8 d-flex align-end path__point">
                     <DrivePoint class="ma-0" :point="drive.from"/>
                     <span class="path__point-date">, {{ departureTime }}</span>
@@ -19,24 +19,27 @@
                 {{ drive.driver.name }}
             </button>
 
-            <p class="subtitle-2 d-flex align-center mb-0">
-                <v-icon class="mr-1" dense>{{ $options.icons.mdiCar }}</v-icon>
-                {{ driverVehicle }}
-            </p>
+            <div class="d-flex pb-4 pb-sm-2">
+                <p class="subtitle-2 d-flex align-center mb-0 drive__car">
+                    <v-icon class="mr-1" dense>{{ $options.icons.mdiCar }}</v-icon>
+                    {{ driverVehicle }}
+                </p>
+
+                <v-spacer />
+
+                <v-card-actions class="pa-0 mt-n2">
+                    <v-spacer/>
+
+                    <v-btn color="primary" icon text outlined :href="driverPhoneLink">
+                        <v-icon class="drive__phone-icon" dense>{{ $options.icons.mdiPhone }}</v-icon>
+                    </v-btn>
+
+                    <v-btn class="ml-4" color="primary" text outlined elevation="0" @click="changeStatus">
+                        {{ isPending ? 'В активні' : 'Завершити' }}
+                    </v-btn>
+                </v-card-actions>
+            </div>
         </v-card-text>
-
-        <v-card-actions class="pb-4 pb-sm-2">
-            <a class="subtitle-2 d-flex align-center drive__phone pl-2" :href="driverPhone">
-                <v-icon class="mr-1 drive__phone-icon" dense>{{ $options.icons.mdiPhone }}</v-icon>
-                {{ drive.driver.phone }}
-            </a>
-
-            <v-spacer/>
-
-            <v-btn color="primary" outlined @click="changeStatus">
-                {{ isPending ? 'В активні' : 'Завершити' }}
-            </v-btn>
-        </v-card-actions>
 
         <v-bottom-sheet :value="isDriverDetailsDisplaying" persistent content-class="driver-details-modal">
             <DriverDetails
@@ -84,7 +87,11 @@ export default {
         },
 
         driverPhone() {
-            return `tel:${this.drive.driver.phone}`;
+            return this.drive.driver.phone;
+        },
+
+        driverPhoneLink() {
+            return `tel:${this.driverPhone}`;
         },
 
         driverVehicle() {
@@ -148,7 +155,7 @@ export default {
     content: "";
     background-image: url("/verified-stamp.png");
     background-size: contain;
-    transform: rotate(22deg) translate(3px, 11px);
+    transform: rotate(22deg) translate(-7px, 12px);
     width: 100px;
     height: 90px;
     position: absolute;
@@ -171,7 +178,7 @@ export default {
     position: absolute;
     display: block;
     border-left: 2px solid #3F51B5;
-    left: 7px;
+    left: 8px;
 }
 
 .path::before {
@@ -180,7 +187,7 @@ export default {
 }
 
 .path::after {
-    bottom: 11px;
+    bottom: 13px;
     height: 18px;
 }
 
@@ -188,24 +195,24 @@ export default {
     position: absolute;
     display: block;
     top: calc(50% - 3px);
-    left: 3px;
+    left: 4px;
     border: 5px solid transparent;
     border-top-color: #3F51B5;
 }
 
 .path__point {
     position: relative;
-    padding-left: 20px;
+    padding-left: 24px;
     display: flex;
     margin: 0;
     color: #424242;
-    font-size: 18px;
-    line-height: 18px;
+    font-size: 19px;
+    line-height: 1;
 }
 
 .path__point-date {
     font-size: 16px;
-    line-height: 16px;
+    line-height: 1;
     color: #757575;
 }
 
@@ -213,8 +220,8 @@ export default {
     position: absolute;
     content: "";
     display: block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     transform: translateY(-50%);
     top: 50%;
@@ -229,12 +236,17 @@ export default {
 .drive__driver {
     border: none;
     background: none;
-    margin-bottom: 8px;
     display: block;
     text-decoration: underline;
+    font-size: 16px !important;
+}
+
+.drive__car {
+    font-size: 16px !important;
 }
 
 .drive__phone {
+    font-size: 16px !important;
     color: rgba(0, 0, 0, 0.6);
     align-self: stretch;
 }

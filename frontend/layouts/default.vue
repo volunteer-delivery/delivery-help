@@ -128,7 +128,7 @@ export default {
 }
 
 .layout__main {
-    padding-top: 24px !important;
+    padding-top: 16px !important;
     padding-bottom: 96px !important;
 }
 
