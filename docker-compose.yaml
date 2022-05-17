@@ -17,7 +17,7 @@ services:
   mongo:
     image: mongo:5.0.7
     volumes:
-      - ./db_data:/data/db
+      - data_mongo:/data/db
     env_file: .env
 
   frontend:
@@ -30,3 +30,7 @@ services:
       - ./frontend:/app
       - ./frontend/node_modules:/app/node_modules
     env_file: .env
+
+volumes:
+  data_mongo:
+    driver: local
