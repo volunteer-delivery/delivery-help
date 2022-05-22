@@ -35,10 +35,11 @@ function initializeBotServer(token) {
     bot.use(stage.middleware());
 
     bot.command('ride', (ctx) => ctx.scene.enter('new-ride-wizard'));
-    bot.command('profile', driverComposerOptional(true, async (ctx) => {
+    bot.command('profile', driverComposerOptional(true, async (ctx, next) => {
         await ctx.reply(`Ім'я: ${ctx.state.driver.name}`);
         await ctx.reply(`Телефон: ${ctx.state.driver.phone}`);
-    }));
+        return next();
+    }), welcome);
 
     // TODO: delete this command before going to production
     bot.command('clearDev', async (ctx) => {
@@ -53,7 +54,7 @@ function initializeBotServer(token) {
     bot.help(welcome);
     bot.start(welcome);
 
-    bot.on('text', async (ctx, next) => {
+    bot.on('text', driverComposerOptional(false, welcome), async (ctx, next) => {
         if (ctx.session.hasOwnProperty('__scenes') && ctx.session.__scenes.current) {
             next();
         } else {
