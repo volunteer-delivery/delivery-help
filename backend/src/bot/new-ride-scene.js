@@ -32,7 +32,7 @@ fromHandler.action('FROM_ABROAD', async (ctx) => {
 fromHandler.action('FROM_UKRAINE', async (ctx) => {
     await ctx.deleteMessage();
     ctx.scene.state.enterCity = true
-    await ctx.reply('Місто?');
+    await ctx.reply('Вкажіть місто, будь-ласка:');
 });
 fromHandler.on('text', async (ctx) => {
     if (ctx.scene.state.enterCountry) {
@@ -47,7 +47,7 @@ fromHandler.on('text', async (ctx) => {
 
 });
 fromHandler.leave = async (ctx) => {
-    await ctx.reply('Введіть кінцевий населенний пункт призначення')
+    await ctx.reply('Введіть, будь ласка, свій кінцевий населенний пункт призначення:')
     return ctx.wizard.next();
 };
 
@@ -76,7 +76,7 @@ vehicleHandler.setVehicle = (vehicleType) => async (ctx) => {
     const vehile = { "CAR": "легковушку", "VAN": "грузову", "TRUCK": "фуру" };
     await ctx.reply(`Ви обрали ${vehile[vehicleType]}`);
     ctx.scene.state.vehicle = vehicleType;
-    ctx.reply('Дякуємо! Очікуйте на дзвінок координатора');
+    ctx.reply('Дякуємо! Ваша заяква прийнята - очікуйте на дзвінок координатора.');
     await saveRide(ctx);
     return ctx.scene.leave();
 };
@@ -90,8 +90,8 @@ const newRideScene = new Scenes.WizardScene(
         await ctx.reply('Ви зараз за кордоном?', {
             reply_markup: {
                 inline_keyboard: [
-                    [ { text: "Так за кордонм", callback_data: "FROM_ABROAD" } ],
-                    [ { text: "Ніт, заре в Україні 🇺🇦 ;)", callback_data: "FROM_UKRAINE" } ]
+                    [ { text: "Я за кордоном", callback_data: "FROM_ABROAD" } ],
+                    [ { text: "Я в Україні", callback_data: "FROM_UKRAINE" } ]
                 ]
             }
         });
