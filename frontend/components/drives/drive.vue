@@ -13,7 +13,7 @@
             <button
                 type="button"
                 class="subtitle-2 d-flex align-center drive__driver pt-2 pb-2 pr-2"
-                @click="isDriverDetailsDisplaying = true"
+                @click="toggleDriverDetails(true)"
             >
                 <DriverIcon class="mr-1" :driver="drive.driver" :verified="isVerified"/>
                 {{ drive.driver.name }}
@@ -41,11 +41,11 @@
             </div>
         </v-card-text>
 
-        <v-bottom-sheet :value="isDriverDetailsDisplaying" persistent content-class="driver-details-modal">
+        <v-bottom-sheet v-model="isDriverDetailsDisplaying" content-class="driver-details-modal">
             <DriverDetails
                 :driver="drive.driver"
                 ref="detailsView"
-                @close="isDriverDetailsDisplaying = false"
+                @close="toggleDriverDetails(false)"
             />
         </v-bottom-sheet>
     </v-card>
@@ -128,6 +128,10 @@ export default {
                 drive: this.drive,
                 status: this.isPending ? 'ACTIVE' : 'FINISHED'
             });
+        },
+
+        toggleDriverDetails(isDisplaying) {
+            this.isDriverDetailsDisplaying = isDisplaying;
         }
     }
 };

@@ -46,7 +46,7 @@
                     <component :is="navigationExtra.mobileTrigger" @open="openNavigationExtra"/>
                 </v-fade-transition>
 
-                <v-bottom-sheet :value="isNavigationExtraOpened" persistent>
+                <v-bottom-sheet v-model="navigationExtraModel">
                     <v-card tile>
                         <component
                             :is="navigationExtra.view"
@@ -91,6 +91,15 @@ export default {
 
         navigationExtra() {
             return this.$store.state['navigation-store'].extra;
+        },
+
+        navigationExtraModel: {
+            get() {
+                return this.isNavigationExtraOpened;
+            },
+            set(toOpened) {
+                toOpened ? this.openNavigationExtra() : this.closeNavigationExtra();
+            }
         },
 
         isNavigationExtraOpened() {
