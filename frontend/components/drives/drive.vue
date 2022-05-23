@@ -142,11 +142,11 @@ export default {
     .drive {
         border-radius: 0;
         box-shadow: none !important;
-        border-bottom: 1px solid rgb(0 0 0 / 20%);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     }
 
     .drive:last-child {
-        border-bottom: none
+        border-bottom-color: rgba(0, 0, 0, 0.05);
     }
 }
 
