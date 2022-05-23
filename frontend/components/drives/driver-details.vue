@@ -22,17 +22,27 @@
                 </div>
 
                 <template v-else>
-                    <v-card-text>
+                    <v-card-text class="body-1">
                         <p class="d-flex align-center">
                             <v-icon :color="verifiedIconColor">{{ verifiedIcon }}</v-icon>
                             <span class="ml-2">{{ verifiedMessage }}</span>
                         </p>
+
+                        <a class="d-inline-flex align-center driver-details__phone" :href="driverPhoneLink">
+                            <v-icon>{{ $options.icons.mdiPhone }}</v-icon>
+
+                            <span class="ml-2" >
+                                {{ driverPhone }}
+                            </span>
+                        </a>
                     </v-card-text>
 
                     <v-divider/>
 
                     <v-list class="pb-5 pb-md-10" subheader>
-                        <v-subheader>Історія</v-subheader>
+                        <v-subheader class="text-h6 driver-details__section-heading">
+                            Історія
+                        </v-subheader>
 
                         <v-list-item
                             class="d-flex pl-5 pr-5 align-center driver-details__history-item"
@@ -62,7 +72,7 @@
 </template>
 
 <script>
-import { mdiCheck, mdiClose } from '@mdi/js';
+import { mdiCheck, mdiClose, mdiPhone } from '@mdi/js';
 import DrivePoint from '@/components/drives/drive-point';
 import { formatDate } from '@/utils/format-date';
 
@@ -75,7 +85,8 @@ export default {
 
     icons: {
         mdiClose,
-        mdiCheck
+        mdiCheck,
+        mdiPhone
     },
 
     props: {
@@ -97,6 +108,14 @@ export default {
 
         verifiedMessage() {
             return this.isVerified ? 'Водій перевірений' : 'Водій не перевірений';
+        },
+
+        driverPhone() {
+            return this.driver.phone;
+        },
+
+        driverPhoneLink() {
+            return `tel:${this.driverPhone}`;
         }
     },
 
@@ -146,6 +165,14 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.driver-details__phone {
+    color: inherit;
+}
+
+.driver-details__section-heading {
+    font-size: 1rem !important;
 }
 
 .driver-details__history-item::after {
