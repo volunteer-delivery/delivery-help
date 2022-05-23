@@ -129,10 +129,11 @@ export default {
 
         close() {
             this.$emit('close');
-            this.isLoading = true;
         },
 
         async onOpen() {
+            this.isLoading = true;
+            await this.$nextTick()
             this.drives = await this.$store.dispatch('drives-store/loadDrivesByDriver', this.driver);
             this.isLoading = false;
         }
