@@ -42,10 +42,17 @@
                             <p class="mb-0 mt-0 mr-10 driver-details__history-item-time">
                                 {{ formatDate(drive.departureTime) }}
                             </p>
-                            <DrivePoint class="mb-0 driver-details__history-item-point" :point="drive.from"/>
+                            <DrivePoint
+                                class="mb-0 driver-details__history-item-point"
+                                :point="drive.from"
+                            />
+
                             <div class="ml-2 driver-details__history-item-arrow"/>
-                            <DrivePoint class="ml-4 mb-0 driver-details__history-item-point text-right"
-                                        :point="drive.destination"/>
+
+                            <DrivePoint
+                                class="ml-4 mb-0 driver-details__history-item-point text-right"
+                                :point="drive.destination"
+                            />
                         </v-list-item>
                     </v-list>
                 </template>
@@ -104,11 +111,9 @@ export default {
         close() {
             this.$emit('close');
             this.isLoading = true;
-            document.body.classList.remove('driver-details-lock-scroll');
         },
 
         async onOpen() {
-            document.body.classList.add('driver-details-lock-scroll');
             this.drives = await this.$store.dispatch('drives-store/loadDrivesByDriver', this.driver);
             this.isLoading = false;
         }
@@ -120,10 +125,6 @@ export default {
 .driver-details-modal {
     overflow-y: auto !important;
     overflow-x: hidden !important;
-}
-
-.driver-details-lock-scroll {
-    overflow: hidden;
 }
 </style>
 

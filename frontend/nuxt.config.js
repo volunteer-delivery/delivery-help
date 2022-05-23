@@ -57,7 +57,7 @@ export default {
 
     plugins: [
         '~/plugins/axios',
-        '~/plugins/api-socket'
+        { src: '~/plugins/api-socket', mode: 'client' }
     ],
 
     server: {

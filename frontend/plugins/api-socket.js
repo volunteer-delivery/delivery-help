@@ -1,6 +1,4 @@
 export default function (context) {
-    if (process.server) return;
-
     const socket = context.$nuxtSocket({});
 
     socket.on('newRide', async (drive) => {
