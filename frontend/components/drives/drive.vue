@@ -20,10 +20,20 @@
             </button>
 
             <div class="d-flex pb-4 pb-sm-2">
-                <p class="subtitle-2 d-flex align-center mb-0 drive__car">
-                    <v-icon class="mr-1" dense>{{ $options.icons.mdiCar }}</v-icon>
-                    {{ driverVehicle }}
-                </p>
+                <v-tooltip right color="rgba(97, 97, 97, 1)">
+                    <template #activator="{ on, attrs }">
+                        <p
+                            class="subtitle-2 d-flex align-center mb-0 drive__car"
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            <v-icon class="mr-1" dense>{{ $options.icons.mdiCar }}</v-icon>
+                            {{ driverVehicle }}
+                        </p>
+                    </template>
+
+                    <span>{{ driverTooltip }}</span>
+                </v-tooltip>
 
                 <v-spacer />
 
@@ -55,7 +65,7 @@
 import { mdiCar, mdiPhone } from '@mdi/js';
 import DrivePoint from '~/components/drives/drive-point';
 import DriverIcon from '~/components/drives/driver-icon';
-import { formatVehicle } from '~/utils/format-vehicle';
+import { formatVehicle, formatVehicleDetails } from '~/utils/format-vehicle';
 import { formatDate } from '~/utils/format-date';
 import DriverDetails from '~/components/drives/driver-details';
 
@@ -96,6 +106,10 @@ export default {
 
         driverVehicle() {
             return formatVehicle(this.drive.vehicle);
+        },
+
+        driverTooltip() {
+            return formatVehicleDetails(this.drive.vehicle);
         },
 
         isVerified() {
