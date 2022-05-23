@@ -27,7 +27,7 @@
 
                 <v-spacer />
 
-                <v-card-actions class="pa-0 mt-n2">
+                <v-card-actions class="pa-0">
                     <v-spacer/>
 
                     <v-btn color="primary" icon text outlined :href="driverPhoneLink">
