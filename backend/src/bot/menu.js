@@ -18,7 +18,7 @@ const formatRideReply = (ride) => {
     }
     let status;
     if (ride.status == 'FINISHED') {
-        status = '\n<b>Поїздку завершенно</b>';
+        status = '\n<b>Поїздку завершено</b>';
     } else {
         status = '';
     }
