@@ -1,5 +1,6 @@
 const { Scenes, Composer } = require('telegraf');
 const { rideModel } = require('../models');
+const { showMenu } = require('./menu');
 const { broadcastNewRide } = require('../socket');
 
 const saveRide = async(ctx) => {
@@ -18,6 +19,7 @@ const saveRide = async(ctx) => {
         status: 'PENDING'
     });
     await ride.populate('driver');
+    ctx.state.rides.push(ride);
     broadcastNewRide(ride);
 };
 
@@ -78,15 +80,12 @@ vehicleHandler.setVehicle = (vehicleType) => async (ctx) => {
     const vehile = { "CAR": "легковушку", "VAN": "грузову", "TRUCK": "фуру" };
     await ctx.reply(`Ви обрали ${vehile[vehicleType]}`);
     ctx.scene.state.vehicle = vehicleType;
-    ctx.reply('Дякуємо! Ваша заявка прийнята.');
-    ctx.reply('Якщо цей маршрут буде актуальним для волонтерів, вони сконтактують із вами по телефону.');
-    ctx.reply(
-        'Ваша допомога є неоціненною, тож якщо ви маєте бажання продовжити волонтерити,' +
-        ' натисніть на кнопку "Зареєструвати поїздку".'
-    );
-    ctx.reply('Разом - ми сила!');
     await saveRide(ctx);
-    return ctx.scene.leave();
+    await ctx.reply('Дякуємо! Ваша заявка прийнята.');
+    await ctx.reply('Якщо цей маршрут буде актуальним для волонтерів, вони сконтактують із вами по телефону.');
+    await ctx.reply('Ваша допомога є неоціненною. Разом - ми сила!');
+    await ctx.scene.leave();
+    await showMenu(ctx);
 };
 vehicleHandler.action('SET_CAR', vehicleHandler.setVehicle('CAR'));
 vehicleHandler.action('SET_VAN', vehicleHandler.setVehicle('VAN'));

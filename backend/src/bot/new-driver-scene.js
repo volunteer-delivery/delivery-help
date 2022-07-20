@@ -1,5 +1,6 @@
 const { Scenes, Composer, Markup } = require('telegraf');
 const { driverModel } = require('../models')
+const { showMenu } = require('./menu');
 
 const saveDriver = async (ctx) => {
     await driverModel.create({
@@ -42,7 +43,8 @@ contactHandler.leave = async (ctx) => {
         }
     });
     await saveDriver(ctx);
-    return ctx.scene.leave();
+    await ctx.scene.leave();
+    await showMenu(ctx);
 };
 
 const newDriverScene = new Scenes.WizardScene(
