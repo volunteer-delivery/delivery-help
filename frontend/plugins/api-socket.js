@@ -1,11 +1,13 @@
-export default function (context) {
-    const socket = context.$nuxtSocket({});
+export default function (context, inject) {
+    const cable = context.$nuxtSocket({});
 
-    socket.on('newRide', async (drive) => {
+    cable.on('newRide', async (drive) => {
         await context.store.dispatch('drives-store/add', drive);
     });
 
-    socket.on('updateRide', async (drive) => {
+    cable.on('updateRide', async (drive) => {
         await context.store.dispatch('drives-store/update', drive);
     });
+
+    inject('cable', cable);
 }

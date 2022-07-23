@@ -9,15 +9,20 @@ function initializeSocketServer(httpServer) {
 }
 
 function broadcastNewRide(ride) {
-    if (socketServer) {
-        socketServer.emit("newRide", ride);
-    }
+    socketServer?.emit("newRide", ride);
 }
 
 function broadcastUpdateRide(ride) {
-    if (socketServer) {
-        socketServer.emit("updateRide", ride);
-    }
+    socketServer?.emit("updateRide", ride);
 }
 
-module.exports = { initializeSocketServer, broadcastNewRide, broadcastUpdateRide };
+function broadcastNewRideComment(rideId, comment) {
+    socketServer?.emit(`newRideComment:${rideId}`, comment);
+}
+
+module.exports = {
+    initializeSocketServer,
+    broadcastNewRide,
+    broadcastUpdateRide,
+    broadcastNewRideComment
+};

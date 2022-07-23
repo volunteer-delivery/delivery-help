@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
-const { driverRouter, rideRouter, authRouter } = require('./routers');
+const { driverRouter, rideRouter, authRouter, rideCommentsRouter } = require('./routers');
 const { rideModel } = require('./models');
 const { initializeSocketServer } = require('./socket');
 const { initializeBotServer } = require('./bot');
@@ -34,7 +34,7 @@ async function bootstrap() {
     app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 
     app.use('/api/v1', authMiddleware);
-    app.use('/api/v1', driverRouter, rideRouter, authRouter);
+    app.use('/api/v1', driverRouter, rideRouter, authRouter, rideCommentsRouter);
 
     const httpServer = createServer(app);
 

@@ -35,7 +35,12 @@ const rideSchema = new Schema({
         enum: ['PENDING', 'ACTIVE', 'FINISHED'],
         default: 'PENDING',
         required: true
-    }
+    },
+
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'RideComment'
+    }]
 });
 
 preparePublicSchema(rideSchema);
