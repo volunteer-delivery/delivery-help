@@ -1,5 +1,6 @@
 const { Scenes, Composer } = require('telegraf');
 const { rideModel } = require('../models');
+const { showMenu } = require('./menu');
 const { broadcastNewRide } = require('../socket');
 
 const saveRide = async(ctx) => {
@@ -18,6 +19,7 @@ const saveRide = async(ctx) => {
         status: 'PENDING'
     });
     await ride.populate('driver');
+    ctx.state.rides.push(ride);
     broadcastNewRide(ride);
 };
 
@@ -26,13 +28,14 @@ const fromHandler = new Composer();
 fromHandler.action('FROM_ABROAD', async (ctx) => {
     await ctx.deleteMessage();
     ctx.scene.state.enterCountry = true;
-    await ctx.reply('Яка країна?');
+    await ctx.reply('Напишіть країну та місто, в якому ви зараз перебуваєте:');
+    await ctx.reply('(Наприклад: Польща, Вроцлав)');
     
 });
 fromHandler.action('FROM_UKRAINE', async (ctx) => {
     await ctx.deleteMessage();
     ctx.scene.state.enterCity = true
-    await ctx.reply('Вкажіть місто, будь-ласка:');
+    await ctx.reply('Вкажіть місто:');
 });
 fromHandler.on('text', async (ctx) => {
     if (ctx.scene.state.enterCountry) {
@@ -47,7 +50,8 @@ fromHandler.on('text', async (ctx) => {
 
 });
 fromHandler.leave = async (ctx) => {
-    await ctx.reply('Введіть, будь ласка, свій кінцевий населенний пункт призначення:')
+    await ctx.reply('Зазначте кінцевий населений пункт:');
+    await ctx.reply('(Наприклад: Україна, Черкаси)')
     return ctx.wizard.next();
 };
 
@@ -56,13 +60,13 @@ calendarHandler.action(/calendar-telegram-date-[\d-]+/g, async (ctx) => {
     await ctx.deleteMessage();
     const date = ctx.match[0].replace("calendar-telegram-date-", "");
     ctx.scene.state.departureTime = date;
-    await ctx.reply(`Ви обрали ${date}`);
+    await ctx.reply(`Ви вказали, що ваша поїздка розпочнеться ${date}`);
 
-    await ctx.reply('Ваш тип авто?', {
+    await ctx.reply('Оберіть габарити вашого транспортного засобу:', {
         reply_markup: {
             inline_keyboard: [
-                [ { text: "Легковушка ( < 2т)", callback_data: "SET_CAR" } ],
-                [ { text: "Грузова ( < 10т)", callback_data: "SET_VAN" } ],
+                [ { text: "Легковий автомобіль ( < 2т)", callback_data: "SET_CAR" } ],
+                [ { text: "Вантажний автомобіль ( < 10т)", callback_data: "SET_VAN" } ],
                 [ { text: "Фура ( > 10т)", callback_data: "SET_TRUCK" } ]
             ]
         }
@@ -76,9 +80,12 @@ vehicleHandler.setVehicle = (vehicleType) => async (ctx) => {
     const vehile = { "CAR": "легковушку", "VAN": "грузову", "TRUCK": "фуру" };
     await ctx.reply(`Ви обрали ${vehile[vehicleType]}`);
     ctx.scene.state.vehicle = vehicleType;
-    ctx.reply('Дякуємо! Ваша заяква прийнята - очікуйте на дзвінок координатора.');
     await saveRide(ctx);
-    return ctx.scene.leave();
+    await ctx.reply('Дякуємо! Ваша заявка прийнята.');
+    await ctx.reply('Якщо цей маршрут буде актуальним для волонтерів, вони сконтактують із вами по телефону.');
+    await ctx.reply('Ваша допомога є неоціненною. Разом - ми сила!');
+    await ctx.scene.leave();
+    await showMenu(ctx);
 };
 vehicleHandler.action('SET_CAR', vehicleHandler.setVehicle('CAR'));
 vehicleHandler.action('SET_VAN', vehicleHandler.setVehicle('VAN'));
@@ -87,11 +94,11 @@ vehicleHandler.action('SET_TRUCK', vehicleHandler.setVehicle('TRUCK'));
 const newRideScene = new Scenes.WizardScene(
     'new-ride-wizard',
     async (ctx) => {
-        await ctx.reply('Ви зараз за кордоном?', {
+        await ctx.reply('Оберіть варіант локації, з якої ви розпочинаєте поїздку:', {
             reply_markup: {
                 inline_keyboard: [
-                    [ { text: "Я за кордоном", callback_data: "FROM_ABROAD" } ],
-                    [ { text: "Я в Україні", callback_data: "FROM_UKRAINE" } ]
+                    [ { text: "Я в Україні", callback_data: "FROM_UKRAINE" } ],
+                    [ { text: "Я за кордоном", callback_data: "FROM_ABROAD" } ]
                 ]
             }
         });
@@ -101,7 +108,7 @@ const newRideScene = new Scenes.WizardScene(
     fromHandler,
     async (ctx) => {
         ctx.scene.state.destinationCity = ctx.message.text;
-        await ctx.reply('Дата вашої поїздки', ctx.calendar.getCalendar())
+        await ctx.reply('Вкажіть дату початку запланованої поїздки: ', ctx.calendar.getCalendar())
         return ctx.wizard.next();
     },
     calendarHandler,

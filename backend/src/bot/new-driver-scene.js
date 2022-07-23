@@ -1,5 +1,6 @@
-const { Scenes, Composer } = require('telegraf');
+const { Scenes, Composer, Markup } = require('telegraf');
 const { driverModel } = require('../models')
+const { showMenu } = require('./menu');
 
 const saveDriver = async (ctx) => {
     await driverModel.create({
@@ -10,74 +11,62 @@ const saveDriver = async (ctx) => {
     });
 };
 
-const nameHandler = new Composer();
-nameHandler.action('USE_PROFILE_NAME', async (ctx) => {
-    await ctx.deleteMessage();
-    const name = `${ctx.update.callback_query.from.first_name} ${ctx.update.callback_query.from.last_name}`;
-    ctx.scene.state.name = name;
-
-    await ctx.reply(`Беремо ${name}`);
-    return nameHandler.leave(ctx);
-});
-nameHandler.action('ENTER_NAME', async (ctx) => {
-    await ctx.deleteMessage();
-    ctx.scene.state.enterNameFlag = true;
-    await ctx.reply('Введіть ваше ім\'я');
-});
-nameHandler.on('text', async (ctx) => {
-    if (ctx.scene.state.enterNameFlag) {
-        ctx.scene.state.name = ctx.message.text;
-        return nameHandler.leave(ctx);
-    }
-});
-nameHandler.leave = async (ctx) => {
-    await ctx.reply('Введіть ваш номер:', {
-        reply_markup: {
-            one_time_keyboard: true,
-            keyboard: [
-                [ { text: 'Відправити мій телеграм контакт 📲', request_contact: true } ]
-            ]
+const contactHandler = new Composer();
+contactHandler.on('text', async (ctx) => {
+    await ctx.reply(
+        'Натисніть кнопку "Відправити свої контактні дані"',
+        {
+            reply_markup: {
+                one_time_keyboard: true,
+                keyboard: [
+                    [ { text: 'Відправити свої контактні дані', request_contact: true } ]
+                ]
+            }
         }
-    });
-    return ctx.wizard.next();
-};
-
-const phoneHandler = new Composer();
-phoneHandler.on('text', async (ctx) => {
-    ctx.scene.state.phone = ctx.message.text;
-    return phoneHandler.leave(ctx);
+    );
 });
-phoneHandler.on('contact', async (ctx) => {
+contactHandler.on('contact', async (ctx) => {
     const phone = ctx.message.contact.phone_number;
+    const name = `${ctx.message.contact.first_name} ${ctx.message.contact.last_name}`;
     ctx.scene.state.phone = phone;
-    return phoneHandler.leave(ctx);
+    ctx.scene.state.name = name;
+    return contactHandler.leave(ctx);
 });
-phoneHandler.leave = async (ctx) => {
-    await ctx.reply('Дякуємо за реестрацію', {
-        reply_markup: {
-            remove_keyboard: true
+contactHandler.leave = async (ctx) => {
+    await ctx.reply(
+        'Ваш контакт успішно збережено. Якщо ви вже знаєте деталі своєї ' +
+        'найближчої поїздки і хочете допомогти волонтерам, натисніть ' +
+        'кнопку "Зареєструвати поїздку".',
+        {
+            reply_markup: {
+                remove_keyboard: true
         }
     });
     await saveDriver(ctx);
-    return ctx.scene.leave();
+    await ctx.scene.leave();
+    await showMenu(ctx);
 };
 
 const newDriverScene = new Scenes.WizardScene(
     'new-driver-wizard',
     async (ctx) => {
-        await ctx.reply('Як вас звати?', {
-            reply_markup: {
-                inline_keyboard: [
-                    [ { text: `Це моє ім\'я ${ctx.message.chat.first_name} ${ctx.message.chat.last_name}`, callback_data: "USE_PROFILE_NAME" } ],
-                    [ { text: "Ні, я введу його самостійно", callback_data: "ENTER_NAME" } ]
-                ]
+        await ctx.reply(
+            'Натисніть кнопку "Відправити свої контактні дані", ' +
+            'щоби поділитися ними із волонтерами, яким потрібна ' +
+            'допомога. Надана інформація безпечно зберігається у волонтерській базі.',
+            {
+                reply_markup: {
+                    one_time_keyboard: true,
+                    keyboard: [
+                        [ { text: 'Відправити свої контактні дані', request_contact: true } ]
+                    ]
+                }
             }
-        });
+        );
 
         return ctx.wizard.next();
     },
-    nameHandler,
-    phoneHandler
+    contactHandler
 );
 
 module.exports = newDriverScene;
