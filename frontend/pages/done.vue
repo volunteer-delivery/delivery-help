@@ -6,7 +6,7 @@
 import DriveList from '~/components/drives/drive-list';
 
 export default {
-    name: 'running',
+    name: 'done',
 
     components: {
         DriveList

@@ -8,6 +8,8 @@ import DriverFilterMobileTrigger from '~/components/drives/drives-filter-mobile-
 import DriveList from '@/components/drives/drive-list';
 
 export default {
+    name: 'index',
+
     components: { DriveList },
 
     computed: {

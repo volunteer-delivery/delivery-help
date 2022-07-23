@@ -7,6 +7,7 @@
                     :key="item.url"
                     :to="item.url"
                     :ripple="false"
+                    exact
                 >
                     <v-list-item-icon>
                         <v-badge :content="drivesCounter[item.id]" :value="drivesCounter[item.id]">
@@ -38,6 +39,7 @@
                     :key="item.url"
                     :to="item.url"
                     :ripple="false"
+                    exact
                 >
                     <span>{{ item.title }}</span>
 
@@ -73,6 +75,8 @@
 import { mdiCar, mdiCheck, mdiClose, mdiPlay } from '@mdi/js';
 
 export default {
+    name: 'default',
+
     icons: {
         mdiClose
     },
