@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent>
+        <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent app>
             <v-list class="pt-5" nav dense>
                 <v-list-item
                     v-for="item of $options.navItems"
