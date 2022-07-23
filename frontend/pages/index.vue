@@ -10,10 +10,6 @@ import DriveList from '@/components/drives/drive-list';
 export default {
     components: { DriveList },
 
-    async asyncData({ store }) {
-        await store.dispatch('drives-store/load');
-    },
-
     computed: {
         drives() {
             return this.$store.getters['drives-store/pendingFilteredSorted'];

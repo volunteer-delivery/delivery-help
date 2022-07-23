@@ -40,13 +40,37 @@
                 <v-card-actions class="pa-0">
                     <v-spacer/>
 
-                    <v-btn color="primary" icon text outlined :href="driverPhoneLink">
+                    <v-btn color="primary" icon text :href="driverPhoneLink">
                         <v-icon class="drive__phone-icon" dense>{{ $options.icons.mdiPhone }}</v-icon>
                     </v-btn>
 
-                    <v-btn class="ml-4" color="primary" text outlined elevation="0" @click="changeStatus" v-if="canChangeStatus">
-                        {{ isPending ? 'В активні' : 'Завершити' }}
-                    </v-btn>
+                    <v-menu offset-y>
+                        <template #activator="{ on, attrs }">
+                            <v-btn class="ml-2" v-on="on" v-bind="attrs" color="primary" icon text>
+                                <v-icon>{{ $options.icons.mdiDotsHorizontal }}</v-icon>
+                            </v-btn>
+                        </template>
+
+                        <v-list class="action-dropdown">
+                            <v-list-item>
+                                <v-btn class="w-100" color="primary" text tile elevation="0" @click="changeStatus" v-if="canChangeStatus">
+                                    <v-icon class="mr-3">
+                                        {{ isPending ? $options.icons.mdiPlay : $options.icons.mdiCheck }}
+                                    </v-icon>
+                                    {{ isPending ? 'В активні' : 'Завершити' }}
+                                </v-btn>
+                            </v-list-item>
+
+                            <v-list-item>
+                                <v-btn class="w-100" color="primary" text tile elevation="0" :to="`/drives/${drive.id}`">
+                                    <v-icon class="mr-3">
+                                        {{ $options.icons.mdiChartTree }}
+                                    </v-icon>
+                                    Деталі
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                 </v-card-actions>
             </div>
         </v-card-text>
@@ -62,7 +86,7 @@
 </template>
 
 <script>
-import { mdiCar, mdiPhone } from '@mdi/js';
+import { mdiCar, mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree } from '@mdi/js';
 import DrivePoint from '~/components/drives/drive-point';
 import DriverIcon from '~/components/drives/driver-icon';
 import { formatVehicle, formatVehicleDetails } from '~/utils/format-vehicle';
@@ -80,7 +104,11 @@ export default {
 
     icons: {
         mdiCar,
-        mdiPhone
+        mdiPhone,
+        mdiDotsHorizontal,
+        mdiCheck,
+        mdiPlay,
+        mdiChartTree
     },
 
     props: {
@@ -285,5 +313,15 @@ TODO DRIVER_GRADE
 
 .drive__phone-icon {
     color: inherit;
+}
+
+.action-dropdown,
+.action-dropdown .v-list-item {
+    padding: 0;
+    min-height: 0;
+}
+
+.action-dropdown .v-btn {
+    justify-content: start;
 }
 </style>

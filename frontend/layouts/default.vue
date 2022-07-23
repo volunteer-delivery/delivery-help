@@ -20,7 +20,7 @@
 
             <component
                 v-if="navigationExtra"
-                class="pt-10"
+                class="pt-5 pb-5 drawer__navigation-extra"
                 :is="navigationExtra.view"
             />
         </v-navigation-drawer>
@@ -133,6 +133,10 @@ export default {
         closeNavigationExtra() {
             this.$store.commit('navigation-store/closeExtra');
         }
+    },
+
+    async middleware({ store }) {
+        await store.dispatch('drives-store/load');
     }
 };
 </script>
@@ -163,6 +167,15 @@ export default {
     position: absolute;
     top: 16px;
     right: 16px;
+}
+
+.v-navigation-drawer__content {
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer__navigation-extra {
+    margin-top: auto;
 }
 
 .v-bottom-navigation .v-btn::before {

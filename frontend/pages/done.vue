@@ -12,10 +12,6 @@ export default {
         DriveList
     },
 
-    async asyncData({ store }) {
-        await store.dispatch('drives-store/load');
-    },
-
     computed: {
         drives() {
             return this.$store.getters['drives-store/done'];
