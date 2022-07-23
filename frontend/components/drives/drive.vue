@@ -44,7 +44,7 @@
                         <v-icon class="drive__phone-icon" dense>{{ $options.icons.mdiPhone }}</v-icon>
                     </v-btn>
 
-                    <v-btn class="ml-4" color="primary" text outlined elevation="0" @click="changeStatus">
+                    <v-btn class="ml-4" color="primary" text outlined elevation="0" @click="changeStatus" v-if="canChangeStatus">
                         {{ isPending ? 'В активні' : 'Завершити' }}
                     </v-btn>
                 </v-card-actions>
@@ -124,6 +124,14 @@ export default {
 
         isPending() {
             return this.drive.status === 'PENDING';
+        },
+
+        isDone() {
+            return this.drive.status === 'FINISHED';
+        },
+
+        canChangeStatus() {
+            return !this.isDone;
         }
     },
 

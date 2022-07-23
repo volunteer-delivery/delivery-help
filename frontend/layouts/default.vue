@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mdiCar, mdiClose, mdiPlay } from '@mdi/js';
+import { mdiCar, mdiCheck, mdiClose, mdiPlay } from '@mdi/js';
 
 export default {
     icons: {
@@ -81,6 +81,11 @@ export default {
             title: 'Активні',
             icon: mdiPlay,
             url: '/active'
+        },
+        {
+            title: 'Завершені',
+            icon: mdiCheck,
+            url: '/done'
         }
     ],
 

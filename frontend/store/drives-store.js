@@ -24,6 +24,10 @@ export const getters = {
         return state.drives.filter(drive => drive.status === 'ACTIVE');
     },
 
+    done(state) {
+        return state.drives.filter(drive => drive.status === 'FINISHED');
+    },
+
     pendingFiltered({ pendingFilter }, { pending }) {
         return pending.filter(drive => {
             if (pendingFilter.fromCountry && pendingFilter.fromCountry !== drive.from.country) return false;
