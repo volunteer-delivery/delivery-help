@@ -17,7 +17,7 @@ function docker_login() {
 function send_telegram_noty() {
   message="<b>$1</b>%0AApp URL https://staging.delivery-help.com.ua"
   curl \
-    ---silent \
+    --silent \
     --data parse_mode=HTML \
     --data chat_id="$TELEGTAM_NOTY_CHAT" \
     --data text="$message" \
