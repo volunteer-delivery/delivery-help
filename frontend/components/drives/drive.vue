@@ -37,7 +37,7 @@
 
                 <v-spacer />
 
-                <v-card-actions class="pa-0">
+                <v-card-actions class="pa-0" v-if="!hideActions">
                     <v-spacer/>
 
                     <v-btn color="primary" icon text :href="driverPhoneLink">
@@ -112,7 +112,16 @@ export default {
     },
 
     props: {
-        drive: Object
+        drive: {
+            type: Object,
+            required: true
+        },
+
+        hideActions: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
     },
 
     data: () => ({
