@@ -66,10 +66,11 @@
                 />
             </v-menu>
 
-            <v-checkbox
-                label="Тільки перевірені водії"
-                v-model="filter.verifiedDriver"
-            />
+<!--            TODO DRIVER_GRADE-->
+<!--            <v-checkbox-->
+<!--                label="Тільки перевірені водії"-->
+<!--                v-model="filter.verifiedDriver"-->
+<!--            />-->
 
             <v-btn class="mt-3" color="primary" block @click="apply">
                 Фільтрувати

@@ -23,10 +23,11 @@
 
                 <template v-else>
                     <v-card-text class="body-1">
-                        <p class="d-flex align-center">
-                            <v-icon :color="verifiedIconColor">{{ verifiedIcon }}</v-icon>
-                            <span class="ml-2">{{ verifiedMessage }}</span>
-                        </p>
+<!--                        TODO DRIVER_GRADE-->
+<!--                        <p class="d-flex align-center">-->
+<!--                            <v-icon :color="verifiedIconColor">{{ verifiedIcon }}</v-icon>-->
+<!--                            <span class="ml-2">{{ verifiedMessage }}</span>-->
+<!--                        </p>-->
 
                         <a class="d-inline-flex align-center driver-details__phone" :href="driverPhoneLink">
                             <v-icon>{{ $options.icons.mdiPhone }}</v-icon>
@@ -95,7 +96,9 @@ export default {
 
     computed: {
         isVerified() {
-            return this.driver.grade === 'VERIFIED';
+            // TODO DRIVER_GRADE
+            // return this.driver.grade === 'VERIFIED';
+            return false;
         },
 
         verifiedIcon() {

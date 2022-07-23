@@ -113,7 +113,9 @@ export default {
         },
 
         isVerified() {
-            return this.drive.driver.grade === 'VERIFIED';
+            // TODO DRIVER_GRADE
+            // return this.drive.driver.grade === 'VERIFIED';
+            return false
         },
 
         cardClasses() {
@@ -177,6 +179,9 @@ export default {
     position: relative;
 }
 
+/*
+TODO DRIVER_GRADE
+
 .drive::before {
     content: "";
     background-image: url("/verified-stamp.png");
@@ -188,6 +193,7 @@ export default {
     top: 0;
     right: 0;
 }
+ */
 
 .drive:not(.drive--verified)::before {
     filter: grayscale(100%);
