@@ -26,7 +26,6 @@ export default {
 
 <style>
 .drives-filter-mobile-trigger.drives-filter-mobile-trigger {
-    transform: translateY(50%);
-    bottom: 56px;
+    bottom: 70px;
 }
 </style>

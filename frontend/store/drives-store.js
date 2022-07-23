@@ -28,6 +28,16 @@ export const getters = {
         return state.drives.filter(drive => drive.status === 'FINISHED');
     },
 
+    counter(_, getters) {
+        const format = (value) => value > 100 ? `100+` : value;
+
+        return {
+            pending: format(getters.pending.length),
+            active: format(getters.active.length),
+            done: format(getters.done.length)
+        };
+    },
+
     pendingFiltered({ pendingFilter }, { pending }) {
         return pending.filter(drive => {
             if (pendingFilter.fromCountry && pendingFilter.fromCountry !== drive.from.country) return false;

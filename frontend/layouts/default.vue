@@ -6,9 +6,12 @@
                     v-for="item of $options.navItems"
                     :key="item.url"
                     :to="item.url"
+                    :ripple="false"
                 >
                     <v-list-item-icon>
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <v-badge :content="drivesCounter[item.id]" :value="drivesCounter[item.id]">
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-badge>
                     </v-list-item-icon>
 
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -31,13 +34,16 @@
         <template v-if="isBottomNavigation">
             <v-bottom-navigation fixed>
                 <v-btn
-                    v-for="(item, index) of $options.navItems"
+                    v-for="item of $options.navItems"
                     :key="item.url"
                     :to="item.url"
-                    :class="{ 'ml-2': index > 0 }"
+                    :ripple="false"
                 >
                     <span>{{ item.title }}</span>
-                    <v-icon>{{ item.icon }}</v-icon>
+
+                    <v-badge :content="drivesCounter[item.id]" :value="drivesCounter[item.id]">
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-badge>
                 </v-btn>
             </v-bottom-navigation>
 
@@ -73,16 +79,19 @@ export default {
 
     navItems: [
         {
+            id: 'pending',
             title: 'Нові',
             icon: mdiCar,
             url: '/'
         },
         {
+            id: 'active',
             title: 'Активні',
             icon: mdiPlay,
             url: '/active'
         },
         {
+            id: 'done',
             title: 'Завершені',
             icon: mdiCheck,
             url: '/done'
@@ -109,6 +118,10 @@ export default {
 
         isNavigationExtraOpened() {
             return this.$store.state['navigation-store'].extraOpened;
+        },
+
+        drivesCounter() {
+            return this.$store.getters['drives-store/counter'];
         }
     },
 
@@ -150,6 +163,16 @@ export default {
     position: absolute;
     top: 16px;
     right: 16px;
+}
+
+.v-bottom-navigation .v-btn::before {
+    display: none;
+}
+
+.v-list-item:not(.v-list-item--active) .v-badge__badge,
+.v-bottom-navigation .v-btn:not(.v-btn--active) .v-badge__badge {
+    background-color: #6f6f6f !important;
+    border-color: #6f6f6f !important;
 }
 
 .toasted {
