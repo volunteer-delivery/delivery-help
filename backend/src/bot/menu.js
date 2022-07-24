@@ -7,7 +7,7 @@ const hideMenu = async(ctx, next) => {
     return next();
 };
 
-const formatRideReply = (ride) => {
+const formatRideReply = (ride, showStatus = true) => {
     const date = ride.departureTime.toISOString().slice(0, 10);
 
     let from;
@@ -17,9 +17,20 @@ const formatRideReply = (ride) => {
         from = ride.from.country;
     }
     let status;
-    if (ride.status == 'FINISHED') {
-        status = '\n<b>Поїздку завершено</b>';
-    } else {
+    switch (ride.status) {
+        case 'FINISHED':
+            status = '\n<b>Поїздку завершено</b>';
+            break;
+        case 'PENDING':
+            status = '\n<b>Поїздка в обробці</b>';
+            break;
+        case 'ACTIVE':
+            status = '\n<b>Ваша поточна поїздка</b>';
+            break;
+        default:
+            status = '';
+    }
+    if (!showStatus) {
         status = '';
     }
 
@@ -65,7 +76,7 @@ const registerMenuHandlers = (bot, newRideScene) => {
         nonFinishedRidesComposerOptional(true, async(ctx) => {
             for (ride of ctx.state.rides) {
                 if (ride.status != 'FINISHED') {
-                    await ctx.replyWithHTML(formatRideReply(ride));
+                    await ctx.replyWithHTML(formatRideReply(ride, false));
                 }
             }
         })
