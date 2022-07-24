@@ -24,8 +24,10 @@ const stage = new Scenes.Stage(
     { ttl: 2 * 60 }
 );
 
+let bot;
+
 function initializeBotServer(token) {
-    const bot = new Telegraf(token);
+    bot = new Telegraf(token);
 
     bot.use(session());
     bot.use(driverStateMiddleware());
@@ -69,4 +71,25 @@ function initializeBotServer(token) {
     bot.launch();
 };
 
-module.exports = { initializeBotServer };
+function notifyNewStatus(ride) {
+    let msg;
+    switch (ride.status) {
+        case 'FINISHED':
+            msg = 'Вашу поїздку завершенно. Дякуємо! Слава Україні!';
+            break;
+        case 'PENDING':
+            break;
+        case 'ACTIVE':
+            msg = 'Статус поїздки змінено. Гарної дороги!';
+            break;
+    }
+
+    if (ride.driver?._telegramId && msg) {
+        bot?.telegram.sendMessage(ride.driver?._telegramId, msg);
+    }
+}
+
+module.exports = {
+    initializeBotServer,
+    notifyNewStatus
+};
