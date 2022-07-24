@@ -1,5 +1,4 @@
 const { session, Composer, Telegraf, Scenes } = require('telegraf');
-const Calendar = require('telegraf-calendar-telegram');
 const { showMenu, registerMenuHandlers } = require('./menu');
 const { driverStateMiddleware, ridesStateMiddleware, driverComposerOptional } = require('./middlewares');
 const newDriverScene = require('./new-driver-scene');
@@ -27,12 +26,6 @@ const stage = new Scenes.Stage(
 
 function initializeBotServer(token) {
     const bot = new Telegraf(token);
-
-    const calendar = new Calendar(bot);
-    bot.use(async (ctx, next) => {
-        ctx.calendar = calendar;
-        return next()
-    });
 
     bot.use(session());
     bot.use(driverStateMiddleware());

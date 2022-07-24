@@ -3,6 +3,10 @@ const { rideModel } = require('../models');
 const { showMenu } = require('./menu');
 const { broadcastNewRide } = require('../socket');
 
+const daysOfWeek = [
+    'Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'
+];
+
 const saveRide = async(ctx) => {
     const ride = await rideModel.create({
         driver: ctx.state.driver._id,
@@ -35,7 +39,7 @@ fromHandler.action('FROM_ABROAD', async (ctx) => {
 fromHandler.action('FROM_UKRAINE', async (ctx) => {
     await ctx.deleteMessage();
     ctx.scene.state.enterCity = true
-    await ctx.reply('Вкажіть місто:');
+    await ctx.reply('Звідки Ви будете їхати?');
 });
 fromHandler.on('text', async (ctx) => {
     if (ctx.scene.state.enterCountry) {
@@ -55,10 +59,54 @@ fromHandler.leave = async (ctx) => {
     return ctx.wizard.next();
 };
 
-const calendarHandler = new Composer();
-calendarHandler.action(/calendar-telegram-date-[\d-]+/g, async (ctx) => {
+const dateHandler = new Composer();
+dateHandler.showDatePicker = async (ctx) => {
+    const keyBoard = [];
+    const date = new Date(ctx.scene.state.datePickerFirstDate);
+
+    if (date > ctx.scene.state.datePickerToday) {
+        keyBoard.push([ { text: 'Попередні дати', callback_data: 'PREV_DATE_RANGE' } ]);
+    }
+    for (let i = 0; i < 2; i++) {
+        const keyBoardRow = [];
+        for (let j = 0; j < 3; j++) {
+            const dateStr = date.toISOString().slice(0, 10);
+            keyBoardRow.push({
+                text: `${dateStr} ${daysOfWeek[date.getDay()]}`,
+                callback_data: `PICK_DATE_${dateStr}` 
+            });
+            date.setDate(date.getDate() + 1);
+        }
+        keyBoard.push(keyBoardRow);
+    }
+    keyBoard.push([ { text: 'Наступні дати', callback_data: 'NEXT_DATE_RANGE' } ]);
+
+    await ctx.reply(
+        'Оберіть варіант локації, з якої ви розпочинаєте поїздку:',
+        {
+            reply_markup: {
+                inline_keyboard: keyBoard
+            }
+        }
+    );
+};
+dateHandler.action('NEXT_DATE_RANGE', async (ctx) => {
     await ctx.deleteMessage();
-    const date = ctx.match[0].replace("calendar-telegram-date-", "");
+    ctx.scene.state.datePickerFirstDate.setDate(
+        ctx.scene.state.datePickerFirstDate.getDate() + 6
+    );
+    await dateHandler.showDatePicker(ctx);
+});
+dateHandler.action('PREV_DATE_RANGE', async (ctx) => {
+    await ctx.deleteMessage();
+    ctx.scene.state.datePickerFirstDate.setDate(
+        ctx.scene.state.datePickerFirstDate.getDate() - 6
+    );
+    await dateHandler.showDatePicker(ctx);
+});
+dateHandler.action(/PICK_DATE_[\d-]+/g, async (ctx) => {
+    await ctx.deleteMessage();
+    const date = ctx.match[0].replace("PICK_DATE_", "");
     ctx.scene.state.departureTime = date;
     await ctx.reply(`Ви вказали, що ваша поїздка розпочнеться ${date}`);
 
@@ -77,7 +125,7 @@ calendarHandler.action(/calendar-telegram-date-[\d-]+/g, async (ctx) => {
 const vehicleHandler = new Composer();
 vehicleHandler.setVehicle = (vehicleType) => async (ctx) => {
     await ctx.deleteMessage();
-    const vehile = { "CAR": "легковушку", "VAN": "грузову", "TRUCK": "фуру" };
+    const vehile = { 'CAR': 'легковушку', 'VAN': 'грузову', 'TRUCK': 'фуру' };
     await ctx.reply(`Ви обрали ${vehile[vehicleType]}`);
     ctx.scene.state.vehicle = vehicleType;
     await saveRide(ctx);
@@ -108,10 +156,13 @@ const newRideScene = new Scenes.WizardScene(
     fromHandler,
     async (ctx) => {
         ctx.scene.state.destinationCity = ctx.message.text;
-        await ctx.reply('Вкажіть дату початку запланованої поїздки: ', ctx.calendar.getCalendar())
+        ctx.scene.state.datePickerToday = new Date();
+        ctx.scene.state.datePickerToday.setHours(0, 0, 0, 0);
+        ctx.scene.state.datePickerFirstDate = new Date(ctx.scene.state.datePickerToday);
+        await dateHandler.showDatePicker(ctx);
         return ctx.wizard.next();
     },
-    calendarHandler,
+    dateHandler,
     vehicleHandler
 );
 
