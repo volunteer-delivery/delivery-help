@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { Error: MongooseError } = require('mongoose');
 const { driverModel, rideModel } = require('../models');
 const { broadcastNewRide, broadcastUpdateRide } = require('../socket');
+const { notifyNewStatus } = require('../bot');
 const { getRandomDriver, getRandomRides } = require('../seed');
 
 const rideRouter = Router();
@@ -27,7 +28,6 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
     const { status } = req.body;
     const { id } = req.params;
     try {
-        console.log(id);
         const ride = await rideModel.findById(id);
         if (!ride) {
             return res.status(404).send({ 'message': 'Ride not found' });
@@ -41,6 +41,7 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
         await ride.save();
         await ride.populate('driver');
         broadcastUpdateRide(ride);
+        notifyNewStatus(ride);
 
         res.send({ 'message': 'Status successfully changed', 'ride': ride });
     } catch (error) {
