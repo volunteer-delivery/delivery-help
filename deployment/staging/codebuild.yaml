@@ -3,8 +3,10 @@ version: 0.2
 env:
   shell: bash
   variables:
-    FRONTEND_IMAGE: $CR_HOST/$CR_USERNAME/delivery-help-frontend-staging
-    BACKEND_IMAGE: $CR_HOST/$CR_USERNAME/delivery-help-backend-staging
+    FRONTEND_IMAGE: delivery-help-frontend-staging
+    FRONTEND_TAG: $CR_HOST/$CR_USERNAME/$FRONTEND_IMAGE
+    BACKEND_IMAGE: delivery-help-backend-staging
+    BACKEND_TAG: $CR_HOST/$CR_USERNAME/$BACKEND_IMAGE
 
 phases:
   build:
@@ -19,14 +21,19 @@ phases:
           --build-arg FRONTEND_IP=$FRONTEND_IP \
           --build-arg FRONTEND_DOMAIN=$FRONTEND_DOMAIN \
           .
+      - docker tag $FRONTEND_IMAGE:latest $FRONTEND_TAG:latest
+
       - echo Building backend...
       - >
         docker build \
           -t $BACKEND_IMAGE:latest \
           -f deployment/staging/backend/Dockerfile \
           .
+      - docker tag $BACKEND_IMAGE:latest $BACKEND_TAG:latest
+
       - echo Logging in to GitHub Registry...
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
+
       - echo Pushing docker images...
-      - docker push $FRONTEND_IMAGE:latest
-      - docker push $BACKEND_IMAGE:latest
+      - docker push $FRONTEND_TAG:latest
+      - docker push $BACKEND_TAG:latest
