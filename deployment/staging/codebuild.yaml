@@ -11,6 +11,9 @@ env:
 phases:
   build:
     commands:
+      - echo Logging in to GitHub Registry...
+      - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
+
       - echo Building frontend...
       - >
         docker build \
@@ -30,9 +33,6 @@ phases:
           -f deployment/staging/backend/Dockerfile \
           .
       - docker tag $BACKEND_IMAGE:latest $BACKEND_TAG:latest
-
-      - echo Logging in to GitHub Registry...
-      - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
       - echo Pushing docker images...
       - docker push $FRONTEND_TAG:latest
