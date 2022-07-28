@@ -13,15 +13,13 @@ phases:
     runtime-versions:
       docker: 19
 
-  pre_build:
+  build:
     commands:
       - echo Logging in to GitHub Registry...
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
       - docker pull $FRONTEND_TAG:latest
       - docker pull $BACKEND_TAG:latest
 
-  build:
-    commands:
       - echo Building frontend...
       - >
         docker build \
