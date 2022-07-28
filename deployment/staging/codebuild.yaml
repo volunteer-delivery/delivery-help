@@ -1,13 +1,5 @@
 version: 0.2
 
-env:
-  shell: bash
-  variables:
-    FRONTEND_IMAGE: delivery-help-frontend-arm-staging
-    FRONTEND_TAG: $CR_HOST/$CR_USERNAME/$FRONTEND_IMAGE
-    BACKEND_IMAGE: delivery-help-backend-arm-staging
-    BACKEND_TAG: $CR_HOST/$CR_USERNAME/$BACKEND_IMAGE
-
 phases:
   install:
     runtime-versions:
@@ -17,31 +9,33 @@ phases:
     commands:
       - echo Logging in to GitHub Registry...
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
-      - docker pull $FRONTEND_TAG:latest
-      - docker pull $BACKEND_TAG:latest
+      - echo $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
+      - echo $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
+      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
+      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
 
       - echo Building frontend...
       - >
         docker build \
-          -t $FRONTEND_IMAGE:latest \
+          -t delivery-help-frontend-arm-staging:latest \
           -f deployment/staging/frontend/codebuild.Dockerfile \
-          --cache-from $FRONTEND_TAG:latest \
+          --cache-from $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_IP=$FRONTEND_IP \
           --build-arg FRONTEND_DOMAIN=$FRONTEND_DOMAIN \
           .
-      - docker tag $FRONTEND_IMAGE:latest $FRONTEND_TAG:latest
+      - docker tag delivery-help-frontend-arm-staging:latest $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
 
       - echo Building backend...
       - >
         docker build \
-          -t $BACKEND_IMAGE:latest \
+          -t delivery-help-backend-arm-staging:latest \
           -f deployment/staging/backend/Dockerfile \
-          --cache-from $BACKEND_TAG:latest \
+          --cache-from $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
           .
-      - docker tag $BACKEND_IMAGE:latest $BACKEND_TAG:latest
+      - docker tag delivery-help-backend-arm-staging:latest $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
 
       - echo Pushing docker images...
-      - docker push $FRONTEND_TAG:latest
-      - docker push $BACKEND_TAG:latest
+      - docker push $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
+      - docker push $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
