@@ -9,10 +9,8 @@ phases:
     commands:
       - echo Logging in to GitHub Registry...
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
-      - echo $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
-      - echo $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
-      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
-      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
+#      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
+#      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
 
       - echo Building frontend...
       - >
