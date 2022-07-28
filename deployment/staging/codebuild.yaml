@@ -9,14 +9,10 @@ phases:
     commands:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
-      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
-      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
-
       - >
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
           -f deployment/staging/frontend/codebuild.Dockerfile \
-          --cache-from $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_IP=$FRONTEND_IP \
@@ -27,7 +23,6 @@ phases:
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
           -f deployment/staging/backend/codebuild.Dockerfile \
-          --cache-from $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
           .
 
       - docker push $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
