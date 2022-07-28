@@ -7,10 +7,8 @@ phases:
 
   build:
     commands:
-      - echo Logging in to GitHub Registry...
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
-      - echo Building frontend...
       - >
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
@@ -22,7 +20,6 @@ phases:
           --build-arg FRONTEND_DOMAIN=$FRONTEND_DOMAIN \
           .
 
-      - echo Building backend...
       - >
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
@@ -30,6 +27,5 @@ phases:
           --cache-from $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
           .
 
-      - echo Pushing docker images...
       - docker push $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
       - docker push $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
