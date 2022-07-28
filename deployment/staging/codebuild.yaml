@@ -9,13 +9,11 @@ phases:
     commands:
       - echo Logging in to GitHub Registry...
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
-#      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
-#      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
 
       - echo Building frontend...
       - >
         docker build \
-          -t delivery-help-frontend-arm-staging:latest \
+          -t $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
           -f deployment/staging/frontend/codebuild.Dockerfile \
           --cache-from $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
@@ -23,16 +21,14 @@ phases:
           --build-arg FRONTEND_IP=$FRONTEND_IP \
           --build-arg FRONTEND_DOMAIN=$FRONTEND_DOMAIN \
           .
-      - docker tag delivery-help-frontend-arm-staging:latest $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
 
       - echo Building backend...
       - >
         docker build \
-          -t delivery-help-backend-arm-staging:latest \
+          -t $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
           -f deployment/staging/backend/Dockerfile \
           --cache-from $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
           .
-      - docker tag delivery-help-backend-arm-staging:latest $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
 
       - echo Pushing docker images...
       - docker push $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest

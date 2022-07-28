@@ -1,4 +1,4 @@
-FROM node:16.14-alpine as builder
+FROM ghcr.io/tarch64/delivery-help-node:latest as builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY ./frontend/. ./
 
 RUN npm run build
 
-FROM nginx:1.21.6-alpine
+FROM ghcr.io/tarch64/delivery-help-nginx:latest
 LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
 
 WORKDIR /app
