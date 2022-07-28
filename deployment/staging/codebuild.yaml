@@ -9,6 +9,9 @@ phases:
     commands:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
+      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
+      - docker pull $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
+
       - >
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
