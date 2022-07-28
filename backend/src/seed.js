@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { driverModel, rideModel, userModel } = require('./models');
 
 const userList = [
