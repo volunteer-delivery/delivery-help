@@ -4,9 +4,9 @@ env:
   shell: bash
   variables:
     FRONTEND_IMAGE: delivery-help-frontend-arm-staging
-    FRONTEND_TAG: $CR_HOST/$CR_USERNAME/$FRONTEND_IMAGE:latest
+    FRONTEND_TAG: $CR_HOST/$CR_USERNAME/$FRONTEND_IMAGE
     BACKEND_IMAGE: delivery-help-backend-arm-staging
-    BACKEND_TAG: $CR_HOST/$CR_USERNAME/$BACKEND_IMAGE:latest
+    BACKEND_TAG: $CR_HOST/$CR_USERNAME/$BACKEND_IMAGE
 
 phases:
   install:
@@ -17,8 +17,8 @@ phases:
     commands:
       - echo Logging in to GitHub Registry...
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
-      - docker pull $FRONTEND_TAG
-      - docker pull $BACKEND_TAG
+      - docker pull $FRONTEND_TAG:latest
+      - docker pull $BACKEND_TAG:latest
 
   build:
     commands:
@@ -27,23 +27,23 @@ phases:
         docker build \
           -t $FRONTEND_IMAGE:latest \
           -f deployment/staging/frontend/codebuild.Dockerfile \
-          --cache-from $FRONTEND_TAG \
+          --cache-from $FRONTEND_TAG:latest \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_IP=$FRONTEND_IP \
           --build-arg FRONTEND_DOMAIN=$FRONTEND_DOMAIN \
           .
-      - docker tag $FRONTEND_IMAGE:latest $FRONTEND_TAG
+      - docker tag $FRONTEND_IMAGE:latest $FRONTEND_TAG:latest
 
       - echo Building backend...
       - >
         docker build \
           -t $BACKEND_IMAGE:latest \
           -f deployment/staging/backend/Dockerfile \
-          --cache-from $BACKEND_TAG \
+          --cache-from $BACKEND_TAG:latest \
           .
-      - docker tag $BACKEND_IMAGE:latest $BACKEND_TAG
+      - docker tag $BACKEND_IMAGE:latest $BACKEND_TAG:latest
 
       - echo Pushing docker images...
-      - docker push $FRONTEND_TAG
-      - docker push $BACKEND_TAG
+      - docker push $FRONTEND_TAG:latest
+      - docker push $BACKEND_TAG:latest
