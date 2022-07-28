@@ -67,9 +67,9 @@ dateHandler.showDatePicker = async (ctx) => {
     if (date > ctx.scene.state.datePickerToday) {
         keyBoard.push([ { text: 'Попередні дати', callback_data: 'PREV_DATE_RANGE' } ]);
     }
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
         const keyBoardRow = [];
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < 2; j++) {
             const dateStr = date.toISOString().slice(0, 10);
             keyBoardRow.push({
                 text: `${dateStr} ${daysOfWeek[date.getDay()]}`,
