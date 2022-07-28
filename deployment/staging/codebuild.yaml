@@ -26,7 +26,7 @@ phases:
       - >
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
-          -f deployment/staging/backend/Dockerfile \
+          -f deployment/staging/backend/codebuild.Dockerfile \
           --cache-from $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
           .
 
