@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ec2-user/delivery-help/app
+
+hooks:
+  BeforeInstall:
+    - location: hooks/before-install.sh
+      runas: ec2-user
+
+  ApplicationStart:
+    - location: hooks/start.sh
+      runas: ec2-user
+
+  ApplicationStop:
+    - location: hooks/stop.sh
+      runas: ec2-user
