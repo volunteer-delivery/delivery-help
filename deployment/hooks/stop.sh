@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-docker compose --env-file "$HOME/delivery-help/.env" -f ../staging/docker-compose-up.yaml down --remove-orphans;
+docker compose -f ../staging/docker-compose.yaml down --remove-orphans;

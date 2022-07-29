@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-docker compose --env-file "$HOME/delivery-help/.env" -f ../staging/docker-compose-up.yaml pull;
+export $(cat "$HOME/delivery-help/.env" | xargs) && \
+echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin && \
+docker compose -f ../staging/docker-compose.yaml pull;

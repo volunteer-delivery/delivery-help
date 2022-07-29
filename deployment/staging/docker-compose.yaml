@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  frontend:
+    restart: always
+    image: ${CR_HOST}/${CR_USERNAME}/delivery-help-frontend-staging:latest
+    command: nginx -g 'daemon off;'
+    env_file: ${HOME}/delivery-help/.env
+    ports:
+      - 80:80
+
+  backend:
+    restart: always
+    image: ${CR_HOST}/${CR_USERNAME}/delivery-help-backend-staging:latest
+    command: npm run start
+    env_file: ${HOME}/delivery-help/.env
