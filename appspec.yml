@@ -7,7 +7,7 @@ files:
 
 hooks:
   AfterInstall:
-    - location: ci/common/hooks/before-install.sh
+    - location: ci/common/hooks/after-install.sh
       runas: ec2-user
 
   ApplicationStart:
