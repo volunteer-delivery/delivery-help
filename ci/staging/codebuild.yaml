@@ -6,6 +6,7 @@ phases:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
       - export DOCKER_BUILDKIT=1
+      - export BUILDKIT_INLINE_CACHE=1
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
       - export FRONTEND_TAG="$CR_BASE/delivery-help-frontend"
       - export BACKEND_TAG="$CR_BASE/delivery-help-backend"
@@ -24,9 +25,11 @@ phases:
           --target builder \
           --file ci/staging/frontend/Dockerfile \
           --cache-from $FRONTEND_TAG:staging-builder \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
-          --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg FRONTEND_API_URL \
+          --build-arg FRONTEND_SOCKET_URL \
+          --build-arg FRONTEND_IP \
+          --build-arg FRONTEND_DOMAIN \
           .
 
       - >
@@ -35,9 +38,11 @@ phases:
           --file ci/staging/frontend/Dockerfile \
           --cache-from frontend-builder \
           --cache-from $FRONTEND_TAG:staging \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
-          --build-arg FRONTEND_IP=$FRONTEND_IP \
-          --build-arg FRONTEND_DOMAIN=$FRONTEND_DOMAIN \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg FRONTEND_API_URL \
+          --build-arg FRONTEND_SOCKET_URL \
+          --build-arg FRONTEND_IP \
+          --build-arg FRONTEND_DOMAIN \
           .
 
       - >
@@ -45,7 +50,7 @@ phases:
           --tag backend-app \
           --file ci/staging/backend/Dockerfile \
           --cache-from $BACKEND_TAG:staging \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --build-arg BUILDKIT_INLINE_CACHE \
           .
 
   post_build:
