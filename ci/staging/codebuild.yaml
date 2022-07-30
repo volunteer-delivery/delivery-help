@@ -21,6 +21,7 @@ phases:
           --tag frontend-builder \
           --target builder \
           --file ci/staging/frontend/Dockerfile \
+          --cache-from $FRONTEND_TAG:staging-builder
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
