@@ -5,10 +5,18 @@ phases:
     commands:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
+      - export DOCKER_BUILDKIT=1
+      - export FRONTEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest"
+      - export BACKEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest"
+
+      - docker pull $FRONTEND_TAG || true
+      - docker pull $BACKEND_TAG || true
+
       - >
         docker build \
-          -t $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
+          -t $FRONTEND_TAG \
           -f ci/staging/frontend/Dockerfile \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_IP=$FRONTEND_IP \
@@ -17,9 +25,10 @@ phases:
 
       - >
         docker build \
-          -t $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
+          -t $BACKEND_TAG \
           -f ci/staging/backend/Dockerfile \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           .
 
-      - docker push $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
+      - docker push $FRONTEND_TAG
       - docker push $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
