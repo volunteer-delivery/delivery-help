@@ -15,7 +15,7 @@ phases:
 
       - >
         docker build \
-          --tag $FRONTEND_TAG:staging-builder \
+          --tag frontend-builder \
           --target builder \
           --file ci/staging/frontend/Dockerfile \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
@@ -27,7 +27,7 @@ phases:
 
       - >
         docker build \
-          --tag $FRONTEND_TAG:latest \
+          --tag frontend-app \
           --file ci/staging/frontend/Dockerfile \
           --cache-from $FRONTEND_TAG:staging-builder \
           --cache-from $FRONTEND_TAG:staging \
@@ -40,12 +40,17 @@ phases:
 
       - >
         docker build \
-          --tag $BACKEND_TAG:staging \
+          --tag backend-app \
           --file ci/staging/backend/Dockerfile \
           --cache-from $BACKEND_TAG:staging \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           .
 
+      - docker tag frontend-app $FRONTEND_TAG:staging
       - docker push $FRONTEND_TAG:staging
+
+      - docker tag frontend-builder $FRONTEND_TAG:staging-builder
       - docker push $FRONTEND_TAG:staging-builder
+
+      - docker tag backend-app $BACKEND_TAG:staging
       - docker push $BACKEND_TAG:staging
