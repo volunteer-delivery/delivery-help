@@ -6,9 +6,12 @@ phases:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
       - export DOCKER_BUILDKIT=1
-      - export FRONTEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-frontend"
-      - export BACKEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-backend"
+      - export CR_BASE="$CR_HOST/$CR_USERNAME"
+      - export FRONTEND_TAG="$CR_BASE/delivery-help-frontend"
+      - export BACKEND_TAG="$CR_BASE/delivery-help-backend"
 
+      - docker pull $CR_BASE/delivery-help-node:latest || true
+      - docker pull $CR_BASE/delivery-help-nginx:latest || true
       - docker pull $FRONTEND_TAG:staging || true
       - docker pull $FRONTEND_TAG:staging-builder || true
       - docker pull $BACKEND_TAG:staging || true
