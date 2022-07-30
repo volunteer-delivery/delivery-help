@@ -6,7 +6,7 @@ files:
     destination: /home/ec2-user/delivery-help/app
 
 hooks:
-  BeforeInstall:
+  AfterInstall:
     - location: ci/common/hooks/before-install.sh
       runas: ec2-user
 
