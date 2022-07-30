@@ -14,8 +14,8 @@ phases:
 
       - >
         docker build \
-          -t $FRONTEND_TAG \
-          -f ci/staging/frontend/Dockerfile \
+          --tag $FRONTEND_TAG \
+          --file ci/staging/frontend/Dockerfile \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
@@ -25,8 +25,8 @@ phases:
 
       - >
         docker build \
-          -t $BACKEND_TAG \
-          -f ci/staging/backend/Dockerfile \
+          --tag $BACKEND_TAG \
+          --file ci/staging/backend/Dockerfile \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           .
 
