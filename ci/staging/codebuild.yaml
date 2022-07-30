@@ -1,10 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      docker: 19
-
   build:
     commands:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
@@ -12,7 +8,7 @@ phases:
       - >
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest \
-          -f deployment/staging/frontend/codebuild.Dockerfile \
+          -f ci/staging/frontend/Dockerfile \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_IP=$FRONTEND_IP \
@@ -22,7 +18,7 @@ phases:
       - >
         docker build \
           -t $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest \
-          -f deployment/staging/backend/codebuild.Dockerfile \
+          -f ci/staging/backend/Dockerfile \
           .
 
       - docker push $CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest
