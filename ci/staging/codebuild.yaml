@@ -29,8 +29,8 @@ phases:
         docker build \
           --tag $FRONTEND_TAG:latest \
           --file ci/staging/frontend/Dockerfile \
-          --cache-from $FRONTEND_TAG:staging-builder
-          --cache-from $FRONTEND_TAG:staging
+          --cache-from $FRONTEND_TAG:staging-builder \
+          --cache-from $FRONTEND_TAG:staging \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
@@ -42,7 +42,7 @@ phases:
         docker build \
           --tag $BACKEND_TAG:staging \
           --file ci/staging/backend/Dockerfile \
-          --cache-from $BACKEND_TAG:staging
+          --cache-from $BACKEND_TAG:staging \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           .
 
