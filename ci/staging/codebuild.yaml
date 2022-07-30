@@ -1,7 +1,7 @@
 version: 0.2
 
 phases:
-  build:
+  pre_build:
     commands:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
@@ -16,6 +16,8 @@ phases:
       - docker pull $FRONTEND_TAG:staging-builder || true
       - docker pull $BACKEND_TAG:staging || true
 
+  build:
+    commands:
       - >
         docker build \
           --tag frontend-builder \
@@ -46,11 +48,13 @@ phases:
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           .
 
-      - docker tag frontend-app $FRONTEND_TAG:staging
-      - docker push $FRONTEND_TAG:staging
-
+  post_build:
+    commands:
       - docker tag frontend-builder $FRONTEND_TAG:staging-builder
       - docker push $FRONTEND_TAG:staging-builder
+
+      - docker tag frontend-app $FRONTEND_TAG:staging
+      - docker push $FRONTEND_TAG:staging
 
       - docker tag backend-app $BACKEND_TAG:staging
       - docker push $BACKEND_TAG:staging
