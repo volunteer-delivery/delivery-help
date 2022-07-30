@@ -6,15 +6,17 @@ phases:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
       - export DOCKER_BUILDKIT=1
-      - export FRONTEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-frontend-arm-staging:latest"
-      - export BACKEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest"
+      - export FRONTEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-frontend"
+      - export BACKEND_TAG="$CR_HOST/$CR_USERNAME/delivery-help-backend"
 
-      - docker pull $FRONTEND_TAG || true
-      - docker pull $BACKEND_TAG || true
+      - docker pull $FRONTEND_TAG:staging || true
+      - docker pull $FRONTEND_TAG:staging-builder || true
+      - docker pull $BACKEND_TAG:staging || true
 
       - >
         docker build \
-          --tag $FRONTEND_TAG \
+          --tag $FRONTEND_TAG:staging-builder \
+          --target builder \
           --file ci/staging/frontend/Dockerfile \
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
@@ -25,10 +27,25 @@ phases:
 
       - >
         docker build \
-          --tag $BACKEND_TAG \
+          --tag $FRONTEND_TAG:latest \
+          --file ci/staging/frontend/Dockerfile \
+          --cache-from $FRONTEND_TAG:staging-builder
+          --cache-from $FRONTEND_TAG:staging
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --build-arg FRONTEND_API_URL=$FRONTEND_API_URL \
+          --build-arg FRONTEND_SOCKET_URL=$FRONTEND_SOCKET_URL \
+          --build-arg FRONTEND_IP=$FRONTEND_IP \
+          --build-arg FRONTEND_DOMAIN=$FRONTEND_DOMAIN \
+          .
+
+      - >
+        docker build \
+          --tag $BACKEND_TAG:staging \
           --file ci/staging/backend/Dockerfile \
+          --cache-from $BACKEND_TAG:staging
           --build-arg BUILDKIT_INLINE_CACHE=1 \
           .
 
-      - docker push $FRONTEND_TAG
-      - docker push $CR_HOST/$CR_USERNAME/delivery-help-backend-arm-staging:latest
+      - docker push $FRONTEND_TAG:staging
+      - docker push $FRONTEND_TAG:staging-builder
+      - docker push $BACKEND_TAG:staging
