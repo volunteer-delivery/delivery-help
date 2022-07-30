@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-docker compose -f ci/staging/docker-compose.yaml up --detach;
+root="$HOME/delivery-help"
+
+docker compose -f "$root/app/ci/staging/docker-compose.yaml" up --detach;
