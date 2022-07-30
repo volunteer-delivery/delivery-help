@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
-root="$HOME/delivery-help"
+config="$HOME/delivery-help/app/ci/staging/docker-compose.yaml";
 
-docker compose -f "$root/app/ci/staging/docker-compose.yaml" up --detach;
+docker compose -f "$config" up --detach && \
+docker compose -f "$config" down --remove-orphans;

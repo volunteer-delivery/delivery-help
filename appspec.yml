@@ -13,7 +13,3 @@ hooks:
   ApplicationStart:
     - location: ci/common/hooks/start.sh
       runas: ec2-user
-
-  ApplicationStop:
-    - location: ci/common/hooks/stop.sh
-      runas: ec2-user
