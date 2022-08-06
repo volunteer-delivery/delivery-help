@@ -39,7 +39,7 @@ fromHandler.action('FROM_ABROAD', async (ctx) => {
 fromHandler.action('FROM_UKRAINE', async (ctx) => {
     await ctx.deleteMessage();
     ctx.scene.state.enterCity = true
-    await ctx.reply('Звідки Ви будете їхати?');
+    await ctx.reply('Звідки ви будете їхати?');
 });
 fromHandler.on('text', async (ctx) => {
     if (ctx.scene.state.enterCountry) {
@@ -125,13 +125,17 @@ dateHandler.action(/PICK_DATE_[\d-]+/g, async (ctx) => {
 const vehicleHandler = new Composer();
 vehicleHandler.setVehicle = (vehicleType) => async (ctx) => {
     await ctx.deleteMessage();
-    const vehile = { 'CAR': 'легковушку', 'VAN': 'грузову', 'TRUCK': 'фуру' };
+    const vehile = { 
+        'CAR': 'легковий автомобіль',
+        'VAN': 'вантажний автомобіль',
+        'TRUCK': 'фуру' 
+    };
     await ctx.reply(`Ви обрали ${vehile[vehicleType]}`);
     ctx.scene.state.vehicle = vehicleType;
     await saveRide(ctx);
     await ctx.reply('Дякуємо! Ваша заявка прийнята.');
     await ctx.reply('Якщо цей маршрут буде актуальним для волонтерів, вони сконтактують із вами по телефону.');
-    await ctx.reply('Ваша допомога є неоціненною. Разом - ми сила!');
+    await ctx.reply('Зареєструвати наступну поїздку ви зможете після завершення поточної.');
     await ctx.scene.leave();
     await showMenu(ctx);
 };
