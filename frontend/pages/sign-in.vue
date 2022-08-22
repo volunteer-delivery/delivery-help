@@ -4,7 +4,7 @@
             <v-form lazy-validation ref="form" @submit="signIn">
                 <v-card elevation="1">
                     <v-card-title>
-                        DeliveryHelp ~ Вхід
+                        ВолонтерВантаж ~ Вхід
                     </v-card-title>
 
                     <v-card-text>
