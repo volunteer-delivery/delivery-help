@@ -82,7 +82,7 @@ dateHandler.showDatePicker = async (ctx) => {
     keyBoard.push([ { text: 'Наступні дати', callback_data: 'NEXT_DATE_RANGE' } ]);
 
     await ctx.reply(
-        'Оберіть варіант локації, з якої ви розпочинаєте поїздку:',
+        'Оберіть варіант дати, коли ви розпочинаєте поїздку:',
         {
             reply_markup: {
                 inline_keyboard: keyBoard
