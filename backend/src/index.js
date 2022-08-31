@@ -10,14 +10,16 @@ const { initializeBotServer } = require('./bot');
 const { seedData } = require('./seed');
 const { authMiddleware } = require('./middlewares');
 
-const { MONGO_URL, BACKEND_SECRET, TELEGRAM_BOT_TOKEN, FRONTEND_ORIGIN } = process.env;
+const { MONGO_URL, BACKEND_SECRET, BACKEND_ENV, TELEGRAM_BOT_TOKEN, FRONTEND_ORIGIN } = process.env;
 
 async function bootstrap() {
     await mongoose.connect(MONGO_URL);
 
-    const rideCount = await rideModel.count();
+    if (BACKEND_ENV !== 'production') {
+        const rideCount = await rideModel.count();
 
-    if (!rideCount) await seedData();
+        if (!rideCount) await seedData();
+    }
 
     const app = express();
 
