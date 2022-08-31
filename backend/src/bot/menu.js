@@ -19,13 +19,13 @@ const formatRideReply = (ride, showStatus = true) => {
     let status;
     switch (ride.status) {
         case 'FINISHED':
-            status = '\n<b>Поїздку завершено</b>';
+            status = '\n<b>Вашу поїздку завершено.</b>';
             break;
         case 'PENDING':
-            status = '\n<b>Поїздка в обробці</b>';
+            status = '\n<b>Інформація про вашу поїздку в обробці.</b>';
             break;
         case 'ACTIVE':
-            status = '\n<b>Ваша поточна поїздка</b>';
+            status = '\n<b>Інформація про вашу поточну поїздку.</b>';
             break;
         default:
             status = '';
