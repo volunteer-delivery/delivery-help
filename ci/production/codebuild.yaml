@@ -1,0 +1,65 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
+
+      - export DOCKER_BUILDKIT=1
+      - export BUILDKIT_INLINE_CACHE=1
+      - export CR_BASE="$CR_HOST/$CR_USERNAME"
+      - export FRONTEND_TAG="$CR_BASE/delivery-help-frontend"
+      - export BACKEND_TAG="$CR_BASE/delivery-help-backend"
+
+      - docker pull $CR_BASE/delivery-help-node:latest || true
+      - docker pull $CR_BASE/delivery-help-nginx:latest || true
+      - docker pull $FRONTEND_TAG:production || true
+      - docker pull $FRONTEND_TAG:production-builder || true
+      - docker pull $BACKEND_TAG:production || true
+
+  build:
+    commands:
+      - >
+        docker build \
+          --tag frontend-builder \
+          --target builder \
+          --file ci/production/frontend/Dockerfile \
+          --cache-from $FRONTEND_TAG:production-builder \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg FRONTEND_API_URL \
+          --build-arg FRONTEND_SOCKET_URL \
+          --build-arg FRONTEND_IP \
+          --build-arg FRONTEND_DOMAIN \
+          .
+
+      - >
+        docker build \
+          --tag frontend-app \
+          --file ci/production/frontend/Dockerfile \
+          --cache-from frontend-builder \
+          --cache-from $FRONTEND_TAG:production \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg FRONTEND_API_URL \
+          --build-arg FRONTEND_SOCKET_URL \
+          --build-arg FRONTEND_IP \
+          --build-arg FRONTEND_DOMAIN \
+          .
+
+      - >
+        docker build \
+          --tag backend-app \
+          --file ci/production/backend/Dockerfile \
+          --cache-from $BACKEND_TAG:production \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          .
+
+  post_build:
+    commands:
+      - docker tag frontend-builder $FRONTEND_TAG:production-builder
+      - docker push $FRONTEND_TAG:production-builder
+
+      - docker tag frontend-app $FRONTEND_TAG:production
+      - docker push $FRONTEND_TAG:production
+
+      - docker tag backend-app $BACKEND_TAG:production
+      - docker push $BACKEND_TAG:production
