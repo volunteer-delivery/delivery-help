@@ -20,5 +20,6 @@ const { readFileSync, writeFileSync, existsSync } = require('fs');
     writeFileSync(historyLocation, history);
 
     replServer.setupHistory(historyLocation, () => {});
+    replServer.on('exit', () => mongoose.disconnect());
 })();
 
