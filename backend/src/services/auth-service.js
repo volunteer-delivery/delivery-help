@@ -8,7 +8,7 @@ const authService = {
     async validateCredentials(credentials) {
         if (!credentials.username || !credentials.password) return false;
 
-        const user = await userModel.findOne({ username: credentials.username }).exec()
+        const user = await userModel.findOne({ name: credentials.username }).exec()
         const isCredentialsValid = user && await bcrypt.compare(credentials.password, user._password);
 
         return isCredentialsValid ? user : false;

@@ -9,6 +9,8 @@ async function authMiddleware(req, res, next) {
     const user = tokenPayload && await userModel.findById(tokenPayload.userId).exec();
 
     if (!user) {
+        res.clearCookie('dh.auth');
+        res.clearCookie('dh.session');
         return res.status(403).send();
     }
 

@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { Error: MongooseError } = require('mongoose');
-const { driverModel, rideModel } = require('../models');
+const { driverModel, rideModel, rideStatusEnum } = require('../models');
 const { broadcastNewRide, broadcastUpdateRide } = require('../socket');
 const { notifyNewStatus } = require('../bot');
 const { getRandomDriver, getRandomRides } = require('../seed');
@@ -8,7 +8,8 @@ const { getRandomDriver, getRandomRides } = require('../seed');
 const rideRouter = Router();
 
 rideRouter.get('/rides', async (req, res) => {
-    const rides = await rideModel.find({}).populate('driver');
+    const filter = { volunteer: [null, req.user.id] }
+    const rides = await rideModel.find(filter).populate('driver');
     res.send({ 'rides': rides });
 });
 
@@ -37,10 +38,17 @@ rideRouter.patch('/rides/:id/status', async (req, res) => {
             return res.status(406).send({ 'message': 'Status not provided' });
         }
 
+        const oldStatus = ride.status;
         ride.status = status;
+
+        if (status === rideStatusEnum.active) {
+            ride.volunteer = req.user.id;
+        }
+
         await ride.save();
         await ride.populate('driver');
-        broadcastUpdateRide(ride);
+        const socketUpdateUserId = oldStatus === rideStatusEnum.pending ? null : req.user.id;
+        broadcastUpdateRide(socketUpdateUserId, ride);
         notifyNewStatus(ride);
 
         res.send({ 'message': 'Status successfully changed', 'ride': ride });

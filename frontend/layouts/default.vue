@@ -74,6 +74,8 @@
 <script>
 import { mdiCar, mdiCheck, mdiClose, mdiPlay } from '@mdi/js';
 
+let subscriptions = [];
+
 export default {
     name: 'default',
 
@@ -139,8 +141,19 @@ export default {
         }
     },
 
-    async middleware({ store }) {
-        await store.dispatch('drives-store/load');
+    async middleware({ store, $bindVuexCable }) {
+        subscriptions.forEach(unsubscribe => unsubscribe());
+        subscriptions = [];
+
+        await Promise.all([
+            store.dispatch('drives-store/load'),
+            store.dispatch('auth-store/loadCurrentUser')
+        ]);
+        const { currentUser } = store.state["auth-store"];
+
+        subscriptions.push($bindVuexCable('rides/new', 'drives-store/add'));
+        subscriptions.push($bindVuexCable('rides/update', 'drives-store/update'));
+        subscriptions.push($bindVuexCable(`users/${currentUser.id}/rides/update`, 'drives-store/update'));
     }
 };
 </script>

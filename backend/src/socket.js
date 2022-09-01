@@ -9,15 +9,16 @@ function initializeSocketServer(httpServer) {
 }
 
 function broadcastNewRide(ride) {
-    socketServer?.emit("newRide", ride);
+    socketServer.emit('rides/new', ride);
 }
 
-function broadcastUpdateRide(ride) {
-    socketServer?.emit("updateRide", ride);
+function broadcastUpdateRide(userId, ride) {
+    const namespace = userId ? `users/${userId}/rides` : 'rides';
+    socketServer.emit(`${namespace}/update`, ride);
 }
 
 function broadcastNewRideComment(rideId, comment) {
-    socketServer?.emit(`newRideComment:${rideId}`, comment);
+    socketServer.emit(`rides/${rideId}/comments/new`, comment);
 }
 
 module.exports = {

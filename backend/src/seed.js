@@ -1,12 +1,10 @@
 const bcrypt = require('bcryptjs');
-const { driverModel, rideModel, userModel } = require('./models');
+const { driverModel, rideModel, userModel, rideStatusEnum} = require('./models');
 
-const userList = [
-    {
-        name: 'beta',
-        _password: bcrypt.hashSync('password', 10)
-    }
-];
+const userData = {
+    name: 'beta',
+    _password: bcrypt.hashSync('password', 10)
+};
 
 const driverList = [
     {
@@ -69,18 +67,23 @@ const vehicleList = ['CAR', 'VAN', 'TRUCK', 'CAR', 'CAR', 'CAR', 'CAR' ];
 const statusList = ['PENDING', 'ACTIVE', 'FINISHED', 'PENDING', 'PENDING', 'PENDING', 'PENDING'];
 
 async function seedData() {
-    await userModel.insertMany(userList);
-
+    const user = await userModel.create(userData);
     const drivers = await driverModel.insertMany(driverList);
 
-    await Promise.all(drivers.map((driver, i) => rideModel.create({
-        driver: driver._id,
-        from: fromList[i],
-        destination: destinationList[i],
-        departureTime: timeList[i],
-        vehicle: vehicleList[i],
-        status: statusList[i]
-    })));
+    await Promise.all(drivers.map((driver, i) => {
+        const status = statusList[i];
+        const volunteer = [rideStatusEnum.active, rideStatusEnum.finished].includes(status) ? user._id : null;
+
+        return rideModel.create({
+            driver: driver._id,
+            from: fromList[i],
+            destination: destinationList[i],
+            departureTime: timeList[i],
+            vehicle: vehicleList[i],
+            status,
+            volunteer
+        })
+    }));
 }
 
 function getRandomElem(arr) {

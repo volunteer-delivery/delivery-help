@@ -2,6 +2,12 @@ const { Schema, model } = require('mongoose');
 const { preparePublicSchema } = require('./common');
 const { addressSchema } = require('./address-model');
 
+const rideStatusEnum = {
+    pending: 'PENDING',
+    active: 'ACTIVE',
+    finished: 'FINISHED'
+};
+
 const rideSchema = new Schema({
     driver: {
         type: Schema.Types.ObjectId,
@@ -32,18 +38,25 @@ const rideSchema = new Schema({
 
     status: {
         type: String,
-        enum: ['PENDING', 'ACTIVE', 'FINISHED'],
-        default: 'PENDING',
+        enum: Object.values(rideStatusEnum),
+        default: rideStatusEnum.pending,
         required: true
     },
 
     comments: [{
         type: Schema.Types.ObjectId,
         ref: 'RideComment'
-    }]
+    }],
+
+    volunteer: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: false,
+        default: null
+    }
 });
 
 preparePublicSchema(rideSchema);
 const rideModel = model('Ride', rideSchema);
 
-module.exports = { rideModel };
+module.exports = { rideModel, rideStatusEnum };

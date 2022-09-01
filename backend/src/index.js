@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
-const { driverRouter, rideRouter, authRouter, rideCommentsRouter } = require('./routers');
+const { driverRouter, rideRouter, authRouter, rideCommentsRouter, userRouter } = require('./routers');
 const { rideModel } = require('./models');
 const { initializeSocketServer } = require('./socket');
 const { initializeBotServer } = require('./bot');
@@ -28,14 +28,17 @@ async function bootstrap() {
     app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 
     app.use('/api/v1', authMiddleware);
-    app.use('/api/v1', driverRouter, rideRouter, authRouter, rideCommentsRouter);
+    app.use('/api/v1', driverRouter, rideRouter, authRouter, rideCommentsRouter, userRouter);
 
     const httpServer = createServer(app);
 
     initializeSocketServer(httpServer);
 
     httpServer.listen(8080, () => {
-        console.log('Server was started');
+        console.log([
+            '\nServer was started',
+            `time: ${new Date().toLocaleTimeString()}`
+        ].join('\n'));
     });
 
     if (TELEGRAM_BOT_TOKEN) {

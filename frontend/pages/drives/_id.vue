@@ -80,12 +80,12 @@ export default {
 
     created() {
         this.timeUpdater = setInterval(() => this.now = Date.now(), 5000);
-        this.$cable.on(`newRideComment:${this.driveId}`, this.addComment);
+        this.$cable.on(`rides/${this.driveId}/comments/new`, this.addComment);
     },
 
     destroyed() {
         clearInterval(this.timeUpdater);
-        this.$cable.off(`newRideComment:${this.driveId}`, this.addComment);
+        this.$cable.off(`rides/${this.driveId}/comments/new`, this.addComment);
     },
 
     methods: {

@@ -1,13 +1,12 @@
 export default function (context, inject) {
     const cable = context.$nuxtSocket({});
 
-    cable.on('newRide', async (drive) => {
-        await context.store.dispatch('drives-store/add', drive);
-    });
-
-    cable.on('updateRide', async (drive) => {
-        await context.store.dispatch('drives-store/update', drive);
-    });
+    function bindVuexCable(event, action) {
+        const handler = (payload) => context.store.dispatch(action, payload);
+        cable.on(event, handler);
+        return () => cable.off(event, handler);
+    }
 
     inject('cable', cable);
+    inject('bindVuexCable', bindVuexCable)
 }
