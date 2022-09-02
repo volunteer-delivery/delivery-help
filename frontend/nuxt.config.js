@@ -1,6 +1,10 @@
 import colors from 'vuetify/lib/util/colors';
 
-const { FRONTEND_API_URL, FRONTEND_SOCKET_URL } = process.env;
+const { FRONTEND_API_URL, FRONTEND_SOCKET_URL, FRONTEND_BUGSNAG_KEY, FRONTEND_ENV } = process.env;
+
+function optional(isEnabled, ...module) {
+    return isEnabled ? [module] : [];
+}
 
 const BROWSERSLIST = [
     'last 4 chrome version',
@@ -52,7 +56,13 @@ export default {
     modules: [
         '@nuxtjs/axios',
         'nuxt-socket-io',
-        ['@nuxtjs/toast', { duration: 5000 }]
+        ['@nuxtjs/toast', { duration: 5000 }],
+
+        ...optional(FRONTEND_BUGSNAG_KEY, 'nuxt-bugsnag', {
+            apiKey: FRONTEND_BUGSNAG_KEY,
+            releaseStage: FRONTEND_ENV,
+            publishRelease: true
+        })
     ],
 
     plugins: [

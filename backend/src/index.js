@@ -2,7 +2,8 @@ const { createServer } = require("http");
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const { errorTracker } = require('./services');
 const { driverRouter, rideRouter, authRouter, rideCommentsRouter, userRouter } = require('./routers');
 const { rideModel } = require('./models');
 const { initializeSocketServer } = require('./socket');
@@ -23,6 +24,7 @@ async function bootstrap() {
 
     const app = express();
 
+    errorTracker.initRequestHandler(app);
     app.use(cookieParser(BACKEND_SECRET));
     app.use(express.json());
     app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
@@ -30,13 +32,15 @@ async function bootstrap() {
     app.use('/api/v1', authMiddleware);
     app.use('/api/v1', driverRouter, rideRouter, authRouter, rideCommentsRouter, userRouter);
 
+    errorTracker.initErrorHandler(app);
     const httpServer = createServer(app);
 
     initializeSocketServer(httpServer);
 
     httpServer.listen(8080, () => {
         console.log([
-            '\nServer was started',
+            '',
+            'Server was started',
             `time: ${new Date().toLocaleTimeString()}`
         ].join('\n'));
     });

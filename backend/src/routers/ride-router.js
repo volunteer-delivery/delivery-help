@@ -26,7 +26,7 @@ rideRouter.get('/rides/add-random', async (req, res) => {
 });
 
 rideRouter.patch('/rides/:id/status', async (req, res) => {
-    const { status } = req.body;
+    const { status } = req.bod;
     const { id } = req.params;
     try {
         const ride = await rideModel.findById(id);
