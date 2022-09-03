@@ -4,6 +4,8 @@ WORKDIR /app
 
 ARG FRONTEND_API_URL
 ARG FRONTEND_SOCKET_URL
+ARG FRONTEND_ENV
+ARG FRONTEND_BUGSNAG_KEY
 
 COPY ./frontend/package.json ./frontend/package-lock.json ./
 RUN npm install --production

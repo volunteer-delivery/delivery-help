@@ -30,6 +30,8 @@ phases:
           --build-arg FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_IP \
           --build-arg FRONTEND_DOMAIN \
+          --build-arg FRONTEND_ENV \
+          --build-arg FRONTEND_BUGSNAG_KEY \
           .
 
       - >
@@ -43,6 +45,8 @@ phases:
           --build-arg FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_IP \
           --build-arg FRONTEND_DOMAIN \
+          --build-arg FRONTEND_ENV \
+          --build-arg FRONTEND_BUGSNAG_KEY \
           .
 
       - >
