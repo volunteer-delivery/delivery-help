@@ -14,7 +14,8 @@ export const actions = {
         if (context.state.currentUser) return;
 
         const response = await this.$axios.get('user/current');
-        context.commit('setUser', response.data.user)
+        context.commit('setUser', response.data.user);
+        this.$errorTracker.setUser(response.data.user);
     }
 };
 
