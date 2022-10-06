@@ -14,3 +14,17 @@ services:
     image: ${CR_HOST}/${CR_USERNAME}/delivery-help-backend:staging
     command: npm run start
     env_file: ${HOME}/delivery-help/.env
+    volumes:
+      - /tmp/delivery-help:/app-tmp
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:5.0.7
+    volumes:
+      - data_mongo:/data/db
+    env_file: .env
+
+volumes:
+  data_mongo:
+    driver: local

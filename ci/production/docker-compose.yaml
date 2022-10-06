@@ -14,3 +14,5 @@ services:
     image: ${CR_HOST}/${CR_USERNAME}/delivery-help-backend:production
     command: npm run start
     env_file: ${HOME}/delivery-help/.env
+    volumes:
+      - /tmp/delivery-help:/app-tmp
