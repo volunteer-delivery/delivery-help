@@ -1,13 +1,16 @@
 <template>
     <v-row justify="center" align="center">
-        <v-col class="pa-0 pa-sm-3 pt-sm-7" cols="12" sm="8" md="4">
-            <Drive
-                class="mb-sm-4"
-                v-for="drive of drives"
-                :key="drive.id"
-                :drive="drive"
-            />
-            <empty v-if="!drives.length"/>
+        <v-col class="pa-0 pa-sm-3 pt-sm-7" cols="12" sm="8" md="6">
+            <empty v-if="isEmpty"/>
+
+            <template v-else>
+                <Drive
+                    class="mb-sm-4"
+                    v-for="drive of drives"
+                    :key="drive.id"
+                    :drive="drive"
+                />
+            </template>
         </v-col>
     </v-row>
 </template>
@@ -25,7 +28,16 @@ export default {
     },
 
     props: {
-        drives: Array
+        drives: {
+            type: Array,
+            required: true
+        }
+    },
+
+    computed: {
+        isEmpty() {
+            return !this.drives.length
+        }
     }
 };
 </script>
