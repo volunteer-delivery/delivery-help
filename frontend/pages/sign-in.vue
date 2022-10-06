@@ -15,10 +15,8 @@
                             :rules="$options.validations.username"
                         />
 
-                        <v-text-field
+                        <password-field
                             label="Пароль"
-                            type="password"
-                            autocapitalize="off"
                             v-model="credentials.password"
                             :rules="$options.validations.password"
                         />
@@ -38,7 +36,8 @@
 </template>
 
 <script>
-import { requireField } from '~/validations/require-field';
+import { requireField } from '~/validations';
+import { PasswordField } from "~/components/form";
 
 export default {
     name: 'sign-in',
@@ -46,6 +45,10 @@ export default {
 
     meta: {
         auth: 'public'
+    },
+
+    components: {
+        PasswordField
     },
 
     validations: {
