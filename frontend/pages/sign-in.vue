@@ -1,8 +1,8 @@
 <template>
     <v-row class="h-100" justify="center" align="center">
-        <v-col class="pt-5 h-100 d-flex flex-column justify-center" cols="12" sm="8" md="4">
-            <v-form lazy-validation ref="form" @submit="signIn">
-                <v-card elevation="1">
+        <v-col class="pt-5 h-100 d-flex flex-column justify-center" cols="12" sm="8" md="6" lg="4">
+            <v-form class="sign-in__form" lazy-validation ref="form" @submit="signIn">
+                <v-card class="sign-in__card" elevation="1">
                     <v-card-title>
                         ВолонтерВантаж ~ Вхід
                     </v-card-title>
@@ -25,7 +25,7 @@
                     <v-card-actions>
                         <v-spacer/>
 
-                        <v-btn color="primary" type="submit" :loading="isSubmitting">
+                        <v-btn class="sign-in__button" color="primary" type="submit" :loading="isSubmitting">
                             Увійти
                         </v-btn>
                     </v-card-actions>
@@ -82,3 +82,19 @@ export default {
     }
 };
 </script>
+
+<style>
+.sign-in__button {
+    width: 40%;
+}
+
+@media (max-width: 599px) {
+    .sign-in__form {
+        height: 66%;
+    }
+
+    .sign-in__card.sign-in__card.sign-in__card {
+        box-shadow: none !important;
+    }
+}
+</style>
