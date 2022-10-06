@@ -47,8 +47,8 @@ export default {
             required: true
         },
 
-        driveId: {
-            type: String,
+        drive: {
+            type: Object,
             required: true
         }
     },
@@ -72,7 +72,7 @@ export default {
 
             if (!this.newComment) return;
 
-            this.$axios.post(`/rides/${this.driveId}/comments`, {
+            this.$axios.post(`/rides/${this.drive.id}/comments`, {
                 text: this.newComment
             });
             this.newComment = '';

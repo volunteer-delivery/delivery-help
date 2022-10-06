@@ -11,7 +11,8 @@
 
             <drive class="drive-details__info mb-3" :drive="drive" hide-actions/>
 
-            <CommentList :drive-id="driveId" :comments="comments" />
+            <StatusSwitcher class="mb-3" :drive="drive" />
+            <CommentList :drive="drive" :comments="comments" />
         </v-col>
     </v-row>
 </template>
@@ -19,7 +20,7 @@
 <script>
 import {mdiArrowLeft} from '@mdi/js';
 import {Drive} from '~/components/drives';
-import {CommentList} from "~/components/drive-details";
+import {CommentList, StatusSwitcher} from "~/components/drive-details";
 import {ApiCableMixin} from "~/mixins";
 
 export default {
@@ -27,6 +28,7 @@ export default {
 
     components: {
         CommentList,
+        StatusSwitcher,
         Drive
     },
 

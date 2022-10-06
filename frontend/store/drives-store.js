@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import {DriveStatus} from "~/enums";
 
 export const state = () => ({
     drives: [],
@@ -17,15 +18,15 @@ export const state = () => ({
 
 export const getters = {
     pending(state) {
-        return state.drives.filter(drive => drive.status === 'PENDING');
+        return state.drives.filter(drive => drive.status === DriveStatus.PENDING);
     },
 
     active(state) {
-        return state.drives.filter(drive => drive.status === 'ACTIVE');
+        return state.drives.filter(drive => drive.status === DriveStatus.ACTIVE);
     },
 
     done(state) {
-        return state.drives.filter(drive => drive.status === 'FINISHED');
+        return state.drives.filter(drive => drive.status === DriveStatus.FINISHED);
     },
 
     counter(_, getters) {

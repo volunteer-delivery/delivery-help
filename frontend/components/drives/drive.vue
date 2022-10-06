@@ -92,6 +92,7 @@ import DriverIcon from '~/components/drives/driver-icon';
 import { formatVehicle, formatVehicleDetails } from '~/utils/format-vehicle';
 import { formatDate } from '~/utils/format-date';
 import DriverDetails from '~/components/drives/driver-details';
+import {DriveStatus} from "~/enums";
 
 export default {
     name: 'drive',
@@ -156,17 +157,15 @@ export default {
         },
 
         cardClasses() {
-            return {
-                'drive--verified': this.isVerified
-            };
+            return {'drive--verified': this.isVerified};
         },
 
         isPending() {
-            return this.drive.status === 'PENDING';
+            return this.drive.status === DriveStatus.PENDING;
         },
 
         isDone() {
-            return this.drive.status === 'FINISHED';
+            return this.drive.status === DriveStatus.FINISHED;
         },
 
         canChangeStatus() {
