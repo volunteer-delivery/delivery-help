@@ -1,13 +1,4 @@
-import {
-    FilterQuery,
-    InferSchemaType,
-    model as schemaModel,
-    Model,
-    ObtainSchemaGeneric,
-    Schema,
-    SchemaDefinition as Definition,
-    SchemaDefinitionType,
-} from "mongoose";
+import {InferSchemaType,model,Model,ObtainSchemaGeneric,Schema,SchemaDefinition as Definition,SchemaDefinitionType} from "mongoose";
 import {Injectable, Type} from "@nestjs/common";
 import {ModuleRef} from "@nestjs/core";
 
@@ -30,13 +21,13 @@ export interface IModel {
 
 @Injectable()
 export abstract class Repository<DocType> {
+    public readonly schema: Schema<DocType> = this.buildSchema();
+    public readonly query: SchemaModel<DocType> = model(this.name(), this.schema);
+
+    protected constructor(private readonly moduleRef: ModuleRef) {}
+
     abstract name(): string;
     abstract defineSchema(): ISchemaDefinition<DocType>;
-
-    public readonly schema: Schema<DocType> = this.buildSchema();
-    protected model: SchemaModel<DocType> = schemaModel(this.name(), this.schema);
-
-    constructor(private readonly moduleRef: ModuleRef) {}
 
     private buildSchema(): Schema<DocType> {
         const schema = new Schema<DocType>(this.defineSchema());
@@ -49,10 +40,9 @@ export abstract class Repository<DocType> {
             virtuals: true,
 
             transform: (_, converted) => {
-                delete converted._id;
-                delete converted.__v;
-                delete converted._telegramId;
-                delete converted._password;
+                for (const key of Object.keys(converted)) {
+                    if (key.startsWith(_)) delete converted[key]
+                }
             }
         });
 
@@ -61,17 +51,5 @@ export abstract class Repository<DocType> {
 
     protected requireSchema(Class: Type): Schema {
         return this.moduleRef.get(Class).schema;
-    }
-
-    findOne(filter?: FilterQuery<DocType>) {
-        return this.model.findOne(filter)
-    }
-
-    findById(id: string) {
-        return this.model.findById(id);
-    }
-
-    find(filter?: FilterQuery<DocType>) {
-        return this.model.find(filter);
     }
 }

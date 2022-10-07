@@ -10,7 +10,7 @@ export class RideController {
 
     @Get()
     async getRides(@CurrentUser() user: IUserModel): Promise<{ rides: IRideModel[] }> {
-        const rides = await this.rideRepository.find({volunteer: [null, user.id]}).populate('driver').exec();
+        const rides = await this.rideRepository.query.find({volunteer: [null, user.id]}).populate('driver').exec();
         return {rides};
     }
 }
