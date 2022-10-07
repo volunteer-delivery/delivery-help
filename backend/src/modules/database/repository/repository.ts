@@ -59,4 +59,8 @@ export abstract class Repository<DocType> {
     findOne(filter?: FilterQuery<DocType>) {
         return this.model.findOne(filter).exec();
     }
+
+    findById(id: string) {
+        return this.model.findById(id).exec();
+    }
 }

@@ -1,5 +1,4 @@
-import {Module, OnModuleInit} from "@nestjs/common";
-import {ConfigService} from "@nestjs/config";
+import {DynamicModule, OnModuleInit} from "@nestjs/common";
 import mongoose from 'mongoose';
 import {UserRepository} from "./repository";
 
@@ -7,15 +6,16 @@ const repositories = [
     UserRepository
 ];
 
-@Module({
-    providers: repositories,
-    exports: repositories
-})
 export class DatabaseModule implements OnModuleInit {
-    constructor(private readonly configService: ConfigService) {}
+    static forRoot = (): DynamicModule => ({
+        global: true,
+        module: DatabaseModule,
+        providers: repositories,
+        exports: repositories
+    })
 
     async onModuleInit(): Promise<void> {
-        const url = this.configService.getOrThrow('MONGO_URL');
-        await mongoose.connect(url);
+        // Cannot access to global module in onModuleInit
+        await mongoose.connect(process.env.MONGO_URL);
     }
 }

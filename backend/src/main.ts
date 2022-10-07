@@ -3,6 +3,7 @@ import {ValidationPipe} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import * as cookieParser from 'cookie-parser';
 import {AppModule} from './app.module';
+import {AuthGuard} from "./modules/auth";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -10,6 +11,7 @@ async function bootstrap() {
 
     app.setGlobalPrefix('/api/v1');
     app.use(cookieParser(configService.getOrThrow('BACKEND_SECRET')));
+    app.useGlobalGuards(app.get(AuthGuard));
 
     app.enableCors({
         origin: configService.getOrThrow('FRONTEND_ORIGIN'),

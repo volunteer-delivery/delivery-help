@@ -10,6 +10,10 @@ interface IAuthToken {
     expiresIn: number;
 }
 
+export interface IAuthTokenPayload {
+    userId: string;
+}
+
 @Injectable()
 export class SignInService {
     constructor(
@@ -27,7 +31,7 @@ export class SignInService {
 
     async generateToken(user: IUserModel): Promise<IAuthToken> {
         const expiresIn = this.configService.getOrThrow<number>('BACKEND_AUTH_EXPIRATION', {infer: true});
-        const token = await this.tokenService.encode({userId: user.id}, {expiresIn});
+        const token = await this.tokenService.encode<IAuthTokenPayload>({userId: user.id}, {expiresIn});
 
         return {expiresIn, token};
     }
