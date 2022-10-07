@@ -7,12 +7,6 @@ const { getRandomDriver, getRandomRides } = require('../seed');
 
 const rideRouter = Router();
 
-rideRouter.get('/rides', async (req, res) => {
-    const filter = { volunteer: [null, req.user.id] }
-    const rides = await rideModel.find(filter).populate('driver');
-    res.send({ 'rides': rides });
-});
-
 rideRouter.get('/rides/add-random', async (req, res) => {
     const driver = await driverModel.create(getRandomDriver());
     const ride = await rideModel.create({

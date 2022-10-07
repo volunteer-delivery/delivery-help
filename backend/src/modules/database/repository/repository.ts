@@ -6,9 +6,10 @@ import {
     ObtainSchemaGeneric,
     Schema,
     SchemaDefinition as Definition,
-    SchemaDefinitionType
+    SchemaDefinitionType,
 } from "mongoose";
-import {Injectable} from "@nestjs/common";
+import {Injectable, Type} from "@nestjs/common";
+import {ModuleRef} from "@nestjs/core";
 
 export type ISchemaDefinition<DocType> = Definition<SchemaDefinitionType<DocType>>;
 
@@ -35,6 +36,8 @@ export abstract class Repository<DocType> {
     public readonly schema: Schema<DocType> = this.buildSchema();
     protected model: SchemaModel<DocType> = schemaModel(this.name(), this.schema);
 
+    constructor(private readonly moduleRef: ModuleRef) {}
+
     private buildSchema(): Schema<DocType> {
         const schema = new Schema<DocType>(this.defineSchema());
 
@@ -56,11 +59,19 @@ export abstract class Repository<DocType> {
         return schema;
     }
 
+    protected requireSchema(Class: Type): Schema {
+        return this.moduleRef.get(Class).schema;
+    }
+
     findOne(filter?: FilterQuery<DocType>) {
-        return this.model.findOne(filter).exec();
+        return this.model.findOne(filter)
     }
 
     findById(id: string) {
-        return this.model.findById(id).exec();
+        return this.model.findById(id);
+    }
+
+    find(filter?: FilterQuery<DocType>) {
+        return this.model.find(filter);
     }
 }

@@ -23,7 +23,7 @@ export class SignInService {
     ) {}
 
     async validateCredentials(credentials: SignInCredentials): Promise<IUserModel | false> {
-        const user = await this.userRepository.findOne({name: credentials.username});
+        const user = await this.userRepository.findOne({name: credentials.username}).exec();
         const isCredentialsValid = user && await bcrypt.compare(credentials.password, user._password);
 
         return isCredentialsValid ? user : false;

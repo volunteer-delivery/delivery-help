@@ -1,9 +1,13 @@
 import {DynamicModule, OnModuleInit} from "@nestjs/common";
 import mongoose from 'mongoose';
-import {UserRepository} from "./repository";
+import {AdressRepository, DriverRepository, RideCommentRepository, RideRepository, UserRepository} from "./repository";
 
 const repositories = [
-    UserRepository
+    UserRepository,
+    AdressRepository,
+    DriverRepository,
+    RideCommentRepository,
+    RideRepository
 ];
 
 export class DatabaseModule implements OnModuleInit {

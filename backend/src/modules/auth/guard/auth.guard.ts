@@ -44,6 +44,6 @@ export class AuthGuard implements CanActivate {
 
     private async fetchUserByToken(token: string): Promise<IUserModel | null> {
         const tokenPayload = token && await this.tokenService.decodeOrNull<IAuthTokenPayload>(token);
-        return tokenPayload && await this.userRepository.findById(tokenPayload.userId);
+        return tokenPayload && await this.userRepository.findById(tokenPayload.userId).exec();
     }
 }
