@@ -24,7 +24,7 @@ export abstract class Repository<DocType> {
     public readonly schema: Schema<DocType> = this.buildSchema();
     public readonly query: SchemaModel<DocType> = model(this.name(), this.schema);
 
-    protected constructor(private readonly moduleRef: ModuleRef) {}
+    constructor(private readonly moduleRef: ModuleRef) {}
 
     abstract name(): string;
     abstract defineSchema(): ISchemaDefinition<DocType>;
@@ -41,7 +41,7 @@ export abstract class Repository<DocType> {
 
             transform: (_, converted) => {
                 for (const key of Object.keys(converted)) {
-                    if (key.startsWith(_)) delete converted[key]
+                    if (key.startsWith('_')) delete converted[key];
                 }
             }
         });
