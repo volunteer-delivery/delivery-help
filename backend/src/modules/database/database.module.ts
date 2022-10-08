@@ -1,8 +1,9 @@
-import {DynamicModule, OnModuleInit} from "@nestjs/common";
-import mongoose from 'mongoose';
+import {DynamicModule, Inject, OnModuleInit} from "@nestjs/common";
+import {ConfigService} from "@nestjs/config";
+import {DatabaseConnection} from "./database.connection";
 import {AdressRepository, DriverRepository, RideCommentRepository, RideRepository, UserRepository} from "./repository";
 
-const repositories = [
+export const repositories = [
     UserRepository,
     AdressRepository,
     DriverRepository,
@@ -10,16 +11,27 @@ const repositories = [
     RideRepository
 ];
 
+const publicProviders = [
+    DatabaseConnection,
+    ...repositories
+];
+
 export class DatabaseModule implements OnModuleInit {
     static forRoot = (): DynamicModule => ({
         global: true,
         module: DatabaseModule,
-        providers: repositories,
-        exports: repositories
+        providers: publicProviders,
+        exports: publicProviders
     })
 
+    @Inject()
+    private connection: DatabaseConnection;
+
+    @Inject()
+    private configService: ConfigService;
+
     async onModuleInit(): Promise<void> {
-        // Cannot access to global module in onModuleInit
-        await mongoose.connect(process.env.MONGO_URL);
+        const url = this.configService.getOrThrow('MONGO_URL');
+        await this.connection.connect(url);
     }
 }

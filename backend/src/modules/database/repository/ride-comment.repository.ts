@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import { Schema } from "mongoose";
-import {Repository, ISchemaDefinition, IModel} from "./repository";
+import {BaseRepository, ISchemaDefinition, IModel} from "./base-repository";
 import {IUserModel} from "./user.repository";
 
 export interface IRideCommentModel extends IModel {
@@ -10,8 +10,8 @@ export interface IRideCommentModel extends IModel {
 }
 
 @Injectable()
-export class RideCommentRepository extends Repository<IRideCommentModel> {
-    protected name() {
+export class RideCommentRepository extends BaseRepository<IRideCommentModel> {
+    protected defineName() {
         return 'RideComment';
     }
 

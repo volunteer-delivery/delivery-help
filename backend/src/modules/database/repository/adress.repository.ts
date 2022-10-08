@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {Repository, ISchemaDefinition, IModel} from "./repository";
+import {BaseRepository, ISchemaDefinition, IModel} from "./base-repository";
 
 export interface IAdressModel extends IModel {
     country: string;
@@ -7,8 +7,8 @@ export interface IAdressModel extends IModel {
 }
 
 @Injectable()
-export class AdressRepository extends Repository<IAdressModel> {
-    protected name() {
+export class AdressRepository extends BaseRepository<IAdressModel> {
+    protected defineName() {
         return 'Adress';
     }
 

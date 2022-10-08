@@ -21,4 +21,4 @@ import {DriverModule} from "./modules/driver";
         DriverModule
     ]
 })
-export class AppModule {}
+export class MainModule {}

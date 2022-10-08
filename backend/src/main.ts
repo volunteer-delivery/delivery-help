@@ -2,11 +2,11 @@ import {NestFactory} from '@nestjs/core';
 import {ValidationPipe} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import * as cookieParser from 'cookie-parser';
-import {AppModule} from './app.module';
+import {MainModule} from './main.module';
 import {AuthGuard} from "./modules/auth";
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(MainModule);
     const configService = app.get(ConfigService);
 
     app.setGlobalPrefix('/api/v1');
