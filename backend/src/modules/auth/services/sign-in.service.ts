@@ -30,9 +30,14 @@ export class SignInService {
     }
 
     async generateToken(user: IUserModel): Promise<IAuthToken> {
-        const expiresIn = this.configService.getOrThrow<number>('BACKEND_AUTH_EXPIRATION', {infer: true});
-        const token = await this.tokenService.encode<IAuthTokenPayload>({userId: user.id}, {expiresIn});
+        const payload = {userId: user.id};
+        const options = {expiresIn: this.authExpiration};
+        const token = await this.tokenService.encode<IAuthTokenPayload>(payload, options);
 
-        return {expiresIn, token};
+        return {expiresIn: this.authExpiration, token};
+    }
+
+    private get authExpiration(): number {
+        return this.configService.getOrThrow<number>('BACKEND_AUTH_EXPIRATION', {infer: true});
     }
 }
