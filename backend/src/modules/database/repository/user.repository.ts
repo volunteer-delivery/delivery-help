@@ -1,12 +1,10 @@
 import {Injectable} from "@nestjs/common";
-import {Repository, ISchemaDefinition, IPublicModel, IModel} from "./repository";
+import {Repository, ISchemaDefinition, IModel} from "./repository";
 
 export interface IUserModel extends IModel {
     name: string;
     _password: string;
 }
-
-export type IPublicUserModel = IPublicModel<IUserModel>;
 
 @Injectable()
 export class UserRepository extends Repository<IUserModel>{

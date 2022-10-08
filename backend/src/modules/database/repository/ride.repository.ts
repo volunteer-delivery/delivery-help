@@ -1,10 +1,10 @@
 import {Injectable} from "@nestjs/common";
 import {Schema} from "mongoose";
 import {Repository, ISchemaDefinition, IModel} from "./repository";
-import {IDriverModel, IPublicDriverModel} from "./driver.repository";
+import {IDriverModel} from "./driver.repository";
 import {AdressRepository, IAdressModel} from "./adress.repository";
-import {IPublicUserModel, IUserModel} from "./user.repository";
-import {IPublicRideCommentModel, IRideCommentModel} from "./ride-comment.repository";
+import {IUserModel} from "./user.repository";
+import {IRideCommentModel} from "./ride-comment.repository";
 
 export enum Vehicle {
     CAR = 'CAR',
@@ -28,12 +28,6 @@ export interface IRideModel extends IModel {
     volunteer: IUserModel | null;
     comments: IRideCommentModel[] | null;
 }
-
-export type IPublicRideModel = IRideModel & {
-    driver: IPublicDriverModel;
-    volunteer: IPublicUserModel | null;
-    comments: IPublicRideCommentModel[] | null;
-};
 
 @Injectable()
 export class RideRepository extends Repository<IRideModel> {

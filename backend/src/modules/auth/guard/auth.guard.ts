@@ -1,9 +1,11 @@
 import {CanActivate, ExecutionContext, Injectable} from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import {Reflector} from "@nestjs/core";
 import {Request, Response} from "express";
 import {TokenService} from "../../common/token";
 import {IUserModel, UserRepository} from "../../database";
 import {AuthCookieService, IAuthTokenPayload} from "../services";
+
+export type ISignedRequest = Request & { user?: IUserModel };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -18,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const http = context.switchToHttp();
-        const request = http.getRequest<Request>();
+        const request = http.getRequest<ISignedRequest>();
         const response = http.getResponse<Response>();
 
         if (this.isPublic(context)) return true;

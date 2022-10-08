@@ -4,6 +4,7 @@ import {AuthModule} from "./modules/auth";
 import {DatabaseModule} from "./modules/database";
 import {UserModule} from "./modules/user";
 import {RideModule} from "./modules/ride";
+import {EventsModule} from "./modules/events";
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import {RideModule} from "./modules/ride";
           isGlobal: true
       }),
       DatabaseModule.forRoot(),
+      EventsModule.forRoot(),
       AuthModule,
       UserModule,
       RideModule

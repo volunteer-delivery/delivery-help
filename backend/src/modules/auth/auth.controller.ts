@@ -6,10 +6,6 @@ import {AuthCookieService, SignInService} from "./services";
 import {TokenService} from "../common/token";
 import {PublicEndpoint} from "./guard";
 
-const messages = {
-    invalidCredentials: 'Невірно введене імʼя користувача або пароль'
-};
-
 @Controller('auth')
 @PublicEndpoint()
 export class AuthController {
@@ -29,7 +25,7 @@ export class AuthController {
             password: body.password.trim()
         });
 
-        if (!user) throw new UnprocessableEntityException(messages.invalidCredentials);
+        if (!user) throw new UnprocessableEntityException('Невірно введене імʼя користувача або пароль');
 
         const {token, expiresIn} = await this.signInService.generateToken(user);
         const session = await this.tokenService.encode({auth: true}, {expiresIn});

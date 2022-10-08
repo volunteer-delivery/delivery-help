@@ -12,9 +12,6 @@ type SchemaModel<TModel extends any> = Model<
     >
     & ObtainSchemaGeneric<Schema<TModel>, 'TStaticMethods'>
 
-type ExcludeKeysStartsWith<Set, Needle extends string> = Set extends `${Needle}${infer _X}` ? never : Set;
-export type IPublicModel<Type> = Pick<Type, ExcludeKeysStartsWith<keyof Type, '_'>>
-
 export interface IModel {
     id: string;
 }
