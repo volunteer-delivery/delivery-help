@@ -26,14 +26,11 @@ function setupHistory(replServer: REPLServer): void {
 (async () => {
     const app = await NestFactory.createApplicationContext(ConsoleModule);
 
-    global.app = {
-        nestContext: app,
-        db: {}
-    };
+    global.db = {};
 
     for (const Repository of repositories) {
         const {name, query} = app.get(Repository);
-        global.app.db[name] = query;
+        global.db[name] = query;
     }
 
     const replServer = start();
