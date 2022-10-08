@@ -23,8 +23,8 @@ export abstract class Repository<DocType> {
 
     constructor(private readonly moduleRef: ModuleRef) {}
 
-    abstract name(): string;
-    abstract defineSchema(): ISchemaDefinition<DocType>;
+    protected abstract name(): string;
+    protected abstract defineSchema(): ISchemaDefinition<DocType>;
 
     private buildSchema(): Schema<DocType> {
         const schema = new Schema<DocType>(this.defineSchema());

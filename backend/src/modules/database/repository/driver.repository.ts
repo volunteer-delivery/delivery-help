@@ -15,11 +15,11 @@ export interface IDriverModel extends IModel {
 
 @Injectable()
 export class DriverRepository extends Repository<IDriverModel>{
-    name() {
+    protected name() {
         return 'Driver';
     }
 
-    defineSchema(): ISchemaDefinition<IDriverModel> {
+    protected defineSchema(): ISchemaDefinition<IDriverModel> {
         return {
             name: {
                 type: String,

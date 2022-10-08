@@ -8,11 +8,11 @@ export interface IAdressModel extends IModel {
 
 @Injectable()
 export class AdressRepository extends Repository<IAdressModel> {
-    name() {
+    protected name() {
         return 'Adress';
     }
 
-    defineSchema(): ISchemaDefinition<IAdressModel> {
+    protected defineSchema(): ISchemaDefinition<IAdressModel> {
         return {
             country: {
                 type: String,

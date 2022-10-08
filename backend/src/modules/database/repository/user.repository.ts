@@ -8,11 +8,11 @@ export interface IUserModel extends IModel {
 
 @Injectable()
 export class UserRepository extends Repository<IUserModel>{
-    name() {
+    protected name() {
         return 'User';
     }
 
-    defineSchema(): ISchemaDefinition<IUserModel> {
+    protected defineSchema(): ISchemaDefinition<IUserModel> {
         return {
             name: {
                 type: String,

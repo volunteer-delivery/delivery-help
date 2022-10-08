@@ -11,11 +11,11 @@ export interface IRideCommentModel extends IModel {
 
 @Injectable()
 export class RideCommentRepository extends Repository<IRideCommentModel> {
-    name() {
+    protected name() {
         return 'RideComment';
     }
 
-    defineSchema(): ISchemaDefinition<IRideCommentModel> {
+    protected defineSchema(): ISchemaDefinition<IRideCommentModel> {
         return {
             createdAt: {
                 type: Date,

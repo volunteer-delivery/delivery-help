@@ -31,11 +31,11 @@ export interface IRideModel extends IModel {
 
 @Injectable()
 export class RideRepository extends Repository<IRideModel> {
-    name() {
+    protected name() {
         return 'Ride';
     }
 
-    defineSchema(): ISchemaDefinition<IRideModel> {
+    protected defineSchema(): ISchemaDefinition<IRideModel> {
         return {
             driver: {
                 type: Schema.Types.ObjectId,
