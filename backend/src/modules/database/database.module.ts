@@ -1,4 +1,4 @@
-import {DynamicModule, Inject, OnModuleInit, OnModuleDestroy} from "@nestjs/common";
+import {Inject, OnModuleInit, OnModuleDestroy, Global, Module} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {ModuleRef} from "@nestjs/core";
 import {DatabaseConnection} from "./database.connection";
@@ -18,14 +18,12 @@ const publicProviders = [
     ...repositories
 ];
 
+@Global()
+@Module({
+    providers: [DatabaseSeeds, ...publicProviders],
+    exports: publicProviders
+})
 export class DatabaseModule implements OnModuleInit, OnModuleDestroy {
-    static forRoot = (): DynamicModule => ({
-        global: true,
-        module: DatabaseModule,
-        providers: [DatabaseSeeds, ...publicProviders],
-        exports: publicProviders
-    })
-
     @Inject()
     private moduleRef: ModuleRef;
 
@@ -42,8 +40,7 @@ export class DatabaseModule implements OnModuleInit, OnModuleDestroy {
         await this.connection.connect(this.mongoUrl);
 
         if (!this.isProduction && await this.isNeedSeeds()) {
-            const seeds = await this.moduleRef.resolve(DatabaseSeeds);
-            await seeds.execute();
+            await this.moduleRef.get(DatabaseSeeds).execute();
         }
     }
 

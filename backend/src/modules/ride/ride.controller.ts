@@ -1,19 +1,30 @@
-import {Body, Controller, Get, NotFoundException, Param, Patch} from "@nestjs/common";
+import {Body, Controller, Get, Inject, NotFoundException, Param, Patch} from "@nestjs/common";
 import {IRideModel, IUserModel, RideRepository, RideStatus} from "../database";
 import {CurrentUser} from "../auth";
-import {UpdateStatusRequest} from "./dto";
 import {ISuccessResponse} from "../common/types";
 import {EventsGateway} from "../events";
+import {BotConnection} from "../bot";
+import {UpdateStatusRequest} from "./dto";
+
+const CHANGE_STATUS: Record<RideStatus, string> = {
+    [RideStatus.PENDING]: '',
+    [RideStatus.ACTIVE]: 'Інформацію про вашу поїздку оброблено і тепер вона активна. Бажаємо гарної дороги 🙌🏻',
+    [RideStatus.FINISHED]: 'Ваша поїздка завершилася. Дякуємо за допомогу! Слава Україні 💙💛'
+};
 
 @Controller('rides')
 export class RideController {
-    constructor(
-        private readonly rideRepository: RideRepository,
-        private readonly eventsGateway: EventsGateway
-    ) {}
+    @Inject()
+    private rideRepository: RideRepository;
+
+    @Inject()
+    private eventsGateway: EventsGateway;
+
+    @Inject()
+    private bot: BotConnection;
 
     @Get()
-    async getRides(@CurrentUser() user: IUserModel): Promise<{rides: IRideModel[]}> {
+    async getRides(@CurrentUser() user: IUserModel): Promise<{ rides: IRideModel[] }> {
         const rides = await this.rideRepository.query.find({volunteer: [null, user.id]}).populate('driver').exec();
         return {rides};
     }
@@ -40,8 +51,17 @@ export class RideController {
 
         const socketUpdateUserId = oldStatus === RideStatus.PENDING ? null : currentUser.id;
         this.eventsGateway.broadcastUpdateRide(socketUpdateUserId, ride);
-        // notifyNewStatus(ride);
+        await this.notifyNewStatus(ride);
 
         return {success: true};
+    }
+
+    private async notifyNewStatus(ride: IRideModel): Promise<void> {
+        const telegramId = ride.driver?._telegramId;
+        const message = CHANGE_STATUS[ride.status];
+
+        if (telegramId && message) {
+            await this.bot.sendMessage(ride.driver._telegramId, message);
+        }
     }
 }

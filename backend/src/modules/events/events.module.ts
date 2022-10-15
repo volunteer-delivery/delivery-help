@@ -1,11 +1,9 @@
-import {DynamicModule} from "@nestjs/common";
+import {Global, Module} from "@nestjs/common";
 import {EventsGateway} from "./events.gateway";
 
-export class EventsModule {
-    static forRoot = (): DynamicModule => ({
-        global: true,
-        module: EventsModule,
-        providers: [EventsGateway],
-        exports: [EventsGateway]
-    });
-}
+@Global()
+@Module({
+    providers: [EventsGateway],
+    exports: [EventsGateway]
+})
+export class EventsModule {}

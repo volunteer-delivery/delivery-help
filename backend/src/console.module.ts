@@ -8,7 +8,7 @@ import {ConfigModule} from "@nestjs/config";
             ignoreEnvFile: true,
             isGlobal: true
         }),
-        DatabaseModule.forRoot()
+        DatabaseModule
     ]
 })
 export class ConsoleModule {}

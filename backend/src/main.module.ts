@@ -6,6 +6,7 @@ import {UserModule} from "./modules/user";
 import {RideModule} from "./modules/ride";
 import {EventsModule} from "./modules/events";
 import {DriverModule} from "./modules/driver";
+import {BotModule} from "./modules/bot";
 
 @Module({
     imports: [
@@ -13,12 +14,13 @@ import {DriverModule} from "./modules/driver";
             ignoreEnvFile: true,
             isGlobal: true
         }),
-        DatabaseModule.forRoot(),
-        EventsModule.forRoot(),
+        DatabaseModule,
+        EventsModule,
         AuthModule,
         UserModule,
         RideModule,
-        DriverModule
+        DriverModule,
+        BotModule
     ]
 })
 export class MainModule {}
