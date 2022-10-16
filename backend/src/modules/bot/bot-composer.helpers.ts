@@ -1,5 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {Composer, Context, Middleware, MiddlewareFn} from 'telegraf';
+import {RideStatus} from "../database";
 
 type NonemptyMiddlewares<TContext extends Context = Context> = [Middleware<TContext>, ...Middleware<TContext>[]];
 
@@ -20,6 +21,6 @@ export class BotComposerHelpers {
     }
 
     isNonFinishedRides<TContext extends Context = Context>({state}: TContext): boolean {
-        return state.hasOwnProperty('rides') && state.rides.some(ride => ride.status != 'FINISHED');
+        return state.hasOwnProperty('rides') && state.rides.some(ride => ride.status !== RideStatus.FINISHED);
     };
 }

@@ -9,7 +9,7 @@ export class RidesStateMiddleware extends BaseMiddleware {
     private readonly rideRepository: RideRepository;
 
     async handle({state}: Context, next: IMiddlewareNext): Promise<void> {
-        state.rides = await this.loadRides(state.rides)
+        state.rides = await this.loadRides(state.driver)
         return next();
     }
 
