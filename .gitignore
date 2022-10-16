@@ -1,6 +1,5 @@
 .idea
 .vscode
-.env
 .fleet
 db_data
 node_modules
