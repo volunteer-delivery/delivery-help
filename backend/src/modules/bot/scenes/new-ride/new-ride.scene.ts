@@ -1,17 +1,16 @@
 import {Markup} from "telegraf";
 import {Injectable} from "@nestjs/common";
-import {BaseScene, ISceneDefinition, IWizardSceneContext, SceneType} from "../../base";
+import {BaseWizardScene, ISceneDefinition} from "../../base";
 import {FromType, NewRideFromComposer} from "./new-ride-from.composer";
 import {NewRideDateComposer} from "./new-ride-date.composer";
 import {INewRideContext} from "./new-ride.context";
 import {NewRideVehicleComposer} from "./new-ride-vehicle.composer";
 
 @Injectable()
-export class NewRideScene extends BaseScene<IWizardSceneContext> {
+export class NewRideScene extends BaseWizardScene<INewRideContext> {
     id = 'new-ride-wizard';
-    type = SceneType.WIZZARD;
 
-    defineSteps(): ISceneDefinition<IWizardSceneContext>[] {
+    defineSteps(): ISceneDefinition<INewRideContext>[] {
         return [
             this.startFromTypeStep,
             NewRideFromComposer,
@@ -21,7 +20,7 @@ export class NewRideScene extends BaseScene<IWizardSceneContext> {
         ];
     }
 
-    private async startFromTypeStep(context: IWizardSceneContext): Promise<void> {
+    private async startFromTypeStep(context: INewRideContext): Promise<void> {
         await context.reply(
             'Оберіть варіант локації, з якої ви розпочинаєте поїздку:',
             Markup.inlineKeyboard([

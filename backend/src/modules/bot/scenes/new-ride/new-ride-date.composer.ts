@@ -38,9 +38,9 @@ export class NewRideDateComposer extends BaseComposer {
         await context.reply(
             'Оберіть габарити вашого транспортного засобу:',
             Markup.inlineKeyboard([
-                Markup.button.callback('Легковий автомобіль ( < 2т)', 'SET_CAR'),
-                Markup.button.callback('Вантажний автомобіль ( < 10т)', 'SET_VAN'),
-                Markup.button.callback('Фура ( > 10т)', 'SET_TRUCK')
+                [Markup.button.callback('Легковий автомобіль ( < 2т)', 'SET_CAR')],
+                [Markup.button.callback('Вантажний автомобіль ( < 10т)', 'SET_VAN')],
+                [Markup.button.callback('Фура ( > 10т)', 'SET_TRUCK')]
             ])
         );
         await context.wizard.next();

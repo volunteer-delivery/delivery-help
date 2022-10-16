@@ -1,12 +1,11 @@
 import {Injectable} from "@nestjs/common";
 import {Markup} from "telegraf";
-import {BaseScene, ISceneDefinition, IWizardSceneContext, SceneType} from "../../base";
+import {BaseWizardScene, ISceneDefinition, IWizardSceneContext} from "../../base";
 import {NewDriverContactComposer} from "./new-driver-contact.composer";
 
 @Injectable()
-export class NewDriverScene extends BaseScene<IWizardSceneContext> {
+export class NewDriverScene extends BaseWizardScene {
     id = 'new-driver-wizard';
-    type = SceneType.WIZZARD;
 
     defineSteps(): ISceneDefinition<IWizardSceneContext>[] {
         return [

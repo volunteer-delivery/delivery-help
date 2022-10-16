@@ -6,8 +6,8 @@ import {BaseComposer} from "./base-composer";
 
 export type ISceneContext = Scenes.SceneContext;
 export type IWizardSceneContext = Scenes.WizardContext;
-export type IScene = Scenes.BaseScene<ISceneContext>;
-export type ISceneDefinition<Context extends ISceneContext> = Type<BaseMiddleware> | IInlineMiddleware<Context> | Type<BaseComposer>;
+export type IScene<TContext extends ISceneContext = ISceneContext> = Scenes.BaseScene<TContext>;
+export type ISceneDefinition<TContext extends ISceneContext> = Type<BaseMiddleware> | IInlineMiddleware<TContext> | Type<BaseComposer>;
 
 type IStepObject = BaseMiddleware | BaseComposer;
 
@@ -22,7 +22,7 @@ export abstract class BaseScene<Context extends ISceneContext = any> implements 
 
     abstract id: string;
     abstract type: SceneType;
-    private steps: Array<BaseMiddleware | BaseComposer | IInlineMiddleware<Context>> = [];
+    protected steps: Array<BaseMiddleware | BaseComposer | IInlineMiddleware<Context>> = [];
 
     async onModuleInit(): Promise<void> {
         const middlewares: Type<IStepObject>[] = [];
@@ -39,19 +39,11 @@ export abstract class BaseScene<Context extends ISceneContext = any> implements 
         this.steps.push(...await this.resolver.resolve(middlewares))
     }
 
-    build(): Scenes.BaseScene<Context> {
-        if (this.type === SceneType.WIZZARD) {
-            // @ts-ignore
-            return new Scenes.WizardScene(this.id, ...this.steps);
-        }
-
-        throw new Error('Undefined scene type');
-    }
+    abstract build(): Scenes.BaseScene<Context>;
+    abstract defineSteps(): ISceneDefinition<Context>[];
 
     getStep<TStep extends IStepObject>(Step: Type<TStep>): TStep | null {
         const step = this.steps.find(step => step.constructor === Step) as TStep;
         return step || null;
     }
-
-    abstract defineSteps(): ISceneDefinition<Context>[];
 }

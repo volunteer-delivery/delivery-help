@@ -21,7 +21,6 @@ export class NewRideFromComposer extends BaseComposer {
     }
 
     private async onFromUkraine(context: INewRideContext): Promise<void> {
-        console.log('FROM UKRAINE');
         await context.deleteMessage();
         context.scene.state.enterCity = true
         await context.reply('Звідки ви будете їхати?');
