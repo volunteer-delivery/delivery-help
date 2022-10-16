@@ -4,10 +4,12 @@ import {ISceneContext} from "./base-scene";
 import {BaseMiddleware, IInlineMiddleware} from "./base-middleware";
 import {DynamicDependencyResolver} from "../../common";
 
-export type IComposeMiddlewares = Array<Type<BaseMiddleware> | IInlineMiddleware<ISceneContext>>;
+export type IComposeMiddleware = Type<BaseMiddleware> | IInlineMiddleware<ISceneContext>;
 export type IComposeUpdate = Types.UpdateType | Types.MessageSubType
 export type IComposeHandler = (context: ISceneContext) => void | Promise<void>;
 export type IComposeMatchedContext = { match: RegExpExecArray };
+
+type IResolvedMiddleware = BaseMiddleware | IInlineMiddleware<ISceneContext>;
 
 export interface IComposeActionHandler {
     pattern: boolean,
@@ -22,21 +24,21 @@ export abstract class BaseComposer implements MiddlewareObj<ISceneContext>, OnMo
         return !!Class.COMPOSER
     }
 
-    private middlewares: Array<BaseMiddleware | IInlineMiddleware<ISceneContext>> = [];
+    private middlewares: IResolvedMiddleware[] = [];
     private composer: Composer<ISceneContext>;
 
     @Inject()
     private resolver: DynamicDependencyResolver;
 
     async onModuleInit(): Promise<void> {
-        const middlewares = this.defineMiddlewares();
-        const classMiddlewares = [];
+        this.middlewares = await Promise.all(this.defineMiddlewares().map(this.resolveMiddleware.bind(this)));
+    }
 
-        for (const Middleware of middlewares) {
-            BaseMiddleware.isExtends(Middleware) ? classMiddlewares.push(Middleware) : this.middlewares.push(Middleware.bind(this))
+    private async resolveMiddleware(Middleware: IComposeMiddleware): Promise<IResolvedMiddleware> {
+        if (BaseMiddleware.isExtends(Middleware)) {
+            return await this.resolver.resolve<BaseMiddleware>(Middleware);
         }
-
-        this.middlewares.push(...await this.resolver.resolve<BaseMiddleware>(classMiddlewares))
+        return Middleware.bind(this);
     }
 
     middleware(): IInlineMiddleware<ISceneContext> {
@@ -55,7 +57,7 @@ export abstract class BaseComposer implements MiddlewareObj<ISceneContext>, OnMo
         return this.composer.middleware();
     }
 
-    protected defineMiddlewares(): IComposeMiddlewares {
+    protected defineMiddlewares(): IComposeMiddleware[] {
         return [];
     }
 

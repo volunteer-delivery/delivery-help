@@ -11,7 +11,7 @@ export class NewRideDateComposer extends BaseComposer {
         return {
             PREV_DATE_RANGE: this.showPrevDateRange,
             NEXT_DATE_RANGE: this.showNextDateRange,
-            'PICK_DATE_[\d-]+': { handler: this.pickDate, pattern: true }
+            'PICK_DATE_[\\d-]+': { handler: this.pickDate, pattern: true }
         }
     }
 

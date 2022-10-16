@@ -1,5 +1,5 @@
 import {Inject, Injectable} from "@nestjs/common";
-import {BaseComposer, IComposeMiddlewares, IInlineMiddleware, ISceneContext} from "../base";
+import {BaseComposer, IComposeMiddleware, IInlineMiddleware, ISceneContext} from "../base";
 import {BotMenuHandler} from "../bot-menu.handler";
 import {BotComposerHelpers} from "../bot-composer.helpers";
 
@@ -11,7 +11,7 @@ export class WelcomeComposer extends BaseComposer {
     @Inject()
     private helpers: BotComposerHelpers;
 
-    protected defineMiddlewares(): IComposeMiddlewares {
+    protected defineMiddlewares(): IComposeMiddleware[] {
         return [
             this.createMenuMiddleware(),
             this.createWelcomeMiddleware()

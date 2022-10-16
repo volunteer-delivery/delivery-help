@@ -52,7 +52,7 @@ export class NewRideVehicleComposer extends BaseComposer {
 
     private async saveRide(context: INewRideContext): Promise<void> {
         const ride = await this.rideRepository.query.create({
-            driver: context.state.driver._id,
+            driver: context.state.driver.id,
             from: {
                 country: context.scene.state.fromCountry,
                 city: context.scene.state.fromCity
