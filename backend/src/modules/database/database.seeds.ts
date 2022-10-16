@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {Inject, Injectable} from "@nestjs/common";
 import * as bcrypt from 'bcryptjs';
 import {
     DriverRepository, IDriverModel,
@@ -79,11 +79,14 @@ const rideList = [
 
 @Injectable()
 export class DatabaseSeeds {
-    constructor(
-        private readonly userRepository: UserRepository,
-        private readonly driverRepository: DriverRepository,
-        private readonly rideRepository: RideRepository
-    ) {}
+    @Inject()
+    private userRepository: UserRepository;
+
+    @Inject()
+    private driverRepository: DriverRepository;
+
+    @Inject()
+    private rideRepository: RideRepository;
 
     async execute(): Promise<void> {
         const user = await this.createUser();

@@ -16,7 +16,7 @@ export abstract class BaseRepository<Doc> {
     public readonly schema: Schema<Doc>;
     public readonly query: SchemaModel<Doc>;
 
-    constructor(private readonly moduleRef: ModuleRef) {
+    constructor(private moduleRef: ModuleRef) {
         this.connection = moduleRef.get(DatabaseConnection);
         this.schema = this.buildSchema();
         this.name = this.defineName();

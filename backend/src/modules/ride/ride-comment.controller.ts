@@ -1,4 +1,4 @@
-import {Body, Controller, Get, NotFoundException, Param, Post} from "@nestjs/common";
+import {Body, Controller, Get, Inject, NotFoundException, Param, Post} from "@nestjs/common";
 import {IRideCommentModel, IUserModel, RideCommentRepository, RideRepository} from "../database";
 import {ISuccessResponse} from "../common/types";
 import {AddCommentRequest} from "./dto";
@@ -7,11 +7,14 @@ import {EventsGateway} from "../events";
 
 @Controller('/rides/:id/comments')
 export class RideCommentController {
-    constructor(
-        private readonly rideRepository: RideRepository,
-        private readonly rideCommentRepository: RideCommentRepository,
-        private readonly eventsGateway: EventsGateway
-    ) {}
+    @Inject()
+    private rideRepository: RideRepository;
+
+    @Inject()
+    private rideCommentRepository: RideCommentRepository;
+
+    @Inject()
+    private eventsGateway: EventsGateway;
 
     @Get()
     async getComments(@Param('id') rideId: string): Promise<IRideCommentModel[]> {

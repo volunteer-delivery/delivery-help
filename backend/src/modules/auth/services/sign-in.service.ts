@@ -1,5 +1,5 @@
 import * as bcrypt from "bcryptjs";
-import {Injectable} from "@nestjs/common";
+import {Inject, Injectable} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {SignInCredentials} from "../dto";
 import {IUserModel, UserRepository} from "../../database";
@@ -16,11 +16,14 @@ export interface IAuthTokenPayload {
 
 @Injectable()
 export class SignInService {
-    constructor(
-        private readonly userRepository: UserRepository,
-        private readonly tokenService: TokenService,
-        private readonly configService: ConfigService
-    ) {}
+    @Inject()
+    private userRepository: UserRepository;
+
+    @Inject()
+    private tokenService: TokenService;
+
+    @Inject()
+    private configService: ConfigService;
 
     async validateCredentials(credentials: SignInCredentials): Promise<IUserModel | false> {
         const user = await this.userRepository.query.findOne({name: credentials.username}).exec();

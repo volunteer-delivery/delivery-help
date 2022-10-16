@@ -1,4 +1,4 @@
-import {Body, Controller, Post, Res, UnprocessableEntityException} from "@nestjs/common";
+import {Body, Controller, Inject, Post, Res, UnprocessableEntityException} from "@nestjs/common";
 import {Response} from 'express';
 import {SignInCredentials} from "./dto";
 import {ISuccessResponse} from "../common/types";
@@ -9,11 +9,14 @@ import {PublicEndpoint} from "./guard";
 @Controller('auth')
 @PublicEndpoint()
 export class AuthController {
-    constructor(
-        private readonly signInService: SignInService,
-        private readonly tokenService: TokenService,
-        private readonly cookieService: AuthCookieService
-    ) {}
+    @Inject()
+    private signInService: SignInService;
+
+    @Inject()
+    private tokenService: TokenService;
+
+    @Inject()
+    private cookieService: AuthCookieService;
 
     @Post('sign-in')
     public async signIn(

@@ -6,7 +6,7 @@ import {BaseMiddleware, IMiddlewareNext} from "../base";
 @Injectable()
 export class RidesStateMiddleware extends BaseMiddleware {
     @Inject()
-    private readonly rideRepository: RideRepository;
+    private rideRepository: RideRepository;
 
     async handle({state}: Context, next: IMiddlewareNext): Promise<void> {
         state.rides = await this.loadRides(state.driver)

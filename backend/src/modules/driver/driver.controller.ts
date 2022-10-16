@@ -1,11 +1,10 @@
-import {Controller, Get} from "@nestjs/common";
+import {Controller, Get, Inject} from "@nestjs/common";
 import {DriverRepository, IDriverModel} from "../database";
 
 @Controller('drivers')
 export class DriverController {
-    constructor(
-        private readonly driverRespository: DriverRepository
-    ) {}
+    @Inject()
+    private driverRespository: DriverRepository
 
     @Get()
     async getDrivers(): Promise<{drivers: IDriverModel[]}> {

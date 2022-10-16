@@ -6,7 +6,7 @@ import {BaseMiddleware, IMiddlewareNext} from "../base";
 @Injectable()
 export class DriverStateMiddleware extends BaseMiddleware {
     @Inject()
-    private readonly driverRepository: DriverRepository;
+    private driverRepository: DriverRepository;
 
     async handle({state, chat}: Context, next: IMiddlewareNext): Promise<void> {
         state.driver = await this.loadDriver(chat.id)

@@ -1,4 +1,4 @@
-import {CanActivate, ExecutionContext, Injectable} from "@nestjs/common";
+import {CanActivate, ExecutionContext, Inject, Injectable} from "@nestjs/common";
 import {Reflector} from "@nestjs/core";
 import {Request, Response} from "express";
 import {TokenService} from "../../common/token";
@@ -11,12 +11,17 @@ export type ISignedRequest = Request & { user?: IUserModel };
 export class AuthGuard implements CanActivate {
     static readonly PUBLIC_ENDPOINT_METADATA = Symbol('publicEndpoint');
 
-    constructor(
-        private readonly reflector: Reflector,
-        private readonly tokenService: TokenService,
-        private readonly userRepository: UserRepository,
-        private readonly cookieService: AuthCookieService
-    ) {}
+    @Inject()
+    private reflector: Reflector;
+
+    @Inject()
+    private tokenService: TokenService;
+
+    @Inject()
+    private userRepository: UserRepository;
+
+    @Inject()
+    private cookieService: AuthCookieService;
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const http = context.switchToHttp();
