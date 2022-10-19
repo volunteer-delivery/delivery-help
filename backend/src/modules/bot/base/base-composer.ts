@@ -12,15 +12,13 @@ type IResolvedMiddleware = BaseMiddleware | IInlineMiddleware<ISceneContext>;
 
 export function OnEvent(type: IComposeEvent): MethodDecorator {
     return (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
-        const metadata = ComposerMetadata.resolve(target.constructor);
-        metadata.addEvent(type, descriptor.value);
+        ComposerMetadata.resolve(target.constructor).addEvent(type, descriptor.value);
     }
 }
 
 export function OnAction(action: IComposeAction): MethodDecorator {
     return (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
-        const metadata = ComposerMetadata.resolve(target.constructor);
-        metadata.addAction(action, descriptor.value);
+        ComposerMetadata.resolve(target.constructor).addAction(action, descriptor.value);
     }
 }
 
