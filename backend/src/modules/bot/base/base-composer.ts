@@ -1,19 +1,27 @@
-import {Composer, MiddlewareObj, Types} from "telegraf";
+import {Composer, MiddlewareObj} from "telegraf";
 import {Inject, Injectable, OnModuleInit, Type} from "@nestjs/common";
 import {ISceneContext} from "./base-scene";
 import {BaseMiddleware, IInlineMiddleware} from "./base-middleware";
 import {DynamicDependencyResolver} from "../../common";
+import {ComposerMetadata, IComposeAction, IComposeEvent} from "./composer-metadata";
 
 export type IComposeMiddleware = Type<BaseMiddleware> | IInlineMiddleware<ISceneContext>;
-export type IComposeUpdate = Types.UpdateType | Types.MessageSubType
-export type IComposeHandler = (context: ISceneContext) => void | Promise<void>;
 export type IComposeMatchedContext = { match: RegExpExecArray };
 
 type IResolvedMiddleware = BaseMiddleware | IInlineMiddleware<ISceneContext>;
 
-export interface IComposeActionHandler {
-    pattern: boolean,
-    handler: IComposeHandler
+export function OnEvent(type: IComposeEvent): MethodDecorator {
+    return (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
+        const metadata = ComposerMetadata.resolve(target.constructor);
+        metadata.addEvent(type, descriptor.value);
+    }
+}
+
+export function OnAction(action: IComposeAction): MethodDecorator {
+    return (target: object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
+        const metadata = ComposerMetadata.resolve(target.constructor);
+        metadata.addAction(action, descriptor.value);
+    }
 }
 
 @Injectable()
@@ -24,6 +32,7 @@ export abstract class BaseComposer implements MiddlewareObj<ISceneContext>, OnMo
         return !!Class.COMPOSER
     }
 
+    private readonly metadata = ComposerMetadata.resolve(this.constructor);
     private middlewares: IResolvedMiddleware[] = [];
     private composer: Composer<ISceneContext>;
 
@@ -44,14 +53,12 @@ export abstract class BaseComposer implements MiddlewareObj<ISceneContext>, OnMo
     middleware(): IInlineMiddleware<ISceneContext> {
         this.composer = new Composer(...this.middlewares);
 
-        for (const [type, handler] of Object.entries(this.defineHandlers())) {
-            this.composer.on(type as IComposeUpdate, handler.bind(this));
+        for (const event of this.metadata.events) {
+            this.composer.on(event.key as IComposeEvent, event.handler.bind(this));
         }
 
-        for (const [type, handler] of Object.entries(this.defineActions())) {
-            const config: IComposeActionHandler = typeof handler === 'function' ? { handler, pattern: false } : handler;
-            const trigger = config.pattern ? new RegExp(type) : type;
-            this.composer.action(trigger, config.handler.bind(this));
+        for (const action of this.metadata.actions) {
+            this.composer.action(action.key, action.handler.bind(this))
         }
 
         return this.composer.middleware();
@@ -59,13 +66,5 @@ export abstract class BaseComposer implements MiddlewareObj<ISceneContext>, OnMo
 
     protected defineMiddlewares(): IComposeMiddleware[] {
         return [];
-    }
-
-    protected defineHandlers(): Partial<Record<IComposeUpdate, IComposeHandler>> {
-        return {};
-    }
-
-    protected defineActions(): Partial<Record<string, IComposeHandler | IComposeActionHandler>> {
-        return {};
     }
 }

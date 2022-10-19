@@ -1,6 +1,6 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {RideRepository, RideStatus, Vehicle} from "../../../database";
-import {BaseComposer, IComposeHandler} from "../../base";
+import {BaseComposer, OnAction} from "../../base";
 import {INewRideContext} from "./new-ride.context";
 import {EventsGateway} from "../../../events";
 import {BotMenuHandler} from "../../bot-menu.handler";
@@ -24,30 +24,35 @@ export class NewRideVehicleComposer extends BaseComposer {
     @Inject()
     private menuHandler: BotMenuHandler;
 
-    protected defineActions(): Partial<Record<IActions, IComposeHandler>> {
-        return {
-            SET_CAR: this.setVehicle(Vehicle.CAR),
-            SET_VAN: this.setVehicle(Vehicle.VAN),
-            SET_TRUCK: this.setVehicle(Vehicle.TRUCK)
-        };
+    @OnAction('SET_CAR')
+    private async setCar(context: INewRideContext): Promise<void> {
+        await this.setVehicle(Vehicle.CAR, context);
     }
 
-    private setVehicle(vehicleType: Vehicle): IComposeHandler {
-        return async (context: INewRideContext) => {
-            await context.deleteMessage();
+    @OnAction('SET_VAN')
+    private async setVan(context: INewRideContext): Promise<void> {
+        await this.setVehicle(Vehicle.VAN, context);
+    }
 
-            await context.reply(`Ви обрали ${CHOOSED_VEHICLE[vehicleType]}`);
-            context.scene.state.vehicle = vehicleType;
+    @OnAction('SET_TRUCK')
+    private async setTruck(context: INewRideContext): Promise<void> {
+        await this.setVehicle(Vehicle.TRUCK, context);
+    }
 
-            await this.saveRide(context);
+    private async setVehicle(vehicleType: Vehicle, context: INewRideContext): Promise<void> {
+        await context.deleteMessage();
 
-            await context.reply('Дякуємо! Ваша заявка прийнята.');
-            await context.reply('Якщо цей маршрут буде актуальним для волонтерів, вони сконтактують із вами по телефону.');
-            await context.reply('Зареєструвати наступну поїздку ви зможете після завершення поточної.');
-            await context.scene.leave();
+        await context.reply(`Ви обрали ${CHOOSED_VEHICLE[vehicleType]}`);
+        context.scene.state.vehicle = vehicleType;
 
-            await this.menuHandler.showMenu(context);
-        };
+        await this.saveRide(context);
+
+        await context.reply('Дякуємо! Ваша заявка прийнята.');
+        await context.reply('Якщо цей маршрут буде актуальним для волонтерів, вони сконтактують із вами по телефону.');
+        await context.reply('Зареєструвати наступну поїздку ви зможете після завершення поточної.');
+        await context.scene.leave();
+
+        await this.menuHandler.showMenu(context);
     }
 
     private async saveRide(context: INewRideContext): Promise<void> {

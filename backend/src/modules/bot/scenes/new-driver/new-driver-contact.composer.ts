@@ -1,4 +1,4 @@
-import {BaseComposer, IComposeUpdate, IComposeHandler, ISceneContext, Message} from "../../base";
+import {BaseComposer, ISceneContext, Message, OnEvent} from "../../base";
 import {Markup} from "telegraf";
 import {Inject, Injectable} from "@nestjs/common";
 import {BotMenuHandler} from "../../bot-menu.handler";
@@ -23,10 +23,7 @@ export class NewDriverContactComposer extends BaseComposer {
     @Inject()
     private driverRepository: DriverRepository
 
-    protected defineHandlers(): Partial<Record<IComposeUpdate, IComposeHandler>> {
-        return {text: this.onText, contact: this.onContact};
-    }
-
+    @OnEvent('text')
     private async onText(context: IContext) {
         await context.reply(
             'Натисніть кнопку "Відправити свої контактні дані"',
@@ -36,6 +33,7 @@ export class NewDriverContactComposer extends BaseComposer {
         );
     }
 
+    @OnEvent('contact')
     private async onContact(context: IContext) {
         const {phone_number, first_name, last_name} = context.message.contact;
         context.scene.state.phone = phone_number;

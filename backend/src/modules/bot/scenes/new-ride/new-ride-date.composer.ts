@@ -1,20 +1,13 @@
 import {Injectable} from "@nestjs/common";
 import {Markup} from "telegraf";
-import {BaseComposer, IComposeActionHandler, IComposeHandler, IComposeMatchedContext} from "../../base";
+import {BaseComposer, IComposeMatchedContext, OnAction} from "../../base";
 import {INewRideContext} from "./new-ride.context";
 
 const daysOfWeek = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 
 @Injectable()
 export class NewRideDateComposer extends BaseComposer {
-    protected defineActions(): Partial<Record<string, IComposeHandler | IComposeActionHandler>> {
-        return {
-            PREV_DATE_RANGE: this.showPrevDateRange,
-            NEXT_DATE_RANGE: this.showNextDateRange,
-            'PICK_DATE_[\\d-]+': { handler: this.pickDate, pattern: true }
-        }
-    }
-
+    @OnAction('PREV_DATE_RANGE')
     private async showPrevDateRange(context: INewRideContext): Promise<void> {
         await context.deleteMessage();
         const { datePickerFirstDate } = context.scene.state;
@@ -22,6 +15,7 @@ export class NewRideDateComposer extends BaseComposer {
         await this.showDatePicker(context);
     }
 
+    @OnAction('NEXT_DATE_RANGE')
     private async showNextDateRange(context: INewRideContext): Promise<void> {
         await context.deleteMessage();
         const { datePickerFirstDate } = context.scene.state;
@@ -29,6 +23,7 @@ export class NewRideDateComposer extends BaseComposer {
         await this.showDatePicker(context);
     }
 
+    @OnAction(/PICK_DATE_[\d-]+/g)
     private async pickDate(context: INewRideContext & IComposeMatchedContext): Promise<void> {
         await context.deleteMessage();
         const date = context.match[0].replace("PICK_DATE_", "");
