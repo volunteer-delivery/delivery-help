@@ -14,6 +14,8 @@
     "console": "ts-node src/console.ts"
   },
   "dependencies": {
+    "@bugsnag/js": "^7.18.0",
+    "@bugsnag/plugin-express": "^7.18.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",

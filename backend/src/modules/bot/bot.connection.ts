@@ -4,6 +4,10 @@ import {IInlineMiddleware, IMiddleware} from "./base";
 
 type OnHandlers = [IInlineMiddleware, ...IInlineMiddleware[]];
 
+export interface IHandleBotError {
+    catch(error: Error, context: Context): void | Promise<void>;
+}
+
 @Injectable()
 export class BotConnection {
     private bot: Telegraf;
@@ -17,6 +21,10 @@ export class BotConnection {
     use(input: IMiddleware | IMiddleware[]): void {
         const middlewares = Array.isArray(input) ? input : [input];
         for (const middleware of middlewares) this.bot.use(middleware);
+    }
+
+    onError(errorHandler: IHandleBotError): void {
+        this.bot.catch(errorHandler.catch.bind(errorHandler));
     }
 
     onStart(middleware: IMiddleware): void {

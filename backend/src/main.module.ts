@@ -7,6 +7,7 @@ import {RideModule} from "./modules/ride";
 import {EventsModule} from "./modules/events";
 import {DriverModule} from "./modules/driver";
 import {BotModule} from "./modules/bot";
+import {ErrorTrackerModule} from "./modules/error-tracker";
 
 @Module({
     imports: [
@@ -20,7 +21,8 @@ import {BotModule} from "./modules/bot";
         UserModule,
         RideModule,
         DriverModule,
-        BotModule
+        BotModule,
+        ErrorTrackerModule
     ]
 })
 export class MainModule {}
