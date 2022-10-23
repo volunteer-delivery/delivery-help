@@ -1,5 +1,4 @@
-import {Injectable} from "@nestjs/common";
-import {BaseRepository, ISchemaDefinition, IModel} from "./base-repository";
+import {BaseRepository, ISchemaDefinition, IModel, Repository} from "./base-repository";
 
 export enum DriverGrade {
     VERIFIED = 'VERIFIED',
@@ -13,12 +12,8 @@ export interface IDriverModel extends IModel {
     _telegramId: string | null;
 }
 
-@Injectable()
-export class DriverRepository extends BaseRepository<IDriverModel>{
-    protected defineName() {
-        return 'Driver';
-    }
-
+@Repository({name: 'Driver'})
+export class DriverRepository extends BaseRepository<IDriverModel> {
     protected defineSchema(): ISchemaDefinition<IDriverModel> {
         return {
             name: {

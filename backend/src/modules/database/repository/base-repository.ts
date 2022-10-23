@@ -9,6 +9,19 @@ export interface IModel {
     id: string;
 }
 
+export interface RepositoryOptions {
+    name: string;
+}
+
+const REPOSITORY_METADATA = Symbol('repositoryMetadata');
+
+export function Repository(options: RepositoryOptions): ClassDecorator {
+    return (target: Function) => {
+        target[REPOSITORY_METADATA] = options;
+        Injectable()(target);
+    };
+}
+
 @Injectable()
 export abstract class BaseRepository<Doc> {
     protected readonly connection: DatabaseConnection;
@@ -17,13 +30,14 @@ export abstract class BaseRepository<Doc> {
     public readonly query: SchemaModel<Doc>;
 
     constructor(private moduleRef: ModuleRef) {
+        const options = this.constructor[REPOSITORY_METADATA] as RepositoryOptions;
+
         this.connection = moduleRef.get(DatabaseConnection);
         this.schema = this.buildSchema();
-        this.name = this.defineName();
+        this.name = options.name;
         this.query = this.connection.buildQuery<Doc>(this.name, this.schema);
     }
 
-    protected abstract defineName(): string;
     protected abstract defineSchema(): ISchemaDefinition<Doc>;
 
     private buildSchema(): Schema<Doc> {

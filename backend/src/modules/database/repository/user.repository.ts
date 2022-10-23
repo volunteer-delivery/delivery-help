@@ -1,17 +1,12 @@
-import {Injectable} from "@nestjs/common";
-import {BaseRepository, ISchemaDefinition, IModel} from "./base-repository";
+import {BaseRepository, ISchemaDefinition, IModel, Repository} from "./base-repository";
 
 export interface IUserModel extends IModel {
     name: string;
     _password: string;
 }
 
-@Injectable()
-export class UserRepository extends BaseRepository<IUserModel>{
-    protected defineName() {
-        return 'User';
-    }
-
+@Repository({name: 'User'})
+export class UserRepository extends BaseRepository<IUserModel> {
     protected defineSchema(): ISchemaDefinition<IUserModel> {
         return {
             name: {
