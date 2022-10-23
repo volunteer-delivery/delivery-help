@@ -1,2 +1,2 @@
 export {AuthModule} from './auth.module';
-export {AuthGuard, PublicEndpoint, CurrentUser, ISignedRequest} from './guard';
+export {AuthGuard, PublicApi, CurrentUser, ISignedRequest} from './guard';

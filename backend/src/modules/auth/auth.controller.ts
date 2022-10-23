@@ -4,10 +4,10 @@ import {SignInCredentials} from "./dto";
 import {ISuccessResponse} from "../common/types";
 import {AuthCookieService, SignInService} from "./services";
 import {TokenService} from "../common/token";
-import {PublicEndpoint} from "./guard";
+import {PublicApi} from "./guard";
 
 @Controller('auth')
-@PublicEndpoint()
+@PublicApi()
 export class AuthController {
     @Inject()
     private signInService: SignInService;

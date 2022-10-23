@@ -9,7 +9,7 @@ export type ISignedRequest = Request & { user?: IUserModel };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    static readonly PUBLIC_ENDPOINT_METADATA = Symbol('publicEndpoint');
+    static readonly PUBLIC_API_METADATA = Symbol('publicEndpoint');
 
     @Inject()
     private reflector: Reflector;
@@ -42,7 +42,7 @@ export class AuthGuard implements CanActivate {
     }
 
     private isPublic(context: ExecutionContext): boolean {
-        const key = AuthGuard.PUBLIC_ENDPOINT_METADATA;
+        const key = AuthGuard.PUBLIC_API_METADATA;
         if (this.reflector.get(key, context.getHandler())) return true;
         if (this.reflector.get(key, context.getClass())) return true;
         return false;
