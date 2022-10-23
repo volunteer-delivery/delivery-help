@@ -23,7 +23,10 @@ services:
     image: mongo:5.0.7
     volumes:
       - data_mongo:/data/db
-    env_file: .env
+    env_file: ${HOME}/delivery-help/.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'admin'
+      MONGO_INITDB_ROOT_PASSWORD: 'admin'
 
 volumes:
   data_mongo:
