@@ -19,14 +19,14 @@ services:
     depends_on:
       - mongo
 
-mongo:
-  image: mongo:5.0.7
-  volumes:
-    - data_mongo:/data/db
-  env_file: .env
-  environment:
-    MONGO_INITDB_ROOT_USERNAME: 'admin'
-    MONGO_INITDB_ROOT_PASSWORD: 'admin'
+  mongo:
+    image: mongo:5.0.7
+    volumes:
+      - data_mongo:/data/db
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'admin'
+      MONGO_INITDB_ROOT_PASSWORD: 'admin'
 
 volumes:
   data_mongo:
