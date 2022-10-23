@@ -22,5 +22,5 @@ LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
 
 WORKDIR /app
 
-COPY --from=builder ./dist ./
+COPY --from=builder /app/dist ./
 COPY ./ci/staging/frontend/config.nginx /etc/nginx/templates/default.conf.template

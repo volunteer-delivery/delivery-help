@@ -18,4 +18,4 @@ LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
 
 WORKDIR /app
 
-COPY --from=builder ./dist ./node_modules ./package.json ./
+COPY --from=builder /app/dist /app/node_modules /app/package.json ./
