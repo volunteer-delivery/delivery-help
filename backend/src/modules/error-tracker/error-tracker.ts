@@ -10,13 +10,19 @@ interface BugsnagPluginExpress {
 
 interface IErrorTracker {
     express: BugsnagPluginExpress;
+    setVolunteer(user: IUserModel): void;
+    setDriver(driver: IDriverModel): void;
+    sendError(error: Error): void;
 }
 
 class ErrorTrackerStub implements IErrorTracker {
     express = {
         errorHandler: () => {},
         requestHandler: () => {}
-    }
+    };
+    setVolunteer = () => {};
+    setDriver = () => {};
+    sendError = () => {}
 }
 
 enum UserRole {
@@ -44,10 +50,6 @@ export class ErrorTracker implements IErrorTracker {
         });
 
         this.instance = new ErrorTracker(Bugsnag);
-    }
-
-    static get express(): BugsnagPluginExpress {
-        return this.instance.express;
     }
 
     readonly express: BugsnagPluginExpress = this.client.getPlugin('express');

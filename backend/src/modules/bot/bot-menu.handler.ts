@@ -1,4 +1,4 @@
-import {Inject, Injectable, OnModuleInit} from "@nestjs/common";
+import {Inject, Injectable} from "@nestjs/common";
 import {Context, Markup} from "telegraf";
 import {BotComposerHelpers} from "./bot-composer.helpers";
 import {IInlineMiddleware, IMiddlewareNext, ISceneContext} from "./base";
