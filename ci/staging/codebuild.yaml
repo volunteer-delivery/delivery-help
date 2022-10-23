@@ -49,7 +49,7 @@ phases:
       - >
         docker build \
           --tag backend-builder \
-          --target builder
+          --target builder \
           --file ci/staging/backend/Dockerfile \
           --cache-from $BACKEND_TAG:staging-builder \
           --build-arg BUILDKIT_INLINE_CACHE \
