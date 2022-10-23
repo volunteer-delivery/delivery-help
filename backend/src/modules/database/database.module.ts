@@ -53,7 +53,7 @@ export class DatabaseModule implements OnModuleInit, OnModuleDestroy {
     }
 
     get isProduction(): boolean {
-        return this.configService.get('BACKEND_ENV') === 'production';
+        return this.configService.get('BACKEND_ENV') === 'PRODUCTION';
     }
 
     async isNeedSeeds(): Promise<boolean> {

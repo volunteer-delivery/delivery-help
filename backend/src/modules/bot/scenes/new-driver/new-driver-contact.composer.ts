@@ -1,6 +1,6 @@
-import {BaseComposer, ISceneContext, Message, OnEvent} from "../../base";
 import {Markup} from "telegraf";
 import {Inject, Injectable} from "@nestjs/common";
+import {BaseComposer, ISceneContext, Message, OnEvent} from "../../base";
 import {BotMenuHandler} from "../../bot-menu.handler";
 import {DriverGrade, DriverRepository} from "../../../database";
 
