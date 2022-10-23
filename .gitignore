@@ -1,4 +1,8 @@
 .idea
 .vscode
+.fleet
+.sshconfig
+.DS_Store
 db_data
 node_modules
+dist
