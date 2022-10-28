@@ -7,15 +7,17 @@ phases:
 
       - export DOCKER_BUILDKIT=1
       - export BUILDKIT_INLINE_CACHE=1
+      - export ENV=staging
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
       - export FRONTEND_TAG="$CR_BASE/delivery-help-frontend"
       - export BACKEND_TAG="$CR_BASE/delivery-help-backend"
 
       - docker pull $CR_BASE/delivery-help-node:latest || true
       - docker pull $CR_BASE/delivery-help-nginx:latest || true
-      - docker pull $FRONTEND_TAG:staging || true
-      - docker pull $FRONTEND_TAG:staging-builder || true
-      - docker pull $BACKEND_TAG:staging || true
+      - docker pull $FRONTEND_TAG:$ENV || true
+      - docker pull $FRONTEND_TAG:$ENV-builder || true
+      - docker pull $BACKEND_TAG:$ENV || true
+      - docker pull $BACKEND_TAG:$ENV-builder || true
 
   build:
     commands:
@@ -23,13 +25,11 @@ phases:
         docker build \
           --tag frontend-builder \
           --target builder \
-          --file ci/staging/frontend/Dockerfile \
-          --cache-from $FRONTEND_TAG:staging-builder \
+          --file ci/$ENV/frontend/Dockerfile \
+          --cache-from $FRONTEND_TAG:$ENV-builder \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL \
-          --build-arg FRONTEND_IP \
-          --build-arg FRONTEND_DOMAIN \
           --build-arg FRONTEND_ENV \
           --build-arg FRONTEND_BUGSNAG_KEY \
           .
@@ -37,33 +37,44 @@ phases:
       - >
         docker build \
           --tag frontend-app \
-          --file ci/staging/frontend/Dockerfile \
+          --file ci/$ENV/frontend/Dockerfile \
           --cache-from frontend-builder \
-          --cache-from $FRONTEND_TAG:staging \
+          --cache-from $FRONTEND_TAG:$ENV \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL \
-          --build-arg FRONTEND_IP \
-          --build-arg FRONTEND_DOMAIN \
           --build-arg FRONTEND_ENV \
           --build-arg FRONTEND_BUGSNAG_KEY \
           .
 
       - >
         docker build \
+          --tag backend-builder \
+          --target builder \
+          --file ci/$ENV/backend/Dockerfile \
+          --cache-from $BACKEND_TAG:$ENV-builder \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          .
+
+      - >
+        docker build \
           --tag backend-app \
-          --file ci/staging/backend/Dockerfile \
-          --cache-from $BACKEND_TAG:staging \
+          --file ci/$ENV/backend/Dockerfile \
+          --cache-from backend-builder \
+          --cache-from $BACKEND_TAG:$ENV \
           --build-arg BUILDKIT_INLINE_CACHE \
           .
 
   post_build:
     commands:
-      - docker tag frontend-builder $FRONTEND_TAG:staging-builder
-      - docker push $FRONTEND_TAG:staging-builder
+      - docker tag frontend-builder $FRONTEND_TAG:$ENV-builder
+      - docker push $FRONTEND_TAG:$ENV-builder
 
-      - docker tag frontend-app $FRONTEND_TAG:staging
-      - docker push $FRONTEND_TAG:staging
+      - docker tag frontend-app $FRONTEND_TAG:$ENV
+      - docker push $FRONTEND_TAG:$ENV
 
-      - docker tag backend-app $BACKEND_TAG:staging
-      - docker push $BACKEND_TAG:staging
+      - docker tag backend-builder $BACKEND_TAG:$ENV-builder
+      - docker push $BACKEND_TAG:$ENV-builder
+
+      - docker tag backend-app $BACKEND_TAG:$ENV
+      - docker push $BACKEND_TAG:$ENV

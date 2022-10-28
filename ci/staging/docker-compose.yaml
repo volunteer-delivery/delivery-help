@@ -12,7 +12,7 @@ services:
   backend:
     restart: always
     image: ${CR_HOST}/${CR_USERNAME}/delivery-help-backend:staging
-    command: npm run start
+    command: node dist/main
     env_file: ${HOME}/delivery-help/.env
     volumes:
       - /tmp/delivery-help:/app-tmp

@@ -1,6 +1,7 @@
 .idea
 .vscode
 .fleet
+.env
 .sshconfig
 .DS_Store
 db_data
