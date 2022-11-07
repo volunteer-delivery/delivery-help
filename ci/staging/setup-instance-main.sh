@@ -3,9 +3,9 @@
 install_codedeploy() {
     echo "install codedeploy" && \
     sudo yum install -y ruby wget && \
-    wget https://aws-codedeploy-eu-central-1.s3.eu-central-1.amazonaws.com/latest/install -o $HOME/install && \
-    chmod +x $HOME/install && \
-    sudo $HOME/install auto && \
+    wget https://aws-codedeploy-eu-central-1.s3.eu-central-1.amazonaws.com/latest/install && \
+    chmod +x ./install && \
+    sudo ./install auto && \
     echo "start codedeploy" && \
     sudo service codedeploy-agent start && \
     sudo service codedeploy-agent status
