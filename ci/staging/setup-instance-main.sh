@@ -18,6 +18,7 @@ install_docker() {
     sudo yum install -y docker && \
     echo "start docker" && \
     sudo usermod -a -G docker ec2-user && \
+    newgrp docker && \
     sudo systemctl start docker.service && \
     sudo systemctl enable docker.service && \
     docker -v && \
