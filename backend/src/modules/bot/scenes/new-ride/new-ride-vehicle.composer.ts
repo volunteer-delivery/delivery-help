@@ -49,7 +49,7 @@ export class NewRideVehicleComposer extends BaseComposer {
 
         await context.reply('Дякуємо! Ваша заявка прийнята.');
         await context.reply('Якщо цей маршрут буде актуальним для волонтерів, вони сконтактують із вами по телефону.');
-        await context.reply('Зареєструвати наступну поїздку ви зможете після завершення поточної.');
+        await context.reply('Якщо ви плануєте ще поїздку, розпочніть її реєстрацію вже зараз.');
         await context.scene.leave();
 
         await this.menuHandler.showMenu(context);

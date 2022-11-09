@@ -9,7 +9,7 @@ enum MenuItems {
     PROFILE = 'Мій профіль',
     NEW_RIDE = 'Зареєструвати поїздку',
     RIDE_HISTORY = 'Історія поїздок',
-    ACTIVE_RIDE = 'Переглянути поточну поїздку'
+    ACTIVE_RIDE = 'Переглянути поточні поїздки'
 }
 
 @Injectable()
@@ -46,10 +46,12 @@ export class BotMenuHandler {
     }
 
     private createMenu(context: Context): Markup.Markup<any> {
-        const activeRide = this.helpers.isNonFinishedRides(context) ? MenuItems.ACTIVE_RIDE : MenuItems.NEW_RIDE;
+        const topMenu = this.helpers.isNonFinishedRides(context) ? 
+            [[MenuItems.ACTIVE_RIDE], [MenuItems.NEW_RIDE]] :
+            [[MenuItems.NEW_RIDE]];
 
         return Markup.keyboard([
-            [activeRide],
+            ...topMenu,
             [MenuItems.PROFILE, MenuItems.RIDE_HISTORY]
         ]).resize();
     }
@@ -63,8 +65,7 @@ export class BotMenuHandler {
 
     private createNewRideHandler(): IInlineMiddleware {
         const enterWizard = (context: ISceneContext) => context.scene.enter('new-ride-wizard');
-        const middleware = this.helpers.driverOptional(true, this.hideMenu.bind(this), enterWizard)
-        return this.helpers.nonFinishedRidesOptional(false, middleware)
+        return this.helpers.driverOptional(true, this.hideMenu.bind(this), enterWizard);
     }
 
     private createRideHistoryHandler(): IInlineMiddleware {

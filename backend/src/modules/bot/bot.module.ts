@@ -67,11 +67,11 @@ export class BotModule implements OnModuleInit, OnApplicationBootstrap {
 
     async runBot() {
         this.connection.create(this.token);
-        this.connection.onStart(this.start);
         this.connection.use(session())
         this.connection.use(this.middlewares);
         this.connection.use(this.stages);
         this.menuHandler.registerHandlers();
+        this.connection.onStart(this.start);
         this.connection.onError(this.error);
         this.showInital();
         await this.connection.launch();
