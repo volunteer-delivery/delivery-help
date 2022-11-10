@@ -1,16 +1,24 @@
-use std::env;
+use clap::Parser;
 
+/// CLI to generate .env file based on aws parameter store
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
 pub struct CommandArguments {
-    pub env: String,
-    pub label: String,
+    /// Select parameters by path
+    #[arg(short, long)]
+    pub path: String,
+
+    /// Filter parameters by label
+    #[arg(short, long)]
+    pub label: Option<String>,
+
+    /// AWS regiosn
+    #[arg(short, long)]
+    pub region: Option<String>,
 }
 
 impl CommandArguments {
     pub fn new() -> CommandArguments {
-        let args: Vec<String> = env::args().collect();
-        CommandArguments {
-            env: args[1].to_string(),
-            label: args[2].to_string()
-        }
+        CommandArguments::parse()
     }
 }
