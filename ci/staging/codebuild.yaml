@@ -1,13 +1,23 @@
 version: 0.2
 
+env:
+  variables:
+    CR_HOST: "ghcr.io"
+    ENV: "staging"
+    DOCKER_BUILDKIT: 1
+    BUILDKIT_INLINE_CACHE: 1
+
 phases:
   pre_build:
     commands:
+      - >-
+        eval $( \
+          aws ssm get-parameters-by-path --path '/staging' --no-paginate --with-decryption \
+          | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value' \
+        )
+
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
-      - export DOCKER_BUILDKIT=1
-      - export BUILDKIT_INLINE_CACHE=1
-      - export ENV=staging
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
       - export FRONTEND_TAG="$CR_BASE/delivery-help-frontend"
       - export BACKEND_TAG="$CR_BASE/delivery-help-backend"

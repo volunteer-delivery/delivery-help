@@ -3,7 +3,9 @@
 .fleet
 .env
 .sshconfig
+.aws-credentails
 .DS_Store
 db_data
 node_modules
 dist
+ci/common/secrets-loader/target/
