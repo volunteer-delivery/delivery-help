@@ -2,7 +2,6 @@ version: 0.2
 
 env:
   variables:
-    CR_HOST: "ghcr.io"
     ENV: "staging"
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
@@ -11,10 +10,8 @@ phases:
   pre_build:
     commands:
       - >-
-        eval $( \
-          aws ssm get-parameters-by-path --path '/staging' --no-paginate --with-decryption \
-          | jq -r '.Parameters[] | "export " + (.Name | split("/")[-1] | ascii_upcase | gsub("-"; "_")) + "=" + .Value' \
-        )
+        curl https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64 -o ./secrets-loader
+        export $(chmod +x ./secrets-loader && ./secrets-loader get -r eu-central-1 -p /$ENV -l deploy)
 
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
