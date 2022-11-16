@@ -11,7 +11,7 @@ phases:
   pre_build:
     commands:
       - >-
-        curl $SECRETS_LOADER_BIN_URL -o ./secrets-loader;
+        curl $SECRETS_LOADER_BIN_URL -o ./secrets-loader > /dev/null;
         chmod +x ./secrets-loader;
         secrets=$(./secrets-loader get -r $AWS_REGION -p /$ENV -l deploy);
         echo "AWS_REGION: $AWS_REGION, AWS_REGION_DEFAULT: $AWS_REGION_DEFAULT";
