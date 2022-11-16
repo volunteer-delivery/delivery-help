@@ -11,7 +11,7 @@ phases:
   pre_build:
     commands:
       - >-
-        curl $SECRETS_LOADER_BIN_URL -o ./secrets-loader
+        curl $SECRETS_LOADER_BIN_URL -o ./secrets-loader && \
         export $(chmod +x ./secrets-loader && ./secrets-loader get -r eu-central-1 -p /$ENV -l deploy)
 
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
