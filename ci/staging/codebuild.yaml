@@ -5,12 +5,13 @@ env:
     ENV: "staging"
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
+    SECRETS_LOADER_BIN_URL: https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64
 
 phases:
   pre_build:
     commands:
       - >-
-        curl https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64 -o ./secrets-loader
+        curl $SECRETS_LOADER_BIN_URL -o ./secrets-loader
         export $(chmod +x ./secrets-loader && ./secrets-loader get -r eu-central-1 -p /$ENV -l deploy)
 
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
