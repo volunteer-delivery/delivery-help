@@ -14,7 +14,7 @@ phases:
         curl $SECRETS_LOADER_BIN_URL -o ./secrets-loader;
         chmod +x ./secrets-loader;
         secrets=$(./secrets-loader get -r $AWS_REGION -p /$ENV -l deploy);
-        echo $secrets;
+        echo "AWS_REGION: $AWS_REGION, AWS_REGION_DEFAULT: $AWS_REGION_DEFAULT";
         export $secrets > /dev/null;
 
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
