@@ -5,16 +5,12 @@ env:
     ENV: "staging"
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
-    SECRETS_LOADER_BIN_URL: https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64
 
 phases:
   pre_build:
     commands:
       - >-
-        curl $SECRETS_LOADER_BIN_URL -o ./secrets-loader > /dev/null;
-        chmod +x ./secrets-loader;
-        secrets=$(./secrets-loader get -r $AWS_REGION -p /$ENV -l deploy);
-        echo "AWS_REGION: $AWS_REGION, AWS_REGION_DEFAULT: $AWS_REGION_DEFAULT";
+        secrets=$(./secrets-loader/build/linux-arm64 get -r $AWS_REGION -p /$ENV -l deploy);
         export $secrets > /dev/null;
 
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
