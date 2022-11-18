@@ -11,6 +11,7 @@ phases:
   pre_build:
     commands:
       - curl $SECRETS_LOADER_DOWNLOAD -s -o tmp/secrets-loader
+      - chmod +x tmp/secrets-loader
       - export $(tmp/secrets-loader get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
