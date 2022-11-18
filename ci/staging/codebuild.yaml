@@ -21,10 +21,10 @@ phases:
 
       - docker pull $CR_BASE/delivery-help-node:latest || true
       - docker pull $CR_BASE/delivery-help-nginx:latest || true
-      - docker pull $FRONTEND_TAG:$ENV || true
       - docker pull $FRONTEND_TAG:$ENV-builder || true
-      - docker pull $BACKEND_TAG:$ENV || true
       - docker pull $BACKEND_TAG:$ENV-builder || true
+      - docker pull $FRONTEND_TAG:$ENV || true
+      - docker pull $BACKEND_TAG:$ENV || true
 
   build:
     commands:
