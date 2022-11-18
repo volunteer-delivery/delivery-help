@@ -12,7 +12,7 @@ phases:
     commands:
       - curl $SECRETS_LOADER_DOWNLOAD -s -o tmp/secrets-loader
       - chmod +x tmp/secrets-loader
-      - echo "tmp/secrets-loader get -r $AWS_REGION -p /$ENV -l deploy"
+      - echo $(aws ssm get-parameters-by-path --path '/staging' --with-decryption --parameter-filters 'Key=Label,Values=deploy' --output json --region eu-central-1)
       - export $(tmp/secrets-loader get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
