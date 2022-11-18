@@ -5,14 +5,13 @@ env:
     ENV: "staging"
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
+    SECRETS_LOADER_DOWNLOAD: https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64
 
 phases:
   pre_build:
     commands:
-      - >-
-        secrets=$(./secrets-loader/build/linux-arm64 get -r $AWS_REGION -p /$ENV -l deploy);
-        export $secrets > /dev/null;
-
+      - curl $SECRETS_LOADER_DOWNLOAD -s -o tmp/secrets-loader
+      - export $(tmp/secrets-loader get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
@@ -85,3 +84,12 @@ phases:
 
       - docker tag backend-app $BACKEND_TAG:$ENV
       - docker push $BACKEND_TAG:$ENV
+
+      - mkdir tmp/artifact
+      - cp ci/$ENV/docker-compose.yaml tmp/artifact/
+      - cp tmp/secrets-loader tmp/artifact/
+      - zip -rmj tmp/artifact.zip tmp/artifact/
+
+artifacts:
+  files:
+    - tmp/artifact.zip

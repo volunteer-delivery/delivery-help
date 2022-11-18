@@ -1,3 +1,0 @@
-[submodule "secrets-loader"]
-	path = secrets-loader
-	url = git@github.com:volunteer-delivery/secrets-loader.git
