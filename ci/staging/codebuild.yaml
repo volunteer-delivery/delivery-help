@@ -96,4 +96,3 @@ artifacts:
   files:
     - ./*
   base-directory: tmp/artifact
-  discard-paths: yes
