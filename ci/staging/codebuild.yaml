@@ -90,8 +90,9 @@ phases:
       - cp ci/$ENV/docker-compose.yaml tmp/artifact/
       - cp ci/$ENV/appspec.yml tmp/artifact/
       - cp tmp/secrets-loader tmp/artifact/
-      - zip -rmj tmp/artifact.zip tmp/artifact/
 
 artifacts:
   files:
-    - tmp/artifact.zip
+    - ./*
+  base-directory: tmp/artifact
+  discard-paths: yes
