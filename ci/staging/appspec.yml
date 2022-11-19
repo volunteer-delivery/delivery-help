@@ -1,0 +1,15 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ec2-user/app
+
+hooks:
+  AfterInstall:
+    - location: ci/staging/hooks/after-install.sh
+      runas: ec2-user
+
+  ApplicationStart:
+    - location: ci/staging/hooks/start.sh
+      runas: ec2-user

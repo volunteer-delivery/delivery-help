@@ -88,6 +88,7 @@ phases:
 
       - mkdir tmp/artifact
       - cp ci/$ENV/docker-compose.yaml tmp/artifact/
+      - cp ci/$ENV/appspec.yaml tmp/artifact/
       - cp tmp/secrets-loader tmp/artifact/
       - zip -rmj tmp/artifact.zip tmp/artifact/
 
