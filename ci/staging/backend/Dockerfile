@@ -1,4 +1,4 @@
-FROM ghcr.io/tarch64/delivery-help-node:latest as builder
+FROM ghcr.io/volunteer-delivery/node:latest as builder
 
 WORKDIR /app
 
@@ -13,8 +13,8 @@ RUN npm run build:prod
 
 
 
-FROM ghcr.io/tarch64/delivery-help-node:latest
-LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
+FROM ghcr.io/volunteer-delivery/node:latest
+LABEL org.opencontainers.image.source https://github.com/volunteer-delivery
 
 WORKDIR /app
 

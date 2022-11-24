@@ -16,11 +16,11 @@ phases:
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
-      - export FRONTEND_TAG="$CR_BASE/delivery-help-frontend"
-      - export BACKEND_TAG="$CR_BASE/delivery-help-backend"
+      - export FRONTEND_TAG="$CR_BASE/delivery-help/frontend"
+      - export BACKEND_TAG="$CR_BASE/delivery-help/backend"
 
-      - docker pull $CR_BASE/delivery-help-node:latest || true
-      - docker pull $CR_BASE/delivery-help-nginx:latest || true
+      - docker pull $CR_BASE/node:latest || true
+      - docker pull $CR_BASE/nginx:latest || true
       - docker pull $FRONTEND_TAG:$ENV-builder || true
       - docker pull $BACKEND_TAG:$ENV-builder || true
       - docker pull $FRONTEND_TAG:$ENV || true
@@ -93,6 +93,5 @@ phases:
       - cp tmp/secrets-loader tmp/artifact/
 
 artifacts:
-  files:
-    - ./*
+  files: ['./*']
   base-directory: tmp/artifact

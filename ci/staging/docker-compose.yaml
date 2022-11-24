@@ -3,17 +3,17 @@ version: '3'
 services:
   frontend:
     restart: always
-    image: ${CR_HOST}/${CR_USERNAME}/delivery-help-frontend:staging
+    image: ${CR_HOST}/${CR_USERNAME}/delivery-help/frontend:staging
     command: nginx -g 'daemon off;'
-    env_file: ${HOME}/delivery-help/.env
+    env_file: ${HOME}/app/.env
     ports:
       - 80:80
 
   backend:
     restart: always
-    image: ${CR_HOST}/${CR_USERNAME}/delivery-help-backend:staging
+    image: ${CR_HOST}/${CR_USERNAME}/delivery-help/backend:staging
     command: node dist/main
-    env_file: ${HOME}/delivery-help/.env
+    env_file: ${HOME}/app/.env
     volumes:
       - /tmp/delivery-help:/app-tmp
     depends_on:
@@ -23,7 +23,7 @@ services:
     image: mongo:5.0.7
     volumes:
       - data_mongo:/data/db
-    env_file: ${HOME}/delivery-help/.env
+    env_file: ${HOME}/app/.env
     environment:
       MONGO_INITDB_ROOT_USERNAME: 'admin'
       MONGO_INITDB_ROOT_PASSWORD: 'admin'
