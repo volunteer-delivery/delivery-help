@@ -5,8 +5,8 @@
 .sshconfig
 .aws-credentails
 .DS_Store
-./tmp
-!./tmp/.keep
+tmp/*
+!tmp/.keep
 db_data
 node_modules
 dist
