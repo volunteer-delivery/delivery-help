@@ -40,8 +40,7 @@ phases:
           --file ci/$ENV/frontend/Dockerfile \
           --cache-from $FRONTEND_IMAGE-builder:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_HOST \
-          --build-arg CR_USERNAME \
+          --build-arg CR_BASE \
           --build-arg CR_LABEL \
           --build-arg FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL \
@@ -56,8 +55,7 @@ phases:
           --cache-from frontend-builder \
           --cache-from $FRONTEND_IMAGE:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_HOST \
-          --build-arg CR_USERNAME \
+          --build-arg CR_BASE \
           --build-arg CR_LABEL \
           --build-arg FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL \
@@ -72,8 +70,7 @@ phases:
           --file ci/$ENV/backend/Dockerfile \
           --cache-from $BACKEND_IMAGE-builder:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_HOST \
-          --build-arg CR_USERNAME \
+          --build-arg CR_BASE \
           --build-arg CR_LABEL \
           .
 
@@ -84,8 +81,7 @@ phases:
           --cache-from backend-builder \
           --cache-from $BACKEND_IMAGE:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_HOST \
-          --build-arg CR_USERNAME \
+          --build-arg CR_BASE \
           --build-arg CR_LABEL \
           .
 
@@ -109,7 +105,7 @@ phases:
 
       - mkdir $ARTIFACT_DIR
       - echo $APP_VERSION >> $ARTIFACT_DIR/app-version
-      - envsubst '$CR_HOST,$CR_USERNAME,$APP_VERSION' < ci/$ENV/docker-compose.yaml >> $ARTIFACT_DIR/docker-compose.yaml
+      - envsubst < ci/$ENV/docker-compose.yaml >> $ARTIFACT_DIR/docker-compose.yaml
       - cp ci/$ENV/appspec.yml $ARTIFACT_DIR/
       - cp -r ci/$ENV/hooks $ARTIFACT_DIR/
       - cp $SECRETS_LOADER $ARTIFACT_DIR/

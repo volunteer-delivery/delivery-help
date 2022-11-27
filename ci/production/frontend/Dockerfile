@@ -1,8 +1,7 @@
-ARG CR_HOST
-ARG CR_USERNAME
+ARG CR_BASE
 ARG CR_LABEL
 
-FROM $CR_HOST/$CR_USERNAME/node:latest as builder
+FROM $CR_BASE/node:latest as builder
 
 WORKDIR /app
 
@@ -21,7 +20,7 @@ RUN npm run build
 
 
 
-FROM $CR_HOST/$CR_USERNAME/nginx:latest
+FROM $CR_BASE/nginx:latest
 LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
