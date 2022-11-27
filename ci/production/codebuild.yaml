@@ -1,23 +1,30 @@
 version: 0.2
 
+env:
+  variables:
+    ENV: "production"
+    DOCKER_BUILDKIT: 1
+    BUILDKIT_INLINE_CACHE: 1
+    SECRETS_LOADER_DOWNLOAD: https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64
+
 phases:
   pre_build:
     commands:
+      - curl $SECRETS_LOADER_DOWNLOAD -s -o tmp/secrets-loader
+      - chmod +x tmp/secrets-loader
+      - export $(tmp/secrets-loader get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
-      - export DOCKER_BUILDKIT=1
-      - export BUILDKIT_INLINE_CACHE=1
-      - export ENV=production
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
-      - export FRONTEND_TAG="$CR_BASE/delivery-help-frontend"
-      - export BACKEND_TAG="$CR_BASE/delivery-help-backend"
+      - export FRONTEND_TAG="$CR_BASE/delivery-help/frontend"
+      - export BACKEND_TAG="$CR_BASE/delivery-help/backend"
 
-      - docker pull $CR_BASE/delivery-help-node:latest || true
-      - docker pull $CR_BASE/delivery-help-nginx:latest || true
-      - docker pull $FRONTEND_TAG:$ENV || true
+      - docker pull $CR_BASE/node:latest || true
+      - docker pull $CR_BASE/nginx:latest || true
       - docker pull $FRONTEND_TAG:$ENV-builder || true
-      - docker pull $BACKEND_TAG:$ENV || true
       - docker pull $BACKEND_TAG:$ENV-builder || true
+      - docker pull $FRONTEND_TAG:$ENV || true
+      - docker pull $BACKEND_TAG:$ENV || true
 
   build:
     commands:
@@ -78,3 +85,13 @@ phases:
 
       - docker tag backend-app $BACKEND_TAG:$ENV
       - docker push $BACKEND_TAG:$ENV
+
+      - mkdir tmp/artifact
+      - cp ci/$ENV/docker-compose.yaml tmp/artifact/
+      - cp ci/$ENV/appspec.yml tmp/artifact/
+      - cp -r ci/$ENV/hooks tmp/artifact/
+      - cp tmp/secrets-loader tmp/artifact/
+
+artifacts:
+  files: ['./**/*']
+  base-directory: tmp/artifact
