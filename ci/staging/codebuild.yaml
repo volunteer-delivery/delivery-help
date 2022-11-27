@@ -93,5 +93,5 @@ phases:
       - cp tmp/secrets-loader tmp/artifact/
 
 artifacts:
-  files: ['./*']
+  files: ['./**/*']
   base-directory: tmp/artifact
