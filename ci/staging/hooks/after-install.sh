@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+cd app && \
 sudo chown -R $USER:$USER . && \
 rm -f .env && \
 ./secrets-loader get -r eu-central-1 -p /staging -l instance-main >> .env && \
