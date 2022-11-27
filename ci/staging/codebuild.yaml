@@ -3,29 +3,33 @@ version: 0.2
 env:
   variables:
     ENV: "staging"
-    CR_LABEL: "https://github.com/volunteer-delivery"
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
+    CR_LABEL: "https://github.com/volunteer-delivery"
     SECRETS_LOADER_DOWNLOAD: https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64
+    SECRETS_LOADER: "tmp/secrets-loader"
+    ARTIFACT_DIR: "tmp/artifact"
+
 
 phases:
   pre_build:
     commands:
-      - curl $SECRETS_LOADER_DOWNLOAD -s -o tmp/secrets-loader
-      - chmod +x tmp/secrets-loader
-      - export $(tmp/secrets-loader get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
+      - curl $SECRETS_LOADER_DOWNLOAD -s -o $SECRETS_LOADER
+      - chmod +x $SECRETS_LOADER
+      - export $($SECRETS_LOADER get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
+      - export APP_VERSION="$CODEBUILD_BUILD_NUMBER"
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
-      - export FRONTEND_TAG="$CR_BASE/delivery-help/frontend"
-      - export BACKEND_TAG="$CR_BASE/delivery-help/backend"
+      - export FRONTEND_IMAGE="$CR_BASE/$ENV-delivery-help/frontend"
+      - export BACKEND_IMAGE="$CR_BASE/$ENV-delivery-help/backend"
 
       - docker pull $CR_BASE/node:latest || true
       - docker pull $CR_BASE/nginx:latest || true
-      - docker pull $FRONTEND_TAG:$ENV-builder || true
-      - docker pull $BACKEND_TAG:$ENV-builder || true
-      - docker pull $FRONTEND_TAG:$ENV || true
-      - docker pull $BACKEND_TAG:$ENV || true
+      - docker pull $FRONTEND_IMAGE-builder:latest || true
+      - docker pull $BACKEND_IMAGE-builder:latest || true
+      - docker pull $FRONTEND_IMAGE:latest || true
+      - docker pull $BACKEND_IMAGE:latest || true
 
   build:
     commands:
@@ -34,7 +38,7 @@ phases:
           --tag frontend-builder \
           --target builder \
           --file ci/$ENV/frontend/Dockerfile \
-          --cache-from $FRONTEND_TAG:$ENV-builder \
+          --cache-from $FRONTEND_IMAGE-builder:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg CR_HOST \
           --build-arg CR_USERNAME \
@@ -50,7 +54,7 @@ phases:
           --tag frontend-app \
           --file ci/$ENV/frontend/Dockerfile \
           --cache-from frontend-builder \
-          --cache-from $FRONTEND_TAG:$ENV \
+          --cache-from $FRONTEND_IMAGE:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg CR_HOST \
           --build-arg CR_USERNAME \
@@ -66,7 +70,7 @@ phases:
           --tag backend-builder \
           --target builder \
           --file ci/$ENV/backend/Dockerfile \
-          --cache-from $BACKEND_TAG:$ENV-builder \
+          --cache-from $BACKEND_IMAGE-builder:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg CR_HOST \
           --build-arg CR_USERNAME \
@@ -78,7 +82,7 @@ phases:
           --tag backend-app \
           --file ci/$ENV/backend/Dockerfile \
           --cache-from backend-builder \
-          --cache-from $BACKEND_TAG:$ENV \
+          --cache-from $BACKEND_IMAGE:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg CR_HOST \
           --build-arg CR_USERNAME \
@@ -87,23 +91,29 @@ phases:
 
   post_build:
     commands:
-      - docker tag frontend-builder $FRONTEND_TAG:$ENV-builder
-      - docker push $FRONTEND_TAG:$ENV-builder
+      - docker tag frontend-builder $FRONTEND_IMAGE-builder:latest
+      - docker tag frontend-builder $FRONTEND_IMAGE-builder:$APP_VERSION
+      - docker push -a $FRONTEND_IMAGE-builder
 
-      - docker tag frontend-app $FRONTEND_TAG:$ENV
-      - docker push $FRONTEND_TAG:$ENV
+      - docker tag frontend-app $FRONTEND_IMAGE:latest
+      - docker tag frontend-app $FRONTEND_IMAGE:$APP_VERSION
+      - docker push -a $FRONTEND_IMAGE
 
-      - docker tag backend-builder $BACKEND_TAG:$ENV-builder
-      - docker push $BACKEND_TAG:$ENV-builder
+      - docker tag backend-builder $BACKEND_IMAGE-builder:latest
+      - docker tag backend-builder $BACKEND_IMAGE-builder:$APP_VERSION
+      - docker push -a $BACKEND_IMAGE-builder
 
-      - docker tag backend-app $BACKEND_TAG:$ENV
-      - docker push $BACKEND_TAG:$ENV
+      - docker tag backend-app $BACKEND_IMAGE:latest
+      - docker tag backend-app $BACKEND_IMAGE:$APP_VERSION
+      - docker push -a $BACKEND_IMAGE
 
-      - mkdir tmp/artifact
-      - cp ci/$ENV/docker-compose.yaml tmp/artifact/
-      - cp ci/$ENV/appspec.yml tmp/artifact/
-      - cp -r ci/$ENV/hooks tmp/artifact/
-      - cp tmp/secrets-loader tmp/artifact/
+      - mkdir $ARTIFACT_DIR
+      - echo $APP_VERSION >> $ARTIFACT_DIR/app-version
+      - envsubst '$CR_HOST,$CR_USERNAME,$APP_VERSION' < ci/$ENV/docker-compose.yaml >> $ARTIFACT_DIR/docker-compose.yaml
+      - cp ci/$ENV/appspec.yml $ARTIFACT_DIR/
+      - cp -r ci/$ENV/hooks $ARTIFACT_DIR/
+      - cp $SECRETS_LOADER $ARTIFACT_DIR/
+
 
 artifacts:
   files: ['./**/*']

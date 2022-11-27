@@ -3,7 +3,7 @@ version: '3'
 services:
   frontend:
     restart: always
-    image: ${CR_HOST}/${CR_USERNAME}/delivery-help/frontend:staging
+    image: ${CR_HOST}/${CR_USERNAME}/staging-delivery-help/frontend:${APP_VERSION}
     command: nginx -g 'daemon off;'
     env_file: .env
     ports:
@@ -11,7 +11,7 @@ services:
 
   backend:
     restart: always
-    image: ${CR_HOST}/${CR_USERNAME}/delivery-help/backend:staging
+    image: ${CR_HOST}/${CR_USERNAME}/staging-delivery-help/backend:${APP_VERSION}
     command: node dist/main
     env_file: .env
     volumes:
