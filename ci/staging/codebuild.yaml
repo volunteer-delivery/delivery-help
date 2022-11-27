@@ -12,7 +12,6 @@ phases:
     commands:
       - curl $SECRETS_LOADER_DOWNLOAD -s -o tmp/secrets-loader
       - chmod +x tmp/secrets-loader
-      - tmp/secrets-loader --log-level debug get -r $AWS_REGION -p /$ENV -l deploy
       - export $(tmp/secrets-loader get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
