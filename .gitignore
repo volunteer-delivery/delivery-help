@@ -3,7 +3,10 @@
 .fleet
 .env
 .sshconfig
+.aws-credentails
 .DS_Store
+tmp/*
+!tmp/.keep
 db_data
 node_modules
 dist

@@ -1,4 +1,7 @@
-FROM ghcr.io/tarch64/delivery-help-node:latest as builder
+ARG CR_BASE
+ARG CR_LABEL
+
+FROM $CR_BASE/node:latest as builder
 
 WORKDIR /app
 
@@ -13,8 +16,8 @@ RUN npm run build:prod
 
 
 
-FROM ghcr.io/tarch64/delivery-help-node:latest
-LABEL org.opencontainers.image.source https://github.com/TArch64/delivery-help
+FROM $CR_BASE/node:latest
+LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 

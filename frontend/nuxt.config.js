@@ -7,7 +7,7 @@ export default {
     target: 'static',
 
     head: {
-        title: 'DeliveryHelp',
+        title: 'ВолонтерВантаж',
 
         htmlAttrs: { lang: 'ua' },
 
