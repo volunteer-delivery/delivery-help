@@ -2,8 +2,9 @@
 
 root="$HOME/app"
 env_file="$root/.env"
+docker_compose_file="$root/docker-compose.yaml"
 
 export $(cat $env_file | xargs) && \
 echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin && \
-docker compose down --remove-orphans && \
-docker compose up --detach;
+docker compose -f $docker_compose_file down --remove-orphans && \
+docker compose -f $docker_compose_file up --detach;
