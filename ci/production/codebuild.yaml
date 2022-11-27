@@ -3,6 +3,7 @@ version: 0.2
 env:
   variables:
     ENV: "production"
+    CR_LABEL: "https://github.com/volunteer-delivery"
     DOCKER_BUILDKIT: 1
     BUILDKIT_INLINE_CACHE: 1
     SECRETS_LOADER_DOWNLOAD: https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64
@@ -35,6 +36,9 @@ phases:
           --file ci/$ENV/frontend/Dockerfile \
           --cache-from $FRONTEND_TAG:$ENV-builder \
           --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg CR_HOST \
+          --build-arg CR_USERNAME \
+          --build-arg CR_LABEL \
           --build-arg FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_ENV \
@@ -48,6 +52,9 @@ phases:
           --cache-from frontend-builder \
           --cache-from $FRONTEND_TAG:$ENV \
           --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg CR_HOST \
+          --build-arg CR_USERNAME \
+          --build-arg CR_LABEL \
           --build-arg FRONTEND_API_URL \
           --build-arg FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_ENV \
@@ -61,6 +68,9 @@ phases:
           --file ci/$ENV/backend/Dockerfile \
           --cache-from $BACKEND_TAG:$ENV-builder \
           --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg CR_HOST \
+          --build-arg CR_USERNAME \
+          --build-arg CR_LABEL \
           .
 
       - >
@@ -70,6 +80,9 @@ phases:
           --cache-from backend-builder \
           --cache-from $BACKEND_TAG:$ENV \
           --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg CR_HOST \
+          --build-arg CR_USERNAME \
+          --build-arg CR_LABEL \
           .
 
   post_build:

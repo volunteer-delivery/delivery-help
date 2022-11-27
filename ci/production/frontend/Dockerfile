@@ -1,4 +1,8 @@
-FROM ghcr.io/volunteer-delivery/node:latest as builder
+ARG CR_HOST
+ARG CR_USERNAME
+ARG CR_LABEL
+
+FROM $CR_HOST/$CR_USERNAME/node:latest as builder
 
 WORKDIR /app
 
@@ -17,8 +21,8 @@ RUN npm run build
 
 
 
-FROM ghcr.io/volunteer-delivery/nginx:latest
-LABEL org.opencontainers.image.source https://github.com/volunteer-delivery
+FROM $CR_HOST/$CR_USERNAME/nginx:latest
+LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 
