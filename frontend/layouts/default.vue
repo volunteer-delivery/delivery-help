@@ -1,5 +1,74 @@
 <template>
-    <div><Nuxt/></div>
+    <v-app>
+        <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent app>
+            <v-list class="pt-5" nav dense>
+                <v-list-item
+                    v-for="item of $options.navItems"
+                    :key="item.url"
+                    :to="item.url"
+                    :ripple="false"
+                    exact
+                >
+                    <v-list-item-icon>
+                        <v-badge :content="drivesCounter[item.id]" :value="drivesCounter[item.id]">
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-badge>
+                    </v-list-item-icon>
+
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+
+            <component
+                v-if="navigationExtra"
+                class="pt-5 pb-5 drawer__navigation-extra"
+                :is="navigationExtra.view"
+            />
+        </v-navigation-drawer>
+
+        <v-main class="layout__main">
+            <v-container>
+                <Nuxt/>
+            </v-container>
+        </v-main>
+
+        <template v-if="isBottomNavigation">
+            <v-bottom-navigation fixed>
+                <v-btn
+                    v-for="item of $options.navItems"
+                    :key="item.url"
+                    :to="item.url"
+                    :ripple="false"
+                    exact
+                >
+                    <span>{{ item.title }}</span>
+
+                    <v-badge :content="drivesCounter[item.id]" :value="drivesCounter[item.id]">
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-badge>
+                </v-btn>
+            </v-bottom-navigation>
+
+            <template v-if="navigationExtra">
+                <v-fade-transition>
+                    <component :is="navigationExtra.mobileTrigger" @open="openNavigationExtra"/>
+                </v-fade-transition>
+
+                <v-bottom-sheet v-model="navigationExtraModel">
+                    <v-card tile>
+                        <component
+                            :is="navigationExtra.view"
+                            @close="closeNavigationExtra"
+                        />
+
+                        <v-btn class="layout__close-navigation-extra" icon @click="closeNavigationExtra">
+                            <v-icon>{{ $options.icons.mdiClose }}</v-icon>
+                        </v-btn>
+                    </v-card>
+                </v-bottom-sheet>
+            </template>
+        </template>
+    </v-app>
 </template>
 
 <script>
