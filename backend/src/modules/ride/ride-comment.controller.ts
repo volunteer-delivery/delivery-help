@@ -33,7 +33,8 @@ export class RideCommentController {
         const comment = await this.rideCommentRepository.query.create({
             createdAt: new Date(),
             author: currentUser.id,
-            text: body.text
+            text: body.text,
+            ride: ride.id
         });
 
         await this.rideRepository.query.updateOne({ _id: ride.id }, {

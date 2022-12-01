@@ -1,11 +1,13 @@
 import {Schema} from "mongoose";
 import {BaseRepository, ISchemaDefinition, IModel, Repository} from "./base-repository";
 import {IUserModel} from "./user.repository";
+import {IRideModel} from "./ride.repository";
 
 export interface IRideCommentModel extends IModel {
     createdAt: Date;
     author: IUserModel;
     text: string;
+    ride: IRideModel;
 }
 
 @Repository({name: 'RideComment'})
@@ -25,6 +27,12 @@ export class RideCommentRepository extends BaseRepository<IRideCommentModel> {
 
             text: {
                 type: String,
+                required: true
+            },
+
+            ride: {
+                type: Schema.Types.ObjectId,
+                ref: 'Ride',
                 required: true
             }
         };
