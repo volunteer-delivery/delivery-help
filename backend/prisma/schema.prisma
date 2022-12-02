@@ -6,3 +6,65 @@ datasource db {
   provider = "postgresql"
   url      = env("POSTGRES_URL")
 }
+
+model Driver {
+  id         String  @id @default(uuid()) @db.Uuid
+  telegramId String? @unique
+  name       String
+  phone      String
+  rides      Ride[]
+}
+
+model Ride {
+  id            String        @id @default(uuid()) @db.Uuid
+  departureTime DateTime
+  destination   Address       @relation("rideDestination", fields: [destinationId], references: [id])
+  destinationId String        @unique @db.Uuid
+  driver        Driver        @relation(fields: [driverId], references: [id])
+  driverId      String        @db.Uuid
+  from          Address       @relation("rideAdress", fields: [fromId], references: [id])
+  fromId        String        @unique @db.Uuid
+  status        RideStatus
+  vehicle       Vehicle
+  comments      RideComment[]
+  volunteer     User?         @relation(fields: [volunteerId], references: [id])
+  volunteerId   String?        @db.Uuid
+}
+
+model Address {
+  id              String  @id @default(uuid()) @db.Uuid
+  city            String? @db.VarChar()
+  country         String  @db.VarChar()
+  rideDestination Ride?   @relation("rideDestination")
+  rideAdress      Ride?   @relation("rideAdress")
+}
+
+enum RideStatus {
+  PENDING  @map("PENDING")
+  ACTIVE   @map("ACTIVE")
+  FINISHED @map("FINISHED")
+}
+
+enum Vehicle {
+  CAR   @map("CAR")
+  VAN   @map("VAN")
+  TRUCK @map("TRUCK")
+}
+
+model RideComment {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  text      String
+  ride      Ride     @relation(fields: [rideId], references: [id])
+  rideId    String   @db.Uuid
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @db.Uuid
+}
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  password     String        @db.VarChar
+  name         String        @db.VarChar
+  rides        Ride[]
+  rideComments RideComment[]
+}
