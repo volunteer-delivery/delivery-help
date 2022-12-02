@@ -2,6 +2,7 @@ import {Module} from '@nestjs/common';
 import {ConfigModule} from "@nestjs/config";
 import {AuthModule} from "./modules/auth";
 import {DatabaseModule} from "./modules/database";
+import {PrismaModule} from './modules/prisma';
 import {UserModule} from "./modules/user";
 import {RideModule} from "./modules/ride";
 import {EventsModule} from "./modules/events";
@@ -16,6 +17,7 @@ import {ErrorTrackerModule} from "./modules/error-tracker";
             isGlobal: true
         }),
         DatabaseModule,
+        PrismaModule,
         EventsModule,
         AuthModule,
         UserModule,

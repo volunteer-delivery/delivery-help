@@ -14,6 +14,13 @@ services:
     env_file: .env
     depends_on:
       - mongo
+      - postgres
+
+  postgres:
+    image: postgres:15.1-alpine
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+    env_file: .env
 
   mongo:
     image: mongo:5.0.7
@@ -43,4 +50,6 @@ services:
 
 volumes:
   data_mongo:
+    driver: local
+  data-postgres:
     driver: local
