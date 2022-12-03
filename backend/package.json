@@ -9,8 +9,7 @@
     "build:prod": "rm -rf dist && nest build",
     "start:dev": "nest start --watch --preserveWatchOutput",
     "console": "scripts/node-exec.sh console",
-    "prisma": "prisma",
-    "postinstall": "prisma generate"
+    "prisma": "prisma"
   },
   "dependencies": {
     "@bugsnag/js": "^7.18.0",
