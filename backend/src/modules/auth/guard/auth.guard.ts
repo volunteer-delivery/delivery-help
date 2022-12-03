@@ -2,10 +2,10 @@ import {CanActivate, ExecutionContext, Inject, Injectable} from "@nestjs/common"
 import {Reflector} from "@nestjs/core";
 import {Request, Response} from "express";
 import {TokenService} from "../../common/token";
-import {IUserModel, UserRepository} from "../../database";
 import {AuthCookieService, IAuthTokenPayload} from "../services";
+import {PrismaService, User} from "../../prisma";
 
-export type ISignedRequest = Request & { user?: IUserModel };
+export type ISignedRequest = Request & { user?: User };
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     private tokenService: TokenService;
 
     @Inject()
-    private userRepository: UserRepository;
+    private prisma: PrismaService;
 
     @Inject()
     private cookieService: AuthCookieService;
@@ -48,8 +48,8 @@ export class AuthGuard implements CanActivate {
         return false;
     }
 
-    private async fetchUserByToken(token: string): Promise<IUserModel | null> {
+    private async fetchUserByToken(token: string): Promise<User | null> {
         const tokenPayload = token && await this.tokenService.decodeOrNull<IAuthTokenPayload>(token);
-        return tokenPayload && await this.userRepository.query.findById(tokenPayload.userId).exec();
+        return tokenPayload && await this.prisma.user.findUnique({ where: { id: tokenPayload.userId } })
     }
 }

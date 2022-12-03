@@ -1,5 +1,5 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from './client';
 
 export type UniqueConstrainError = Prisma.PrismaClientKnownRequestError & {
     meta: { target: string[] };

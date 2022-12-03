@@ -1,9 +1,9 @@
 import {start, REPLServer} from 'repl';
 import {readFileSync, writeFileSync, existsSync} from 'fs';
 import {NestFactory} from "@nestjs/core";
-import {ConsoleModule} from './console.module';
-import {repositories} from "./modules/database";
 import {INestApplicationContext} from "@nestjs/common";
+import {ConsoleModule} from './console.module';
+import {PrismaService} from "./modules/prisma";
 
 const HISTORY_LOCATION = '/app-tmp/delivery-help-console-history';
 
@@ -20,13 +20,7 @@ class Console {
     }
 
     private initDatabase(): void {
-        global.db = {};
-
-        for (const Repository of repositories) {
-            const {name, query} = this.applicationContext.get(Repository);
-            const queryName = name[0].toLowerCase() + name.slice(1);
-            global.db[queryName] = query;
-        }
+        global.db = this.applicationContext.get(PrismaService);
     }
 
     private setupHistory(): void {

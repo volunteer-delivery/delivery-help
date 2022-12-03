@@ -1,19 +1,19 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {Context} from "telegraf";
-import {DriverRepository, IDriverModel} from "../../database";
 import {BaseMiddleware, IMiddlewareNext} from "../base";
+import {Driver, PrismaService} from "../../prisma";
 
 @Injectable()
 export class DriverStateMiddleware extends BaseMiddleware {
     @Inject()
-    private driverRepository: DriverRepository;
+    private prisma: PrismaService;
 
     async handle({state, chat}: Context, next: IMiddlewareNext): Promise<void> {
-        state.driver = await this.loadDriver(chat.id)
+        state.driver = await this.loadDriver(chat.id.toString())
         return next();
     }
 
-    private loadDriver(telegramId: number): Promise<IDriverModel> {
-        return this.driverRepository.query.findOne({_telegramId: telegramId}).exec();
+    private loadDriver(telegramId: string): Promise<Driver> {
+        return this.prisma.driver.findUnique({ where: { telegramId } })
     }
 }

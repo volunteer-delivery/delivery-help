@@ -1,7 +1,7 @@
 import Bugsnag, { Client } from "@bugsnag/js";
 import BugsnagPluginExpress from "@bugsnag/plugin-express";
 import {ErrorRequestHandler, RequestHandler} from "express";
-import {IDriverModel, IUserModel} from "../database";
+import {Driver, User} from "../prisma";
 
 interface BugsnagPluginExpress {
     requestHandler: RequestHandler;
@@ -10,8 +10,8 @@ interface BugsnagPluginExpress {
 
 interface IErrorTracker {
     express: BugsnagPluginExpress;
-    setVolunteer(user: IUserModel): void;
-    setDriver(driver: IDriverModel): void;
+    setVolunteer(user: User): void;
+    setDriver(driver: Driver): void;
     sendError(error: Error): void;
 }
 
@@ -56,11 +56,11 @@ export class ErrorTracker implements IErrorTracker {
 
     constructor(private readonly client: Client) {}
 
-    setVolunteer(user: IUserModel): void {
+    setVolunteer(user: User): void {
         this.setUser(user.id, user.name, UserRole.VOLUNTEER);
     }
 
-    setDriver(driver: IDriverModel): void {
+    setDriver(driver: Driver): void {
         this.setUser(driver.id, driver.name, UserRole.DRIVER);
     }
 

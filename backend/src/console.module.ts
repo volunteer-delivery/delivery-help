@@ -1,6 +1,6 @@
 import {Module} from "@nestjs/common";
-import {DatabaseModule} from "./modules/database";
 import {ConfigModule} from "@nestjs/config";
+import {PrismaModule} from "./modules/prisma";
 
 @Module({
     imports: [
@@ -8,7 +8,7 @@ import {ConfigModule} from "@nestjs/config";
             ignoreEnvFile: true,
             isGlobal: true
         }),
-        DatabaseModule
+        PrismaModule
     ]
 })
 export class ConsoleModule {}

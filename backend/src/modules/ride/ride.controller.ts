@@ -1,10 +1,10 @@
 import {Body, Controller, Get, Inject, NotFoundException, Param, Patch} from "@nestjs/common";
-import {IRideModel, IUserModel, RideRepository, RideStatus} from "../database";
 import {CurrentUser} from "../auth";
 import {ISuccessResponse} from "../common/types";
 import {EventsGateway} from "../events";
 import {BotConnection} from "../bot";
 import {UpdateStatusRequest} from "./dto";
+import {Driver, PrismaService, Ride, RideStatus, User} from "../prisma";
 
 const CHANGE_STATUS: Record<RideStatus, string> = {
     [RideStatus.PENDING]: '',
@@ -15,7 +15,7 @@ const CHANGE_STATUS: Record<RideStatus, string> = {
 @Controller('rides')
 export class RideController {
     @Inject()
-    private rideRepository: RideRepository;
+    private prisma: PrismaService;
 
     @Inject()
     private eventsGateway: EventsGateway;
@@ -24,8 +24,20 @@ export class RideController {
     private bot: BotConnection;
 
     @Get()
-    async getRides(@CurrentUser() user: IUserModel): Promise<{ rides: IRideModel[] }> {
-        const rides = await this.rideRepository.query.find({volunteer: [null, user.id]}).populate('driver').exec();
+    async getRides(@CurrentUser() user: User): Promise<{ rides: Ride[] }> {
+        const rides = await this.prisma.ride.findMany({
+            where: {
+                OR: [
+                    { volunteer: null },
+                    { volunteer: { id: user.id } }
+                ]
+            },
+            include: {
+                driver: true,
+                from: true,
+                destination: true
+            }
+        });
         return {rides};
     }
 
@@ -33,35 +45,42 @@ export class RideController {
     async updateStatus(
         @Body() body: UpdateStatusRequest,
         @Param('id') rideId: string,
-        @CurrentUser() currentUser: IUserModel
+        @CurrentUser() currentUser: User
     ): Promise<ISuccessResponse> {
-        const ride = await this.rideRepository.query.findById(rideId).exec();
+        const ride = await this.prisma.ride.findUnique({
+            where: { id: rideId },
+            include: { driver: true }
+        });
 
         if (!ride) throw new NotFoundException('Ride not found');
 
-        const oldStatus = ride.status;
-        ride.status = body.status;
+        const updated = await this.prisma.ride.update({
+            where: { id: rideId },
+            data: {
+                status: body.status,
+                volunteer: {
+                    connect: { id: currentUser.id }
+                }
+            },
+            include: {
+                driver: true,
+                volunteer: true
+            }
+        })
 
-        if (body.status === RideStatus.ACTIVE) {
-            ride.volunteer = currentUser;
-        }
-
-        await ride.save();
-        await ride.populate(['driver', 'volunteer'])
-
-        const socketUpdateUserId = oldStatus === RideStatus.PENDING ? null : currentUser.id;
-        this.eventsGateway.broadcastUpdateRide(socketUpdateUserId, ride);
+        const socketUpdateUserId = ride.status === RideStatus.PENDING ? null : currentUser.id;
+        this.eventsGateway.broadcastUpdateRide(socketUpdateUserId, updated);
         await this.notifyNewStatus(ride);
 
         return {success: true};
     }
 
-    private async notifyNewStatus(ride: IRideModel): Promise<void> {
-        const telegramId = ride.driver?._telegramId;
+    private async notifyNewStatus(ride: Ride & { driver: Driver }): Promise<void> {
+        const telegramId = ride.driver?.telegramId;
         const message = CHANGE_STATUS[ride.status];
 
         if (telegramId && message) {
-            await this.bot.sendMessage(ride.driver._telegramId, message);
+            await this.bot.sendMessage(ride.driver.telegramId, message);
         }
     }
 }

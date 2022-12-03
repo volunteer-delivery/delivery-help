@@ -2,7 +2,7 @@ import {Markup} from "telegraf";
 import {Inject, Injectable} from "@nestjs/common";
 import {BaseComposer, ISceneContext, Message, OnEvent} from "../../base";
 import {BotMenuHandler} from "../../bot-menu.handler";
-import {DriverGrade, DriverRepository} from "../../../database";
+import {PrismaService} from "../../../prisma";
 
 type IContext = ISceneContext & {
     message: Message.ContactMessage;
@@ -21,7 +21,7 @@ export class NewDriverContactComposer extends BaseComposer {
     private menuHandler: BotMenuHandler;
 
     @Inject()
-    private driverRepository: DriverRepository
+    private prisma: PrismaService
 
     @OnEvent('text')
     private async onText(context: IContext) {
@@ -53,11 +53,12 @@ export class NewDriverContactComposer extends BaseComposer {
     }
 
     private async saveDriver(context: IContext) {
-        await this.driverRepository.query.create({
-            _telegramId: context.chat.id,
-            name: context.scene.state.name,
-            phone: context.scene.state.phone,
-            grade: DriverGrade.NOT_VERIFIED
+        await this.prisma.driver.create({
+            data: {
+                telegramId: context.chat.id.toString(),
+                name: context.scene.state.name,
+                phone: context.scene.state.phone
+            }
         });
     };
 }

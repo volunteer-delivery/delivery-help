@@ -1,5 +1,5 @@
-import {Vehicle} from "../../../database";
 import {IWizardSceneContext, Message } from "../../base";
+import {Vehicle} from "../../../prisma";
 
 export type INewRideContext = IWizardSceneContext & {
     message: Message.TextMessage;

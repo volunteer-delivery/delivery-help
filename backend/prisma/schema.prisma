@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/modules/prisma/client"
 }
 
 datasource db {
@@ -8,7 +9,7 @@ datasource db {
 }
 
 model Driver {
-  id         String  @id @default(uuid()) @db.Uuid
+  id         String  @id @default(uuid()) @db.VarChar(36)
   telegramId String? @unique
   name       String
   phone      String
@@ -16,23 +17,23 @@ model Driver {
 }
 
 model Ride {
-  id            String        @id @default(uuid()) @db.Uuid
+  id            String        @id @default(uuid()) @db.VarChar(36)
   departureTime DateTime
   destination   Address       @relation("rideDestination", fields: [destinationId], references: [id])
-  destinationId String        @unique @db.Uuid
+  destinationId String        @unique @db.VarChar(36)
   driver        Driver        @relation(fields: [driverId], references: [id])
-  driverId      String        @db.Uuid
+  driverId      String        @db.VarChar(36)
   from          Address       @relation("rideAdress", fields: [fromId], references: [id])
-  fromId        String        @unique @db.Uuid
+  fromId        String        @unique @db.VarChar(36)
   status        RideStatus
   vehicle       Vehicle
   comments      RideComment[]
   volunteer     User?         @relation(fields: [volunteerId], references: [id])
-  volunteerId   String?        @db.Uuid
+  volunteerId   String?       @db.VarChar(36)
 }
 
 model Address {
-  id              String  @id @default(uuid()) @db.Uuid
+  id              String  @id @default(uuid()) @db.VarChar(36)
   city            String? @db.VarChar()
   country         String  @db.VarChar()
   rideDestination Ride?   @relation("rideDestination")
@@ -52,19 +53,19 @@ enum Vehicle {
 }
 
 model RideComment {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(uuid()) @db.VarChar(36)
   createdAt DateTime @default(now())
   text      String
   ride      Ride     @relation(fields: [rideId], references: [id])
-  rideId    String   @db.Uuid
+  rideId    String   @db.VarChar(36)
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  String   @db.Uuid
+  authorId  String   @db.VarChar(36)
 }
 
 model User {
-  id           String        @id @default(uuid()) @db.Uuid
-  password     String        @db.VarChar
-  name         String        @db.VarChar
+  id           String        @id @default(uuid()) @db.VarChar(36)
+  password     String
+  name         String        @unique @db.VarChar(255)
   rides        Ride[]
   rideComments RideComment[]
 }
