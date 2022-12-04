@@ -14,7 +14,7 @@ phases:
     commands:
       - curl $SECRETS_LOADER_DOWNLOAD -s -o $SECRETS_LOADER
       - chmod +x $SECRETS_LOADER
-      - export $($SECRETS_LOADER get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
+      - export $($SECRETS_LOADER get -r $AWS_REGION -p /cr) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
