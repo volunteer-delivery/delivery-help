@@ -1,7 +1,7 @@
 ARG CR_BASE
 ARG CR_LABEL
 
-FROM $CR_BASE/node:latest as builder
+FROM $CR_BASE/node:3 as builder
 
 WORKDIR /app
 
