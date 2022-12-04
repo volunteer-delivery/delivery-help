@@ -20,7 +20,7 @@ RUN npm run build
 
 
 
-FROM $CR_BASE/nginx:latest
+FROM $CR_BASE/nginx:1
 LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
