@@ -1,0 +1,39 @@
+version: 0.2
+
+env:
+  variables:
+    DOCKER_BUILDKIT: 1
+    BUILDKIT_INLINE_CACHE: 1
+    CR_LABEL: "https://github.com/volunteer-delivery"
+    SECRETS_LOADER_DOWNLOAD: https://raw.githubusercontent.com/volunteer-delivery/secrets-loader/main/build/linux-arm64
+    SECRETS_LOADER: "tmp/secrets-loader"
+
+
+phases:
+  pre_build:
+    commands:
+      - curl $SECRETS_LOADER_DOWNLOAD -s -o $SECRETS_LOADER
+      - chmod +x $SECRETS_LOADER
+      - export $($SECRETS_LOADER get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
+      - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
+
+      - export CR_BASE="$CR_HOST/$CR_USERNAME"
+
+      - docker pull $CR_BASE/node:latest || true
+
+  build:
+    commands:
+      - >
+        docker build \
+          --tag base-image \
+          --file ci/node/Dockerfile \
+          --cache-from $CR_BASE/node:latest \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg CR_LABEL \
+          .
+
+  post_build:
+    commands:
+      - docker tag base-image $CR_BASE/node:latest
+      - docker tag base-image $CR_BASE/node:$CODEBUILD_BUILD_NUMBER
+      - docker push -a $CR_BASE/node
