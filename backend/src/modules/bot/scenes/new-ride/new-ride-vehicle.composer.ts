@@ -3,15 +3,14 @@ import {BaseComposer, OnAction} from "../../base";
 import {INewRideContext} from "./new-ride.context";
 import {EventsGateway} from "../../../events";
 import {BotMenuHandler} from "../../bot-menu.handler";
-import {PrismaService, RideStatus, Vehicle} from "../../../prisma";
+import {Address, Driver, PrismaService, Ride, RideStatus, Vehicle} from "../../../prisma";
+import {RideResponse} from "../../../ride/dto";
 
 const CHOOSED_VEHICLE: Record<Vehicle, string> = {
     [Vehicle.CAR]: 'легковий автомобіль',
     [Vehicle.VAN]: 'вантажний автомобіль',
     [Vehicle.TRUCK]: 'фуру'
 };
-
-type IActions = `SET_${Vehicle}`;
 
 @Injectable()
 export class NewRideVehicleComposer extends BaseComposer {
@@ -58,7 +57,7 @@ export class NewRideVehicleComposer extends BaseComposer {
     private async saveRide(context: INewRideContext): Promise<void> {
         const ride = await this.prisma.ride.create({
             data: {
-                departureTime: context.scene.state.departureTime,
+                departureTime: new Date(context.scene.state.departureTime),
                 vehicle: context.scene.state.vehicle,
                 status: RideStatus.PENDING,
                 driver: {
@@ -77,11 +76,19 @@ export class NewRideVehicleComposer extends BaseComposer {
                     }
                 }
             },
-            include: { driver: true }
+            include: {
+                driver: true,
+                from: true,
+                destination: true
+            }
         });
 
         context.state.rides.push(ride);
 
-        this.eventsGateway.broadcastNewRide(ride);
+        this.broadcastNewRide(ride);
+    }
+
+    broadcastNewRide(ride: Ride & { driver: Driver, from: Address, destination: Address }): void {
+        this.eventsGateway.send('rides/new', new RideResponse(ride));
     }
 }

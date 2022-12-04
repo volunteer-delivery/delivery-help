@@ -1,11 +1,13 @@
-import {Body, Controller, Get, Inject, Param, Post} from "@nestjs/common";
+import {Body, ClassSerializerInterceptor, Controller, Get, Inject, Param, Post, UseInterceptors} from "@nestjs/common";
 import {ISuccessResponse} from "../common/types";
-import {AddCommentRequest} from "./dto";
 import {CurrentUser} from "../auth";
 import {EventsGateway} from "../events";
-import {PrismaService, User, RideComment} from "../prisma";
+import {PrismaService, RideComment, User} from "../prisma";
+import {AddCommentRequest, RideCommentListResponse, RideCommentResponse} from "./dto";
+import {instanceToPlain, plainToInstance} from "class-transformer";
 
 @Controller('/rides/:id/comments')
+@UseInterceptors(ClassSerializerInterceptor)
 export class RideCommentController {
     @Inject()
     private prisma: PrismaService;
@@ -14,12 +16,13 @@ export class RideCommentController {
     private eventsGateway: EventsGateway;
 
     @Get()
-    async getComments(@Param('id') rideId: string): Promise<RideComment[]> {
-        return this.prisma.rideComment.findMany({
+    async getComments(@Param('id') rideId: string): Promise<RideCommentListResponse> {
+        const comments = await this.prisma.rideComment.findMany({
             where: { rideId },
             include: { author: true },
             orderBy: { createdAt: 'desc' }
         });
+        return new RideCommentListResponse(comments);
     }
 
     @Post()
@@ -41,8 +44,12 @@ export class RideCommentController {
             include: { author: true }
         });
 
-        this.eventsGateway.broadcastNewRideComment(rideId, comment);
+        this.broadcastNewRideComment(comment);
 
         return {success: true};
+    }
+
+    private broadcastNewRideComment(comment: RideComment & { author: User }): void {
+        this.eventsGateway.send(`rides/${comment.rideId}/comments/new`, new RideCommentResponse(comment));
     }
 }

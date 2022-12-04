@@ -1,10 +1,20 @@
-import {Body, Controller, Get, Inject, NotFoundException, Param, Patch} from "@nestjs/common";
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Get,
+    Inject,
+    NotFoundException,
+    Param,
+    Patch,
+    UseInterceptors
+} from "@nestjs/common";
 import {CurrentUser} from "../auth";
 import {ISuccessResponse} from "../common/types";
 import {EventsGateway} from "../events";
 import {BotConnection} from "../bot";
-import {UpdateStatusRequest} from "./dto";
-import {Driver, PrismaService, Ride, RideStatus, User} from "../prisma";
+import {RideListResponse, RideResponse, UpdateStatusRequest} from "./dto";
+import {Address, Driver, PrismaService, Ride, RideStatus, User} from "../prisma";
 
 const CHANGE_STATUS: Record<RideStatus, string> = {
     [RideStatus.PENDING]: '',
@@ -13,6 +23,7 @@ const CHANGE_STATUS: Record<RideStatus, string> = {
 };
 
 @Controller('rides')
+@UseInterceptors(ClassSerializerInterceptor)
 export class RideController {
     @Inject()
     private prisma: PrismaService;
@@ -38,7 +49,7 @@ export class RideController {
                 destination: true
             }
         });
-        return {rides};
+        return new RideListResponse(rides);
     }
 
     @Patch(':id/status')
@@ -64,15 +75,21 @@ export class RideController {
             },
             include: {
                 driver: true,
-                volunteer: true
+                from: true,
+                destination: true
             }
-        })
+        });
 
         const socketUpdateUserId = ride.status === RideStatus.PENDING ? null : currentUser.id;
-        this.eventsGateway.broadcastUpdateRide(socketUpdateUserId, updated);
-        await this.notifyNewStatus(ride);
+        this.broadcastUpdateRide(socketUpdateUserId, updated);
+        await this.notifyNewStatus(updated);
 
         return {success: true};
+    }
+
+    broadcastUpdateRide(userId: string | null, ride: Ride & { driver: Driver, from: Address, destination: Address }): void {
+        const namespace = userId ? `users/${userId}/rides` : 'rides';
+        this.eventsGateway.send(`${namespace}/update`, new RideResponse(ride));
     }
 
     private async notifyNewStatus(ride: Ride & { driver: Driver }): Promise<void> {

@@ -41,9 +41,9 @@ export default {
     },
 
     async asyncData({$axios, params}) {
-        const {data: comments} = await $axios.get(`/rides/${params.id}/comments`);
+        const response = await $axios.get(`/rides/${params.id}/comments`);
 
-        return {comments};
+        return {comments: response.data.comments};
     },
 
     computed: {
