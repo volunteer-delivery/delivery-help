@@ -3,7 +3,11 @@ import {WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
 import {instanceToPlain} from "class-transformer";
 
 @WebSocketGateway({
-    cors: {origin: '*'}
+    cors: {
+        origin: process.env.FRONTEND_ORIGIN,
+        credentials: true
+    },
+    transports: ['websocket']
 })
 export class EventsGateway {
     @WebSocketServer()
