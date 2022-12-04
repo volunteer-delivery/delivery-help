@@ -16,7 +16,7 @@ RUN npm run build:prod
 
 
 
-FROM $CR_BASE/node:latest
+FROM $CR_BASE/node:3
 LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app

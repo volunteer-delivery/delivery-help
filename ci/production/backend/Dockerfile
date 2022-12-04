@@ -1,7 +1,7 @@
 ARG CR_BASE
 ARG CR_LABEL
 
-FROM $CR_BASE/node:latest as builder
+FROM $CR_BASE/node:3 as builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN npm run build:prod
 
 
 
-FROM $CR_BASE/node:latest
+FROM $CR_BASE/node:3
 LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
