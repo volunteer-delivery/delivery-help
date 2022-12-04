@@ -17,23 +17,23 @@ phases:
       - export $($SECRETS_LOADER get -r $AWS_REGION -p /cr) > /dev/null
       - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
 
-      - export NODE_IMAGE="$CR_HOST/$CR_USERNAME/node"
+      - export NGINX_IMAGE="$CR_HOST/$CR_USERNAME/nginx"
 
-      - docker pull $NODE_IMAGE:latest || true
+      - docker pull $NGINX_IMAGE:latest || true
 
   build:
     commands:
       - >
         docker build \
           --tag base-image \
-          --file ci/node/Dockerfile \
-          --cache-from $NODE_IMAGE:latest \
+          --file ci/nginx/Dockerfile \
+          --cache-from $NGINX_IMAGE:latest \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg CR_LABEL \
           .
 
   post_build:
     commands:
-      - docker tag base-image $NODE_IMAGE:latest
-      - docker tag base-image $NODE_IMAGE:$CODEBUILD_BUILD_NUMBER
-      - docker push -a $NODE_IMAGE
+      - docker tag base-image $NGINX_IMAGE:latest
+      - docker tag base-image $NGINX_IMAGE:$CODEBUILD_BUILD_NUMBER
+      - docker push -a $NGINX_IMAGE
