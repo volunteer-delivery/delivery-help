@@ -9,11 +9,13 @@ export class DriverStateMiddleware extends BaseMiddleware {
     private prisma: PrismaService;
 
     async handle({state, chat}: Context, next: IMiddlewareNext): Promise<void> {
-        state.driver = await this.loadDriver(chat.id.toString())
+        state.driver = await this.loadDriver(chat.id)
         return next();
     }
 
-    private loadDriver(telegramId: string): Promise<Driver> {
-        return this.prisma.driver.findUnique({ where: { telegramId } })
+    private loadDriver(telegramId: number): Promise<Driver> {
+        return this.prisma.driver.findUnique({
+            where: { telegramId: telegramId.toString() }
+        });
     }
 }

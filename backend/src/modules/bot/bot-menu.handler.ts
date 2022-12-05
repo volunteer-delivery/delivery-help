@@ -92,7 +92,7 @@ export class BotMenuHandler {
 
     private formatRideReply(ride: Ride & { from: Address, destination: Address }, showStatus = true): string {
         const date = ride.departureTime.toISOString().slice(0, 10);
-        const from = ride.from || ride.from.country;
+        const from = ride.from.city || ride.from.country;
 
         let status = '';
 
