@@ -10,7 +10,7 @@ ENV NODE_ENV production
 RUN apt-get update && apt-get install --no-install-recommends -y openssl libssl-dev
 
 COPY ./backend/package.json ./backend/package-lock.json ./
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 COPY ./backend ./
 

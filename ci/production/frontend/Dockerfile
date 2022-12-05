@@ -12,7 +12,7 @@ ARG FRONTEND_BUGSNAG_KEY
 ENV NODE_ENV production
 
 COPY ./frontend/package.json ./frontend/package-lock.json ./
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 COPY ./frontend/. ./
 

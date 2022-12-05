@@ -16,7 +16,7 @@ ENV NODE_ENV production
 ENV NODE_OPTIONS '--openssl-legacy-provider'
 
 COPY ./frontend/package.json ./frontend/package-lock.json ./
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 COPY ./frontend/. ./
 
