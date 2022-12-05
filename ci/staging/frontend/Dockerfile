@@ -2,6 +2,7 @@ ARG CR_BASE
 ARG CR_LABEL
 
 FROM $CR_BASE/node:4 as builder
+LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 
