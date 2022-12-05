@@ -5,11 +5,16 @@ import * as cookieParser from 'cookie-parser';
 import {MainModule} from './main.module';
 import {AuthGuard} from "./modules/auth";
 import {ErrorTracker, ErrorTrackerInterceptor} from "./modules/error-tracker";
+import {PrismaService} from "./modules/prisma";
 
 async function bootstrap() {
     ErrorTracker.init();
 
     const app = await NestFactory.create(MainModule);
+
+    const prisma = app.get(PrismaService);
+    await prisma.enableShutdownHooks(app);
+
     const configService = app.get(ConfigService);
 
     app.setGlobalPrefix('/api/v1');

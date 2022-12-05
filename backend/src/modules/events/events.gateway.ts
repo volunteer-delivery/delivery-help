@@ -1,24 +1,19 @@
-import {WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
 import {Server} from 'socket.io';
-import {IRideCommentModel, IRideModel} from "../database";
+import {WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
+import {instanceToPlain} from "class-transformer";
 
 @WebSocketGateway({
-    cors: {origin: '*'}
+    cors: {
+        origin: process.env.FRONTEND_ORIGIN,
+        credentials: true
+    },
+    transports: ['websocket']
 })
 export class EventsGateway {
     @WebSocketServer()
     private server: Server;
 
-    broadcastNewRide(ride: IRideModel): void {
-        this.server.emit('rides/new', ride);
-    }
-
-    broadcastUpdateRide(userId: string | null, ride: IRideModel): void {
-        const namespace = userId ? `users/${userId}/rides` : 'rides';
-        this.server.emit(`${namespace}/update`, ride);
-    }
-
-    broadcastNewRideComment(rideId: string, comment: IRideCommentModel): void {
-        this.server.emit(`rides/${rideId}/comments/new`, comment);
+    send(event: string, payload: any): void {
+        this.server.emit(event, instanceToPlain(payload));
     }
 }

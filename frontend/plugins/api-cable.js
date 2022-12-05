@@ -2,7 +2,7 @@ import { connect } from 'socket.io-client';
 
 class ApiCable {
     constructor({ url, vuex }) {
-        this.socket = connect(url);
+        this.socket = connect(url, { transports: ['websocket'] });
         this._vuex = vuex;
     }
 

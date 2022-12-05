@@ -2,8 +2,8 @@ import {Inject, Injectable} from "@nestjs/common";
 import {Context, Markup} from "telegraf";
 import {BotComposerHelpers} from "./bot-composer.helpers";
 import {IInlineMiddleware, IMiddlewareNext, ISceneContext} from "./base";
-import {IRideModel, RideStatus} from "../database";
 import {BotConnection} from "./bot.connection";
+import {Ride, Address, RideStatus} from "../prisma";
 
 enum MenuItems {
     PROFILE = 'Мій профіль',
@@ -46,7 +46,7 @@ export class BotMenuHandler {
     }
 
     private createMenu(context: Context): Markup.Markup<any> {
-        const topMenu = this.helpers.isNonFinishedRides(context) ? 
+        const topMenu = this.helpers.isNonFinishedRides(context) ?
             [[MenuItems.ACTIVE_RIDE], [MenuItems.NEW_RIDE]] :
             [[MenuItems.NEW_RIDE]];
 
@@ -90,7 +90,7 @@ export class BotMenuHandler {
         })
     }
 
-    private formatRideReply(ride: IRideModel, showStatus = true): string {
+    private formatRideReply(ride: Ride & { from: Address, destination: Address }, showStatus = true): string {
         const date = ride.departureTime.toISOString().slice(0, 10);
         const from = ride.from.city || ride.from.country;
 

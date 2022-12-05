@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {Composer, Context, Middleware, MiddlewareFn} from 'telegraf';
-import {RideStatus} from "../database";
+import {RideStatus} from "../prisma";
 
 type NonemptyMiddlewares<TContext extends Context = Context> = [Middleware<TContext>, ...Middleware<TContext>[]];
 

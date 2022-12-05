@@ -1,11 +1,13 @@
-import {Controller, Get} from "@nestjs/common";
+import {ClassSerializerInterceptor, Controller, Get, UseInterceptors} from "@nestjs/common";
 import {CurrentUser} from "../auth";
-import {IUserModel} from "../database";
+import {User} from "../prisma";
+import {CurrentUserResponse} from "./dto";
 
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
     @Get('current')
-    getCurrentUser(@CurrentUser() user: IUserModel): {user: IUserModel} {
-        return {user};
+    getCurrentUser(@CurrentUser() user: User): CurrentUserResponse {
+        return new CurrentUserResponse(user);
     }
 }

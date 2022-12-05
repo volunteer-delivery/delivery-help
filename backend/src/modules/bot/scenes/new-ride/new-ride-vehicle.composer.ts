@@ -1,9 +1,10 @@
 import {Inject, Injectable} from "@nestjs/common";
-import {RideRepository, RideStatus, Vehicle} from "../../../database";
 import {BaseComposer, OnAction} from "../../base";
 import {INewRideContext} from "./new-ride.context";
 import {EventsGateway} from "../../../events";
 import {BotMenuHandler} from "../../bot-menu.handler";
+import {Address, Driver, PrismaService, Ride, RideStatus, Vehicle} from "../../../prisma";
+import {RideResponse} from "../../../ride/dto";
 
 const CHOOSED_VEHICLE: Record<Vehicle, string> = {
     [Vehicle.CAR]: 'легковий автомобіль',
@@ -11,12 +12,10 @@ const CHOOSED_VEHICLE: Record<Vehicle, string> = {
     [Vehicle.TRUCK]: 'фуру'
 };
 
-type IActions = `SET_${Vehicle}`;
-
 @Injectable()
 export class NewRideVehicleComposer extends BaseComposer {
     @Inject()
-    private rideRepository: RideRepository;
+    private prisma: PrismaService;
 
     @Inject()
     private eventsGateway: EventsGateway;
@@ -56,24 +55,40 @@ export class NewRideVehicleComposer extends BaseComposer {
     }
 
     private async saveRide(context: INewRideContext): Promise<void> {
-        const ride = await this.rideRepository.query.create({
-            driver: context.state.driver.id,
-            from: {
-                country: context.scene.state.fromCountry,
-                city: context.scene.state.fromCity
+        const ride = await this.prisma.ride.create({
+            data: {
+                departureTime: new Date(context.scene.state.departureTime),
+                vehicle: context.scene.state.vehicle,
+                status: RideStatus.PENDING,
+                driver: {
+                    connect: { id: context.state.driver.id }
+                },
+                from: {
+                    create: {
+                        country: context.scene.state.fromCountry,
+                        city: context.scene.state.fromCity
+                    }
+                },
+                destination: {
+                    create: {
+                        country: 'Україна',
+                        city: context.scene.state.destinationCity
+                    }
+                }
             },
-            destination: {
-                country: 'Україна',
-                city: context.scene.state.destinationCity
-            },
-            departureTime: context.scene.state.departureTime,
-            vehicle: context.scene.state.vehicle,
-            status: RideStatus.PENDING
+            include: {
+                driver: true,
+                from: true,
+                destination: true
+            }
         });
 
-        await ride.populate('driver');
         context.state.rides.push(ride);
 
-        this.eventsGateway.broadcastNewRide(ride);
+        this.broadcastNewRide(ride);
+    }
+
+    broadcastNewRide(ride: Ride & { driver: Driver, from: Address, destination: Address }): void {
+        this.eventsGateway.send('rides/new', new RideResponse(ride));
     }
 }

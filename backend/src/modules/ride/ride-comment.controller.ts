@@ -1,60 +1,55 @@
-import {Body, Controller, Get, Inject, NotFoundException, Param, Post} from "@nestjs/common";
-import {IRideCommentModel, IUserModel, RideCommentRepository, RideRepository} from "../database";
+import {Body, ClassSerializerInterceptor, Controller, Get, Inject, Param, Post, UseInterceptors} from "@nestjs/common";
 import {ISuccessResponse} from "../common/types";
-import {AddCommentRequest} from "./dto";
 import {CurrentUser} from "../auth";
 import {EventsGateway} from "../events";
+import {PrismaService, RideComment, User} from "../prisma";
+import {AddCommentRequest, RideCommentListResponse, RideCommentResponse} from "./dto";
+import {instanceToPlain, plainToInstance} from "class-transformer";
 
 @Controller('/rides/:id/comments')
+@UseInterceptors(ClassSerializerInterceptor)
 export class RideCommentController {
     @Inject()
-    private rideRepository: RideRepository;
-
-    @Inject()
-    private rideCommentRepository: RideCommentRepository;
+    private prisma: PrismaService;
 
     @Inject()
     private eventsGateway: EventsGateway;
 
     @Get()
-    async getComments(@Param('id') rideId: string): Promise<IRideCommentModel[]> {
-        const ride = await this.fetchRide(rideId);
-        return ride.comments;
+    async getComments(@Param('id') rideId: string): Promise<RideCommentListResponse> {
+        const comments = await this.prisma.rideComment.findMany({
+            where: { rideId },
+            include: { author: true },
+            orderBy: { createdAt: 'desc' }
+        });
+        return new RideCommentListResponse(comments);
     }
 
     @Post()
     async addComment(
         @Param('id') rideId: string,
         @Body() body: AddCommentRequest,
-        @CurrentUser() currentUser: IUserModel
+        @CurrentUser() currentUser: User
     ): Promise<ISuccessResponse> {
-        const ride = await this.fetchRide(rideId);
-
-        const comment = await this.rideCommentRepository.query.create({
-            createdAt: new Date(),
-            author: currentUser.id,
-            text: body.text,
-            ride: ride.id
+        const comment = await this.prisma.rideComment.create({
+            data: {
+                text: body.text,
+                author: {
+                    connect: { id: currentUser.id }
+                },
+                ride: {
+                    connect: { id: rideId }
+                }
+            },
+            include: { author: true }
         });
 
-        await this.rideRepository.query.updateOne({ _id: ride.id }, {
-            $push: { comments: comment.id }
-        })
-
-        this.eventsGateway.broadcastNewRideComment(ride.id, await comment.populate('author'));
+        this.broadcastNewRideComment(comment);
 
         return {success: true};
     }
 
-    private async  fetchRide(rideId: string) {
-        const ride = await this.rideRepository.query.findById(rideId).populate({
-            path: 'comments',
-            options: {sort: { createdAt: -1 }},
-            populate: 'author'
-        });
-
-        if (!ride) throw new NotFoundException('Ride not found');
-
-        return ride;
+    private broadcastNewRideComment(comment: RideComment & { author: User }): void {
+        this.eventsGateway.send(`rides/${comment.rideId}/comments/new`, new RideCommentResponse(comment));
     }
 }

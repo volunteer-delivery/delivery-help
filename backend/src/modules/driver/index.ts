@@ -1,1 +1,1 @@
-export {DriverModule} from './driver.module';
+export {DriverResponse} from './dto';
