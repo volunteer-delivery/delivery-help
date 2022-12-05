@@ -2,7 +2,8 @@ import {Inject, Module, OnModuleInit, OnApplicationBootstrap, Global} from "@nes
 import {ConfigService} from "@nestjs/config";
 import {session} from 'telegraf';
 import {BotConnection, IHandleBotError} from "./bot.connection";
-import {BaseMiddleware, BaseStage, IMiddleware, IMiddlewareNext, SessionContext} from "./base";
+import {BaseMiddleware, BaseStage, IMiddleware, IMiddlewareNext} from "./base";
+import type {SessionContext} from './base';
 import {DriverStateMiddleware, RidesStateMiddleware} from "./middlewares";
 import {GeneralStage, WelcomeComposer} from "./scenes";
 import {DynamicDependencyResolver} from "../common";

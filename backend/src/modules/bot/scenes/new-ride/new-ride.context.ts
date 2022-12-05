@@ -1,4 +1,5 @@
-import {IWizardSceneContext, Message } from "../../base";
+import type {Message} from "typegram";
+import {IWizardSceneContext } from "../../base";
 import {Vehicle} from "../../../prisma";
 
 export type INewRideContext = IWizardSceneContext & {

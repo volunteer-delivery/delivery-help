@@ -1,6 +1,7 @@
 import {Markup} from "telegraf";
+import type {Message} from 'typegram';
 import {Inject, Injectable} from "@nestjs/common";
-import {BaseComposer, ISceneContext, Message, OnEvent} from "../../base";
+import {BaseComposer, ISceneContext, OnEvent} from "../../base";
 import {BotMenuHandler} from "../../bot-menu.handler";
 import {PrismaService} from "../../../prisma";
 
