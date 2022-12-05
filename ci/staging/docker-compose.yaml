@@ -17,17 +17,16 @@ services:
     volumes:
       - /tmp/delivery-help:/app-tmp
     depends_on:
-      - mongo
+      - postgres
 
-  mongo:
-    image: mongo:5.0.7
+  postgres:
+    image: postgres:14.6-alpine
     volumes:
-      - data_mongo:/data/db
+      - data-postgres:/var/lib/postgresql/data
     env_file: .env
     environment:
-      MONGO_INITDB_ROOT_USERNAME: 'admin'
-      MONGO_INITDB_ROOT_PASSWORD: 'admin'
+      POSTGRES_PASSWORD: password
 
 volumes:
-  data_mongo:
+  data-postgres:
     driver: local
