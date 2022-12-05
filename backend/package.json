@@ -6,8 +6,8 @@
   "author": "Serhii Velychko (velserh@gmail.com)",
   "license": "ISC",
   "scripts": {
-    "build:prod": "rm -rf dist && nest build --webpack",
-    "start:dev": "nest start --watch --preserveWatchOutput --webpack",
+    "build:prod": "rm -rf dist && nest build",
+    "start:dev": "nest start --watch --preserveWatchOutput",
     "console": "scripts/node-exec.sh console",
     "prisma": "prisma"
   },

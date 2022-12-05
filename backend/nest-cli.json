@@ -4,7 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "assets": [
-      "modules/prisma/client/schema.prisma"
+      "modules/prisma/client/**/*"
     ]
   }
 }
