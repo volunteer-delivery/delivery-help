@@ -5,11 +5,12 @@ import * as AdminJSPrisma from '@adminjs/prisma'
 import {ConfigService} from "@nestjs/config";
 import {Env} from "../common/types";
 import {PrismaService} from "../prisma";
-import {AdminResource, UserResource} from "./resources";
+import {AdminResource, DriverResource, UserResource} from "./resources";
 import {DynamicDependencyResolver} from "../common";
 
 const resources = [
-    UserResource
+    UserResource,
+    DriverResource
 ];
 
 @Injectable()
@@ -77,7 +78,7 @@ export class AdminConfig implements OnModuleInit {
     }
 
     private async buildResources(): Promise<ResourceWithOptions[]> {
-        const loaded: AdminResource[] = await this.dependencyResolver.resolve(resources);
+        const loaded: AdminResource[] = await this.dependencyResolver.resolve<AdminResource>(resources);
         return loaded.map(resource => resource.build());
     }
 }

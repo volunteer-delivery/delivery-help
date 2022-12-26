@@ -26,7 +26,8 @@ export class UserResource extends AdminResource {
             }
         },
         navigation: {
-            name: 'Entities'
+            name: 'Volunteer',
+            icon: 'User'
         }
     };
 
