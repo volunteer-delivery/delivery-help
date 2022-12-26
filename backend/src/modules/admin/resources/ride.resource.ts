@@ -85,6 +85,6 @@ export class RideResource extends AdminResource {
 
     private formatRecord(record: RecordJSON) {
         const { from } = record.populated;
-        from.title = from.params.country;
+        from.title = from.params.city || from.params.country;
     }
 }
