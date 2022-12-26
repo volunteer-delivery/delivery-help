@@ -15,6 +15,7 @@
   "dependencies": {
     "@adminjs/express": "^5.0.1",
     "@adminjs/nestjs": "^5.0.1",
+    "@adminjs/passwords": "^3.0.1",
     "@adminjs/prisma": "^3.0.1",
     "@bugsnag/js": "^7.18.0",
     "@bugsnag/plugin-express": "^7.18.0",

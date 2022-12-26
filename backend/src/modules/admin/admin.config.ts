@@ -1,13 +1,28 @@
-import {CurrentAdmin} from "adminjs";
 import {Inject, Injectable, OnModuleInit} from "@nestjs/common";
+import AdminJS, {CurrentAdmin, ResourceWithOptions} from "adminjs";
 import {AdminModuleOptions} from "@adminjs/nestjs";
+import * as AdminJSPrisma from '@adminjs/prisma'
 import {ConfigService} from "@nestjs/config";
 import {Env} from "../common/types";
+import {PrismaService} from "../prisma";
+import {AdminResource, UserResource} from "./resources";
+import {DynamicDependencyResolver} from "../common";
+
+const resources = [
+    UserResource
+];
 
 @Injectable()
 export class AdminConfig implements OnModuleInit {
     @Inject()
     private configService: ConfigService;
+
+    @Inject()
+    private prismaService: PrismaService
+
+    @Inject()
+    private dependencyResolver: DynamicDependencyResolver;
+
     private adminUser: CurrentAdmin;
 
     onModuleInit(): void {
@@ -16,16 +31,22 @@ export class AdminConfig implements OnModuleInit {
         this.adminUser = { email, password };
     }
 
-    build(): AdminModuleOptions {
-        const secret = this.configService.getOrThrow('BACKEND_SECRET');
-        const env = this.configService.getOrThrow<Env>('BACKEND_ENV');
+    async build(): Promise<AdminModuleOptions> {
+        this.registerPrisma();
 
         const options: AdminModuleOptions =  {
             adminJsOptions: {
                 rootPath: '/admin',
-                resources: [],
+                branding: {
+                    companyName: 'Волонтер Вантаж ~ Адмін',
+                    favicon: '/favicon.ico'
+                },
+                resources: await this.buildResources()
             }
         }
+
+        const secret = this.configService.getOrThrow('BACKEND_SECRET');
+        const env = this.configService.getOrThrow<Env>('BACKEND_ENV');
 
         if (env !== Env.DEVELOPMENT) {
             Object.assign<AdminModuleOptions, Omit<AdminModuleOptions, 'adminJsOptions'>>(options, {
@@ -49,5 +70,14 @@ export class AdminConfig implements OnModuleInit {
         if (email !== this.adminUser.email) return null;
         if (password !== this.adminUser.password) return null;
         return this.adminUser
+    }
+
+    private registerPrisma() {
+        AdminJS.registerAdapter(AdminJSPrisma)
+    }
+
+    private async buildResources(): Promise<ResourceWithOptions[]> {
+        const loaded: AdminResource[] = await this.dependencyResolver.resolve(resources);
+        return loaded.map(resource => resource.build());
     }
 }
