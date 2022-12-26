@@ -1,11 +1,11 @@
 import {Module} from "@nestjs/common";
-import { AdminModule as AdminJsModule } from '@adminjs/nestjs';
+import {AdminModule as AdminJsModule} from '@adminjs/nestjs';
 import {AdminConfig} from "./admin.config";
 import {DynamicDependencyResolver} from "../common";
 
 @Module({
-    providers: [DynamicDependencyResolver],
-    exports: [DynamicDependencyResolver]
+    providers: [AdminConfig, DynamicDependencyResolver],
+    exports: [AdminConfig, DynamicDependencyResolver]
 })
 class ConfigModule {}
 
@@ -13,12 +13,8 @@ class ConfigModule {}
     imports: [
         AdminJsModule.createAdminAsync({
             imports: [ConfigModule],
-            inject: [DynamicDependencyResolver],
-
-            useFactory: async (resolver: DynamicDependencyResolver) => {
-                const config = await resolver.resolve(AdminConfig)
-                return config.build();
-            }
+            inject: [AdminConfig],
+            useFactory: (config) => config.build()
         })
     ]
 })
