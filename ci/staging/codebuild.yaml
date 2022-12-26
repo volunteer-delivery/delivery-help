@@ -35,10 +35,21 @@ phases:
     commands:
       - >
         docker build \
+          --tag backend-app \
+          --file ci/$ENV/backend/Dockerfile \
+          --cache-from $BACKEND_IMAGE:latest \
+          --build-arg BUILDKIT_INLINE_CACHE \
+          --build-arg CR_BASE \
+          --build-arg CR_LABEL \
+          .
+
+      - >
+        docker build \
           --tag frontend-builder \
           --target builder \
           --file ci/$ENV/frontend/Dockerfile \
           --cache-from $FRONTEND_IMAGE-builder:latest \
+          --cache-from backend-app \
           --build-arg BUILDKIT_INLINE_CACHE \
           --build-arg CR_BASE \
           --build-arg CR_LABEL \
@@ -61,16 +72,6 @@ phases:
           --build-arg FRONTEND_SOCKET_URL \
           --build-arg FRONTEND_ENV \
           --build-arg FRONTEND_BUGSNAG_KEY \
-          .
-
-      - >
-        docker build \
-          --tag backend-app \
-          --file ci/$ENV/backend/Dockerfile \
-          --cache-from $BACKEND_IMAGE:latest \
-          --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_BASE \
-          --build-arg CR_LABEL \
           .
 
   post_build:

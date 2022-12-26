@@ -24,10 +24,15 @@ RUN npm run build
 
 
 
+FROM backend-app as backend
+
+
+
 FROM $CR_BASE/nginx:1
 LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 
 COPY --from=builder /app/dist ./
+COPY --from=backend /app/node_modules/adminjs/lib/frontend/assets /app-adminjs/assets
 COPY ./ci/staging/frontend/config.nginx /etc/nginx/templates/default.conf.template

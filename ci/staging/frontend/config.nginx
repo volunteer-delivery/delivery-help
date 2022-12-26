@@ -27,6 +27,16 @@ server {
         proxy_set_header Host $host;
     }
 
+    location /admin/frontend/assets {
+        add_header Pragma public;
+        add_header Cache-Control "public";
+        alias /app-admin/assets;
+    }
+
+    location /admin {
+        proxy_pass http://backend:8080;
+    }
+
     location ~* \.(?:ico|gif|jpe?g|png|woff2?|eot|otf|ttf|svg|js|css)$ {
         add_header Pragma public;
         add_header Cache-Control "public";
