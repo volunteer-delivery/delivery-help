@@ -8,7 +8,6 @@
   "scripts": {
     "build:prod": "rm -rf dist && nest build",
     "start:dev": "nest start --watch --preserveWatchOutput",
-    "admin:dev": "",
     "console": "scripts/node-exec.sh console",
     "prisma": "prisma"
   },
