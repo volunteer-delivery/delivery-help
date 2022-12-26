@@ -1,11 +1,10 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {FeatureType, ResourceOptions, ResourceWithOptions} from "adminjs";
 import {Prisma, PrismaService} from "../../prisma";
-import ModelName = Prisma.ModelName;
 
 @Injectable()
 export abstract class AdminResource {
-    protected abstract model: ModelName;
+    protected abstract model: Prisma.ModelName;
     protected options: ResourceOptions = {};
     protected features: FeatureType[] = [];
 

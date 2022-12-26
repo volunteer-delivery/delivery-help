@@ -5,12 +5,20 @@ import * as AdminJSPrisma from '@adminjs/prisma'
 import {ConfigService} from "@nestjs/config";
 import {Env} from "../common/types";
 import {PrismaService} from "../prisma";
-import {AdminResource, DriverResource, UserResource} from "./resources";
+import {
+    AddressResource,
+    AdminResource,
+    DriverResource,
+    RideResource,
+    UserResource
+} from "./resources";
 import {DynamicDependencyResolver} from "../common";
 
 const resources = [
     UserResource,
-    DriverResource
+    DriverResource,
+    RideResource,
+    AddressResource
 ];
 
 @Injectable()

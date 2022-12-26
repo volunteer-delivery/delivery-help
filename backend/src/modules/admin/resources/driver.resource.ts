@@ -2,25 +2,28 @@ import {Injectable} from "@nestjs/common";
 import {ResourceOptions} from "adminjs";
 import {Prisma} from "../../prisma";
 import {AdminResource} from "./admin-resource";
-import ModelName = Prisma.ModelName;
 
 @Injectable()
 export class DriverResource extends AdminResource {
-    protected model: ModelName = 'Driver';
+    protected model: Prisma.ModelName = 'Driver';
 
     protected options: ResourceOptions = {
         properties: {
             id: {
-                isId: true,
                 position: 1,
-                type: 'uuid'
+                isId: true,
+                type: 'uuid',
+                isVisible: {
+                    show: true
+                }
             },
             telegramId: {
                 isVisible: false
             },
             name: {
                 type: 'string',
-                position: 2
+                position: 2,
+                isTitle: true
             },
             phone: {
                 type: 'phone',
@@ -28,8 +31,12 @@ export class DriverResource extends AdminResource {
             }
         },
         navigation: {
-            name: 'Driver',
             icon: 'Car'
+        },
+        actions: {
+            new: {
+                isVisible: false
+            }
         }
     };
 }
