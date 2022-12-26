@@ -8,10 +8,14 @@
   "scripts": {
     "build:prod": "rm -rf dist && nest build",
     "start:dev": "nest start --watch --preserveWatchOutput",
+    "admin:dev": "",
     "console": "scripts/node-exec.sh console",
     "prisma": "prisma"
   },
   "dependencies": {
+    "@adminjs/express": "^5.0.1",
+    "@adminjs/nestjs": "^5.0.1",
+    "@adminjs/prisma": "^3.0.1",
     "@bugsnag/js": "^7.18.0",
     "@bugsnag/plugin-express": "^7.18.0",
     "@nestjs/cli": "^9.1.4",
@@ -26,10 +30,13 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/node": "^16.0.0",
+    "adminjs": "^6.7.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "cookie-parser": "^1.4.6",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.3",
     "prisma": "^4.6.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",

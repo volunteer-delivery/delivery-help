@@ -4,7 +4,6 @@ import {CurrentUser} from "../auth";
 import {EventsGateway} from "../events";
 import {PrismaService, RideComment, User} from "../prisma";
 import {AddCommentRequest, RideCommentListResponse, RideCommentResponse} from "./dto";
-import {instanceToPlain, plainToInstance} from "class-transformer";
 
 @Controller('/rides/:id/comments')
 @UseInterceptors(ClassSerializerInterceptor)

@@ -117,31 +117,6 @@ export class PrismaClient<
     ? T['rejectOnNotFound']
     : false
       > {
-      /**
-       * @private
-       */
-      private fetcher;
-      /**
-       * @private
-       */
-      private readonly dmmf;
-      /**
-       * @private
-       */
-      private connectionPromise?;
-      /**
-       * @private
-       */
-      private disconnectionPromise?;
-      /**
-       * @private
-       */
-      private readonly engineConfig;
-      /**
-       * @private
-       */
-      private readonly measurePerformance;
-
     /**
    * ##  Prisma Client ʲˢ
    * 
@@ -236,6 +211,8 @@ export class PrismaClient<
    */
   $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>;
 
+  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel}): Promise<R>;
+
       /**
    * `prisma.driver`: Exposes CRUD operations for the **Driver** model.
     * Example usage:
@@ -326,7 +303,7 @@ export namespace Prisma {
 
 
   /**
-   * Prisma Client JS version: 4.6.1
+   * Prisma Client JS version: 4.8.0
    * Query Engine version: 694eea289a8462c80264df36757e4fdc129b1b32
    */
   export type PrismaVersion = {
@@ -491,9 +468,9 @@ export namespace Prisma {
     [K in keyof T]-?: {} extends Prisma__Pick<T, K> ? never : K
   }[keyof T]
 
-  export type TruthyKeys<T> = {
-    [key in keyof T]: T[key] extends false | undefined | null ? never : key
-  }[keyof T]
+  export type TruthyKeys<T> = keyof {
+    [K in keyof T as T[K] extends false | undefined | null ? never : K]: K
+  }
 
   export type TrueKeys<T> = TruthyKeys<Prisma__Pick<T, RequiredKeys<T>>>
 
@@ -783,6 +760,7 @@ export namespace Prisma {
     db?: Datasource
   }
 
+  export type DefaultPrismaClient = PrismaClient
   export type RejectOnNotFound = boolean | ((error: Error) => Error)
   export type RejectPerModel = { [P in ModelName]?: RejectOnNotFound }
   export type RejectPerOperation =  { [P in "findUnique" | "findFirst"]?: RejectPerModel | RejectOnNotFound } 
@@ -923,6 +901,11 @@ export namespace Prisma {
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
 
+  /**
+   * `PrismaClient` proxy available in interactive transactions.
+   */
+  export type TransactionClient = Omit<Prisma.DefaultPrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>
+
   export type Datasource = {
     url?: string
   }
@@ -945,7 +928,7 @@ export namespace Prisma {
     rides?: boolean
   }
 
-  export type DriverCountOutputTypeGetPayload<S extends boolean | null | undefined | DriverCountOutputTypeArgs, U = keyof S> =
+  export type DriverCountOutputTypeGetPayload<S extends boolean | null | undefined | DriverCountOutputTypeArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? DriverCountOutputType :
     S extends undefined ? never :
@@ -953,7 +936,7 @@ export namespace Prisma {
     ? DriverCountOutputType 
     : S extends { select: any } & (DriverCountOutputTypeArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
+    [P in TruthyKeys<S['select']>]:
     P extends keyof DriverCountOutputType ? DriverCountOutputType[P] : never
   } 
       : DriverCountOutputType
@@ -989,7 +972,7 @@ export namespace Prisma {
     comments?: boolean
   }
 
-  export type RideCountOutputTypeGetPayload<S extends boolean | null | undefined | RideCountOutputTypeArgs, U = keyof S> =
+  export type RideCountOutputTypeGetPayload<S extends boolean | null | undefined | RideCountOutputTypeArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? RideCountOutputType :
     S extends undefined ? never :
@@ -997,7 +980,7 @@ export namespace Prisma {
     ? RideCountOutputType 
     : S extends { select: any } & (RideCountOutputTypeArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
+    [P in TruthyKeys<S['select']>]:
     P extends keyof RideCountOutputType ? RideCountOutputType[P] : never
   } 
       : RideCountOutputType
@@ -1035,7 +1018,7 @@ export namespace Prisma {
     rideComments?: boolean
   }
 
-  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs, U = keyof S> =
+  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? UserCountOutputType :
     S extends undefined ? never :
@@ -1043,7 +1026,7 @@ export namespace Prisma {
     ? UserCountOutputType 
     : S extends { select: any } & (UserCountOutputTypeArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
+    [P in TruthyKeys<S['select']>]:
     P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
   } 
       : UserCountOutputType
@@ -1233,31 +1216,31 @@ export namespace Prisma {
     telegramId?: boolean
     name?: boolean
     phone?: boolean
-    rides?: boolean | RideFindManyArgs
+    rides?: boolean | DriverRidesArgs
     _count?: boolean | DriverCountOutputTypeArgs
   }
 
 
   export type DriverInclude = {
-    rides?: boolean | RideFindManyArgs
+    rides?: boolean | DriverRidesArgs
     _count?: boolean | DriverCountOutputTypeArgs
   } 
 
-  export type DriverGetPayload<S extends boolean | null | undefined | DriverArgs, U = keyof S> =
+  export type DriverGetPayload<S extends boolean | null | undefined | DriverArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? Driver :
     S extends undefined ? never :
     S extends { include: any } & (DriverArgs | DriverFindManyArgs)
     ? Driver  & {
-    [P in TrueKeys<S['include']>]:
-        P extends 'rides' ? Array < RideGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
-        P extends '_count' ? DriverCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+    [P in TruthyKeys<S['include']>]:
+        P extends 'rides' ? Array < RideGetPayload<S['include'][P]>>  :
+        P extends '_count' ? DriverCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (DriverArgs | DriverFindManyArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
-        P extends 'rides' ? Array < RideGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
-        P extends '_count' ? DriverCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Driver ? Driver[P] : never
+    [P in TruthyKeys<S['select']>]:
+        P extends 'rides' ? Array < RideGetPayload<S['select'][P]>>  :
+        P extends '_count' ? DriverCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Driver ? Driver[P] : never
   } 
       : Driver
 
@@ -1285,6 +1268,22 @@ export namespace Prisma {
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Driver'> extends True ? Prisma__DriverClient<DriverGetPayload<T>> : Prisma__DriverClient<DriverGetPayload<T> | null, null>
 
     /**
+     * Find one Driver that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {DriverFindUniqueOrThrowArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends DriverFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, DriverFindUniqueOrThrowArgs>
+    ): Prisma__DriverClient<DriverGetPayload<T>>
+
+    /**
      * Find the first Driver that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -1300,6 +1299,24 @@ export namespace Prisma {
     findFirst<T extends DriverFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, DriverFindFirstArgs>
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Driver'> extends True ? Prisma__DriverClient<DriverGetPayload<T>> : Prisma__DriverClient<DriverGetPayload<T> | null, null>
+
+    /**
+     * Find the first Driver that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DriverFindFirstOrThrowArgs} args - Arguments to find a Driver
+     * @example
+     * // Get one Driver
+     * const driver = await prisma.driver.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends DriverFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, DriverFindFirstOrThrowArgs>
+    ): Prisma__DriverClient<DriverGetPayload<T>>
 
     /**
      * Find zero or more Drivers that matches the filter.
@@ -1444,40 +1461,6 @@ export namespace Prisma {
     **/
     upsert<T extends DriverUpsertArgs>(
       args: SelectSubset<T, DriverUpsertArgs>
-    ): Prisma__DriverClient<DriverGetPayload<T>>
-
-    /**
-     * Find one Driver that matches the filter or throw
-     * `NotFoundError` if no matches were found.
-     * @param {DriverFindUniqueOrThrowArgs} args - Arguments to find a Driver
-     * @example
-     * // Get one Driver
-     * const driver = await prisma.driver.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends DriverFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, DriverFindUniqueOrThrowArgs>
-    ): Prisma__DriverClient<DriverGetPayload<T>>
-
-    /**
-     * Find the first Driver that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DriverFindFirstOrThrowArgs} args - Arguments to find a Driver
-     * @example
-     * // Get one Driver
-     * const driver = await prisma.driver.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends DriverFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, DriverFindFirstOrThrowArgs>
     ): Prisma__DriverClient<DriverGetPayload<T>>
 
     /**
@@ -1631,7 +1614,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    rides<T extends RideFindManyArgs= {}>(args?: Subset<T, RideFindManyArgs>): PrismaPromise<Array<RideGetPayload<T>>| Null>;
+    rides<T extends DriverRidesArgs= {}>(args?: Subset<T, DriverRidesArgs>): PrismaPromise<Array<RideGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -1682,7 +1665,7 @@ export namespace Prisma {
   }
 
   /**
-   * Driver: findUnique
+   * Driver findUnique
    */
   export interface DriverFindUniqueArgs extends DriverFindUniqueArgsBase {
    /**
@@ -1692,6 +1675,28 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * Driver findUniqueOrThrow
+   */
+  export type DriverFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Driver
+     * 
+    **/
+    select?: DriverSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: DriverInclude | null
+    /**
+     * Filter, which Driver to fetch.
+     * 
+    **/
+    where: DriverWhereUniqueInput
+  }
+
 
   /**
    * Driver base type for findFirst actions
@@ -1750,7 +1755,7 @@ export namespace Prisma {
   }
 
   /**
-   * Driver: findFirst
+   * Driver findFirst
    */
   export interface DriverFindFirstArgs extends DriverFindFirstArgsBase {
    /**
@@ -1760,6 +1765,63 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * Driver findFirstOrThrow
+   */
+  export type DriverFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Driver
+     * 
+    **/
+    select?: DriverSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: DriverInclude | null
+    /**
+     * Filter, which Driver to fetch.
+     * 
+    **/
+    where?: DriverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Drivers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<DriverOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Drivers.
+     * 
+    **/
+    cursor?: DriverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Drivers from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Drivers.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Drivers.
+     * 
+    **/
+    distinct?: Enumerable<DriverScalarFieldEnum>
+  }
+
 
   /**
    * Driver findMany
@@ -1958,16 +2020,27 @@ export namespace Prisma {
 
 
   /**
-   * Driver: findUniqueOrThrow
+   * Driver.rides
    */
-  export type DriverFindUniqueOrThrowArgs = DriverFindUniqueArgsBase
-      
+  export type DriverRidesArgs = {
+    /**
+     * Select specific fields to fetch from the Ride
+     * 
+    **/
+    select?: RideSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideInclude | null
+    where?: RideWhereInput
+    orderBy?: Enumerable<RideOrderByWithRelationInput>
+    cursor?: RideWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<RideScalarFieldEnum>
+  }
 
-  /**
-   * Driver: findFirstOrThrow
-   */
-  export type DriverFindFirstOrThrowArgs = DriverFindFirstArgsBase
-      
 
   /**
    * Driver without action
@@ -2184,7 +2257,7 @@ export namespace Prisma {
     fromId?: boolean
     status?: boolean
     vehicle?: boolean
-    comments?: boolean | RideCommentFindManyArgs
+    comments?: boolean | RideCommentsArgs
     volunteer?: boolean | UserArgs
     volunteerId?: boolean
     _count?: boolean | RideCountOutputTypeArgs
@@ -2195,34 +2268,34 @@ export namespace Prisma {
     destination?: boolean | AddressArgs
     driver?: boolean | DriverArgs
     from?: boolean | AddressArgs
-    comments?: boolean | RideCommentFindManyArgs
+    comments?: boolean | RideCommentsArgs
     volunteer?: boolean | UserArgs
     _count?: boolean | RideCountOutputTypeArgs
   } 
 
-  export type RideGetPayload<S extends boolean | null | undefined | RideArgs, U = keyof S> =
+  export type RideGetPayload<S extends boolean | null | undefined | RideArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? Ride :
     S extends undefined ? never :
     S extends { include: any } & (RideArgs | RideFindManyArgs)
     ? Ride  & {
-    [P in TrueKeys<S['include']>]:
-        P extends 'destination' ? AddressGetPayload<Exclude<S['include'], undefined | null>[P]> :
-        P extends 'driver' ? DriverGetPayload<Exclude<S['include'], undefined | null>[P]> :
-        P extends 'from' ? AddressGetPayload<Exclude<S['include'], undefined | null>[P]> :
-        P extends 'comments' ? Array < RideCommentGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
-        P extends 'volunteer' ? UserGetPayload<Exclude<S['include'], undefined | null>[P]> | null :
-        P extends '_count' ? RideCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+    [P in TruthyKeys<S['include']>]:
+        P extends 'destination' ? AddressGetPayload<S['include'][P]> :
+        P extends 'driver' ? DriverGetPayload<S['include'][P]> :
+        P extends 'from' ? AddressGetPayload<S['include'][P]> :
+        P extends 'comments' ? Array < RideCommentGetPayload<S['include'][P]>>  :
+        P extends 'volunteer' ? UserGetPayload<S['include'][P]> | null :
+        P extends '_count' ? RideCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (RideArgs | RideFindManyArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
-        P extends 'destination' ? AddressGetPayload<Exclude<S['select'], undefined | null>[P]> :
-        P extends 'driver' ? DriverGetPayload<Exclude<S['select'], undefined | null>[P]> :
-        P extends 'from' ? AddressGetPayload<Exclude<S['select'], undefined | null>[P]> :
-        P extends 'comments' ? Array < RideCommentGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
-        P extends 'volunteer' ? UserGetPayload<Exclude<S['select'], undefined | null>[P]> | null :
-        P extends '_count' ? RideCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Ride ? Ride[P] : never
+    [P in TruthyKeys<S['select']>]:
+        P extends 'destination' ? AddressGetPayload<S['select'][P]> :
+        P extends 'driver' ? DriverGetPayload<S['select'][P]> :
+        P extends 'from' ? AddressGetPayload<S['select'][P]> :
+        P extends 'comments' ? Array < RideCommentGetPayload<S['select'][P]>>  :
+        P extends 'volunteer' ? UserGetPayload<S['select'][P]> | null :
+        P extends '_count' ? RideCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Ride ? Ride[P] : never
   } 
       : Ride
 
@@ -2250,6 +2323,22 @@ export namespace Prisma {
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Ride'> extends True ? Prisma__RideClient<RideGetPayload<T>> : Prisma__RideClient<RideGetPayload<T> | null, null>
 
     /**
+     * Find one Ride that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {RideFindUniqueOrThrowArgs} args - Arguments to find a Ride
+     * @example
+     * // Get one Ride
+     * const ride = await prisma.ride.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends RideFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, RideFindUniqueOrThrowArgs>
+    ): Prisma__RideClient<RideGetPayload<T>>
+
+    /**
      * Find the first Ride that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -2265,6 +2354,24 @@ export namespace Prisma {
     findFirst<T extends RideFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, RideFindFirstArgs>
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Ride'> extends True ? Prisma__RideClient<RideGetPayload<T>> : Prisma__RideClient<RideGetPayload<T> | null, null>
+
+    /**
+     * Find the first Ride that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideFindFirstOrThrowArgs} args - Arguments to find a Ride
+     * @example
+     * // Get one Ride
+     * const ride = await prisma.ride.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends RideFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, RideFindFirstOrThrowArgs>
+    ): Prisma__RideClient<RideGetPayload<T>>
 
     /**
      * Find zero or more Rides that matches the filter.
@@ -2409,40 +2516,6 @@ export namespace Prisma {
     **/
     upsert<T extends RideUpsertArgs>(
       args: SelectSubset<T, RideUpsertArgs>
-    ): Prisma__RideClient<RideGetPayload<T>>
-
-    /**
-     * Find one Ride that matches the filter or throw
-     * `NotFoundError` if no matches were found.
-     * @param {RideFindUniqueOrThrowArgs} args - Arguments to find a Ride
-     * @example
-     * // Get one Ride
-     * const ride = await prisma.ride.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends RideFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, RideFindUniqueOrThrowArgs>
-    ): Prisma__RideClient<RideGetPayload<T>>
-
-    /**
-     * Find the first Ride that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideFindFirstOrThrowArgs} args - Arguments to find a Ride
-     * @example
-     * // Get one Ride
-     * const ride = await prisma.ride.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends RideFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, RideFindFirstOrThrowArgs>
     ): Prisma__RideClient<RideGetPayload<T>>
 
     /**
@@ -2602,7 +2675,7 @@ export namespace Prisma {
 
     from<T extends AddressArgs= {}>(args?: Subset<T, AddressArgs>): Prisma__AddressClient<AddressGetPayload<T> | Null>;
 
-    comments<T extends RideCommentFindManyArgs= {}>(args?: Subset<T, RideCommentFindManyArgs>): PrismaPromise<Array<RideCommentGetPayload<T>>| Null>;
+    comments<T extends RideCommentsArgs= {}>(args?: Subset<T, RideCommentsArgs>): PrismaPromise<Array<RideCommentGetPayload<T>>| Null>;
 
     volunteer<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
 
@@ -2655,7 +2728,7 @@ export namespace Prisma {
   }
 
   /**
-   * Ride: findUnique
+   * Ride findUnique
    */
   export interface RideFindUniqueArgs extends RideFindUniqueArgsBase {
    /**
@@ -2665,6 +2738,28 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * Ride findUniqueOrThrow
+   */
+  export type RideFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Ride
+     * 
+    **/
+    select?: RideSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideInclude | null
+    /**
+     * Filter, which Ride to fetch.
+     * 
+    **/
+    where: RideWhereUniqueInput
+  }
+
 
   /**
    * Ride base type for findFirst actions
@@ -2723,7 +2818,7 @@ export namespace Prisma {
   }
 
   /**
-   * Ride: findFirst
+   * Ride findFirst
    */
   export interface RideFindFirstArgs extends RideFindFirstArgsBase {
    /**
@@ -2733,6 +2828,63 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * Ride findFirstOrThrow
+   */
+  export type RideFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Ride
+     * 
+    **/
+    select?: RideSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideInclude | null
+    /**
+     * Filter, which Ride to fetch.
+     * 
+    **/
+    where?: RideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Rides to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<RideOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Rides.
+     * 
+    **/
+    cursor?: RideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Rides from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Rides.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Rides.
+     * 
+    **/
+    distinct?: Enumerable<RideScalarFieldEnum>
+  }
+
 
   /**
    * Ride findMany
@@ -2931,16 +3083,27 @@ export namespace Prisma {
 
 
   /**
-   * Ride: findUniqueOrThrow
+   * Ride.comments
    */
-  export type RideFindUniqueOrThrowArgs = RideFindUniqueArgsBase
-      
+  export type RideCommentsArgs = {
+    /**
+     * Select specific fields to fetch from the RideComment
+     * 
+    **/
+    select?: RideCommentSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideCommentInclude | null
+    where?: RideCommentWhereInput
+    orderBy?: Enumerable<RideCommentOrderByWithRelationInput>
+    cursor?: RideCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<RideCommentScalarFieldEnum>
+  }
 
-  /**
-   * Ride: findFirstOrThrow
-   */
-  export type RideFindFirstOrThrowArgs = RideFindFirstArgsBase
-      
 
   /**
    * Ride without action
@@ -3125,21 +3288,21 @@ export namespace Prisma {
     rideAdress?: boolean | RideArgs
   } 
 
-  export type AddressGetPayload<S extends boolean | null | undefined | AddressArgs, U = keyof S> =
+  export type AddressGetPayload<S extends boolean | null | undefined | AddressArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? Address :
     S extends undefined ? never :
     S extends { include: any } & (AddressArgs | AddressFindManyArgs)
     ? Address  & {
-    [P in TrueKeys<S['include']>]:
-        P extends 'rideDestination' ? RideGetPayload<Exclude<S['include'], undefined | null>[P]> | null :
-        P extends 'rideAdress' ? RideGetPayload<Exclude<S['include'], undefined | null>[P]> | null :  never
+    [P in TruthyKeys<S['include']>]:
+        P extends 'rideDestination' ? RideGetPayload<S['include'][P]> | null :
+        P extends 'rideAdress' ? RideGetPayload<S['include'][P]> | null :  never
   } 
     : S extends { select: any } & (AddressArgs | AddressFindManyArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
-        P extends 'rideDestination' ? RideGetPayload<Exclude<S['select'], undefined | null>[P]> | null :
-        P extends 'rideAdress' ? RideGetPayload<Exclude<S['select'], undefined | null>[P]> | null :  P extends keyof Address ? Address[P] : never
+    [P in TruthyKeys<S['select']>]:
+        P extends 'rideDestination' ? RideGetPayload<S['select'][P]> | null :
+        P extends 'rideAdress' ? RideGetPayload<S['select'][P]> | null :  P extends keyof Address ? Address[P] : never
   } 
       : Address
 
@@ -3167,6 +3330,22 @@ export namespace Prisma {
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Address'> extends True ? Prisma__AddressClient<AddressGetPayload<T>> : Prisma__AddressClient<AddressGetPayload<T> | null, null>
 
     /**
+     * Find one Address that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {AddressFindUniqueOrThrowArgs} args - Arguments to find a Address
+     * @example
+     * // Get one Address
+     * const address = await prisma.address.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends AddressFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, AddressFindUniqueOrThrowArgs>
+    ): Prisma__AddressClient<AddressGetPayload<T>>
+
+    /**
      * Find the first Address that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -3182,6 +3361,24 @@ export namespace Prisma {
     findFirst<T extends AddressFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, AddressFindFirstArgs>
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Address'> extends True ? Prisma__AddressClient<AddressGetPayload<T>> : Prisma__AddressClient<AddressGetPayload<T> | null, null>
+
+    /**
+     * Find the first Address that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AddressFindFirstOrThrowArgs} args - Arguments to find a Address
+     * @example
+     * // Get one Address
+     * const address = await prisma.address.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends AddressFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, AddressFindFirstOrThrowArgs>
+    ): Prisma__AddressClient<AddressGetPayload<T>>
 
     /**
      * Find zero or more Addresses that matches the filter.
@@ -3326,40 +3523,6 @@ export namespace Prisma {
     **/
     upsert<T extends AddressUpsertArgs>(
       args: SelectSubset<T, AddressUpsertArgs>
-    ): Prisma__AddressClient<AddressGetPayload<T>>
-
-    /**
-     * Find one Address that matches the filter or throw
-     * `NotFoundError` if no matches were found.
-     * @param {AddressFindUniqueOrThrowArgs} args - Arguments to find a Address
-     * @example
-     * // Get one Address
-     * const address = await prisma.address.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends AddressFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, AddressFindUniqueOrThrowArgs>
-    ): Prisma__AddressClient<AddressGetPayload<T>>
-
-    /**
-     * Find the first Address that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AddressFindFirstOrThrowArgs} args - Arguments to find a Address
-     * @example
-     * // Get one Address
-     * const address = await prisma.address.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends AddressFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, AddressFindFirstOrThrowArgs>
     ): Prisma__AddressClient<AddressGetPayload<T>>
 
     /**
@@ -3566,7 +3729,7 @@ export namespace Prisma {
   }
 
   /**
-   * Address: findUnique
+   * Address findUnique
    */
   export interface AddressFindUniqueArgs extends AddressFindUniqueArgsBase {
    /**
@@ -3576,6 +3739,28 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * Address findUniqueOrThrow
+   */
+  export type AddressFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Address
+     * 
+    **/
+    select?: AddressSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AddressInclude | null
+    /**
+     * Filter, which Address to fetch.
+     * 
+    **/
+    where: AddressWhereUniqueInput
+  }
+
 
   /**
    * Address base type for findFirst actions
@@ -3634,7 +3819,7 @@ export namespace Prisma {
   }
 
   /**
-   * Address: findFirst
+   * Address findFirst
    */
   export interface AddressFindFirstArgs extends AddressFindFirstArgsBase {
    /**
@@ -3644,6 +3829,63 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * Address findFirstOrThrow
+   */
+  export type AddressFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Address
+     * 
+    **/
+    select?: AddressSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AddressInclude | null
+    /**
+     * Filter, which Address to fetch.
+     * 
+    **/
+    where?: AddressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Addresses to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<AddressOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Addresses.
+     * 
+    **/
+    cursor?: AddressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Addresses from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Addresses.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Addresses.
+     * 
+    **/
+    distinct?: Enumerable<AddressScalarFieldEnum>
+  }
+
 
   /**
    * Address findMany
@@ -3840,18 +4082,6 @@ export namespace Prisma {
     where?: AddressWhereInput
   }
 
-
-  /**
-   * Address: findUniqueOrThrow
-   */
-  export type AddressFindUniqueOrThrowArgs = AddressFindUniqueArgsBase
-      
-
-  /**
-   * Address: findFirstOrThrow
-   */
-  export type AddressFindFirstOrThrowArgs = AddressFindFirstArgsBase
-      
 
   /**
    * Address without action
@@ -4052,21 +4282,21 @@ export namespace Prisma {
     author?: boolean | UserArgs
   } 
 
-  export type RideCommentGetPayload<S extends boolean | null | undefined | RideCommentArgs, U = keyof S> =
+  export type RideCommentGetPayload<S extends boolean | null | undefined | RideCommentArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? RideComment :
     S extends undefined ? never :
     S extends { include: any } & (RideCommentArgs | RideCommentFindManyArgs)
     ? RideComment  & {
-    [P in TrueKeys<S['include']>]:
-        P extends 'ride' ? RideGetPayload<Exclude<S['include'], undefined | null>[P]> :
-        P extends 'author' ? UserGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+    [P in TruthyKeys<S['include']>]:
+        P extends 'ride' ? RideGetPayload<S['include'][P]> :
+        P extends 'author' ? UserGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (RideCommentArgs | RideCommentFindManyArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
-        P extends 'ride' ? RideGetPayload<Exclude<S['select'], undefined | null>[P]> :
-        P extends 'author' ? UserGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof RideComment ? RideComment[P] : never
+    [P in TruthyKeys<S['select']>]:
+        P extends 'ride' ? RideGetPayload<S['select'][P]> :
+        P extends 'author' ? UserGetPayload<S['select'][P]> :  P extends keyof RideComment ? RideComment[P] : never
   } 
       : RideComment
 
@@ -4094,6 +4324,22 @@ export namespace Prisma {
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'RideComment'> extends True ? Prisma__RideCommentClient<RideCommentGetPayload<T>> : Prisma__RideCommentClient<RideCommentGetPayload<T> | null, null>
 
     /**
+     * Find one RideComment that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {RideCommentFindUniqueOrThrowArgs} args - Arguments to find a RideComment
+     * @example
+     * // Get one RideComment
+     * const rideComment = await prisma.rideComment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends RideCommentFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, RideCommentFindUniqueOrThrowArgs>
+    ): Prisma__RideCommentClient<RideCommentGetPayload<T>>
+
+    /**
      * Find the first RideComment that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -4109,6 +4355,24 @@ export namespace Prisma {
     findFirst<T extends RideCommentFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, RideCommentFindFirstArgs>
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'RideComment'> extends True ? Prisma__RideCommentClient<RideCommentGetPayload<T>> : Prisma__RideCommentClient<RideCommentGetPayload<T> | null, null>
+
+    /**
+     * Find the first RideComment that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RideCommentFindFirstOrThrowArgs} args - Arguments to find a RideComment
+     * @example
+     * // Get one RideComment
+     * const rideComment = await prisma.rideComment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends RideCommentFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, RideCommentFindFirstOrThrowArgs>
+    ): Prisma__RideCommentClient<RideCommentGetPayload<T>>
 
     /**
      * Find zero or more RideComments that matches the filter.
@@ -4253,40 +4517,6 @@ export namespace Prisma {
     **/
     upsert<T extends RideCommentUpsertArgs>(
       args: SelectSubset<T, RideCommentUpsertArgs>
-    ): Prisma__RideCommentClient<RideCommentGetPayload<T>>
-
-    /**
-     * Find one RideComment that matches the filter or throw
-     * `NotFoundError` if no matches were found.
-     * @param {RideCommentFindUniqueOrThrowArgs} args - Arguments to find a RideComment
-     * @example
-     * // Get one RideComment
-     * const rideComment = await prisma.rideComment.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends RideCommentFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, RideCommentFindUniqueOrThrowArgs>
-    ): Prisma__RideCommentClient<RideCommentGetPayload<T>>
-
-    /**
-     * Find the first RideComment that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RideCommentFindFirstOrThrowArgs} args - Arguments to find a RideComment
-     * @example
-     * // Get one RideComment
-     * const rideComment = await prisma.rideComment.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends RideCommentFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, RideCommentFindFirstOrThrowArgs>
     ): Prisma__RideCommentClient<RideCommentGetPayload<T>>
 
     /**
@@ -4493,7 +4723,7 @@ export namespace Prisma {
   }
 
   /**
-   * RideComment: findUnique
+   * RideComment findUnique
    */
   export interface RideCommentFindUniqueArgs extends RideCommentFindUniqueArgsBase {
    /**
@@ -4503,6 +4733,28 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * RideComment findUniqueOrThrow
+   */
+  export type RideCommentFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the RideComment
+     * 
+    **/
+    select?: RideCommentSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideCommentInclude | null
+    /**
+     * Filter, which RideComment to fetch.
+     * 
+    **/
+    where: RideCommentWhereUniqueInput
+  }
+
 
   /**
    * RideComment base type for findFirst actions
@@ -4561,7 +4813,7 @@ export namespace Prisma {
   }
 
   /**
-   * RideComment: findFirst
+   * RideComment findFirst
    */
   export interface RideCommentFindFirstArgs extends RideCommentFindFirstArgsBase {
    /**
@@ -4571,6 +4823,63 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * RideComment findFirstOrThrow
+   */
+  export type RideCommentFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the RideComment
+     * 
+    **/
+    select?: RideCommentSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideCommentInclude | null
+    /**
+     * Filter, which RideComment to fetch.
+     * 
+    **/
+    where?: RideCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RideComments to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<RideCommentOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RideComments.
+     * 
+    **/
+    cursor?: RideCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RideComments from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RideComments.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RideComments.
+     * 
+    **/
+    distinct?: Enumerable<RideCommentScalarFieldEnum>
+  }
+
 
   /**
    * RideComment findMany
@@ -4769,18 +5078,6 @@ export namespace Prisma {
 
 
   /**
-   * RideComment: findUniqueOrThrow
-   */
-  export type RideCommentFindUniqueOrThrowArgs = RideCommentFindUniqueArgsBase
-      
-
-  /**
-   * RideComment: findFirstOrThrow
-   */
-  export type RideCommentFindFirstOrThrowArgs = RideCommentFindFirstArgsBase
-      
-
-  /**
    * RideComment without action
    */
   export type RideCommentArgs = {
@@ -4953,35 +5250,35 @@ export namespace Prisma {
     id?: boolean
     password?: boolean
     name?: boolean
-    rides?: boolean | RideFindManyArgs
-    rideComments?: boolean | RideCommentFindManyArgs
+    rides?: boolean | UserRidesArgs
+    rideComments?: boolean | UserRideCommentsArgs
     _count?: boolean | UserCountOutputTypeArgs
   }
 
 
   export type UserInclude = {
-    rides?: boolean | RideFindManyArgs
-    rideComments?: boolean | RideCommentFindManyArgs
+    rides?: boolean | UserRidesArgs
+    rideComments?: boolean | UserRideCommentsArgs
     _count?: boolean | UserCountOutputTypeArgs
   } 
 
-  export type UserGetPayload<S extends boolean | null | undefined | UserArgs, U = keyof S> =
+  export type UserGetPayload<S extends boolean | null | undefined | UserArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? User :
     S extends undefined ? never :
     S extends { include: any } & (UserArgs | UserFindManyArgs)
     ? User  & {
-    [P in TrueKeys<S['include']>]:
-        P extends 'rides' ? Array < RideGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
-        P extends 'rideComments' ? Array < RideCommentGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
-        P extends '_count' ? UserCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+    [P in TruthyKeys<S['include']>]:
+        P extends 'rides' ? Array < RideGetPayload<S['include'][P]>>  :
+        P extends 'rideComments' ? Array < RideCommentGetPayload<S['include'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (UserArgs | UserFindManyArgs)
       ? {
-    [P in TrueKeys<S['select']>]:
-        P extends 'rides' ? Array < RideGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
-        P extends 'rideComments' ? Array < RideCommentGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
-        P extends '_count' ? UserCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof User ? User[P] : never
+    [P in TruthyKeys<S['select']>]:
+        P extends 'rides' ? Array < RideGetPayload<S['select'][P]>>  :
+        P extends 'rideComments' ? Array < RideCommentGetPayload<S['select'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
       : User
 
@@ -5009,6 +5306,22 @@ export namespace Prisma {
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'User'> extends True ? Prisma__UserClient<UserGetPayload<T>> : Prisma__UserClient<UserGetPayload<T> | null, null>
 
     /**
+     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, UserFindUniqueOrThrowArgs>
+    ): Prisma__UserClient<UserGetPayload<T>>
+
+    /**
      * Find the first User that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -5024,6 +5337,24 @@ export namespace Prisma {
     findFirst<T extends UserFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, UserFindFirstArgs>
     ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'User'> extends True ? Prisma__UserClient<UserGetPayload<T>> : Prisma__UserClient<UserGetPayload<T> | null, null>
+
+    /**
+     * Find the first User that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, UserFindFirstOrThrowArgs>
+    ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
      * Find zero or more Users that matches the filter.
@@ -5168,40 +5499,6 @@ export namespace Prisma {
     **/
     upsert<T extends UserUpsertArgs>(
       args: SelectSubset<T, UserUpsertArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
-
-    /**
-     * Find one User that matches the filter or throw
-     * `NotFoundError` if no matches were found.
-     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
-     * @example
-     * // Get one User
-     * const user = await prisma.user.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, UserFindUniqueOrThrowArgs>
-    ): Prisma__UserClient<UserGetPayload<T>>
-
-    /**
-     * Find the first User that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
-     * @example
-     * // Get one User
-     * const user = await prisma.user.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, UserFindFirstOrThrowArgs>
     ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
@@ -5355,9 +5652,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    rides<T extends RideFindManyArgs= {}>(args?: Subset<T, RideFindManyArgs>): PrismaPromise<Array<RideGetPayload<T>>| Null>;
+    rides<T extends UserRidesArgs= {}>(args?: Subset<T, UserRidesArgs>): PrismaPromise<Array<RideGetPayload<T>>| Null>;
 
-    rideComments<T extends RideCommentFindManyArgs= {}>(args?: Subset<T, RideCommentFindManyArgs>): PrismaPromise<Array<RideCommentGetPayload<T>>| Null>;
+    rideComments<T extends UserRideCommentsArgs= {}>(args?: Subset<T, UserRideCommentsArgs>): PrismaPromise<Array<RideCommentGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -5408,7 +5705,7 @@ export namespace Prisma {
   }
 
   /**
-   * User: findUnique
+   * User findUnique
    */
   export interface UserFindUniqueArgs extends UserFindUniqueArgsBase {
    /**
@@ -5418,6 +5715,28 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * User findUniqueOrThrow
+   */
+  export type UserFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the User
+     * 
+    **/
+    select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
+     * Filter, which User to fetch.
+     * 
+    **/
+    where: UserWhereUniqueInput
+  }
+
 
   /**
    * User base type for findFirst actions
@@ -5476,7 +5795,7 @@ export namespace Prisma {
   }
 
   /**
-   * User: findFirst
+   * User findFirst
    */
   export interface UserFindFirstArgs extends UserFindFirstArgsBase {
    /**
@@ -5486,6 +5805,63 @@ export namespace Prisma {
     rejectOnNotFound?: RejectOnNotFound
   }
       
+
+  /**
+   * User findFirstOrThrow
+   */
+  export type UserFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the User
+     * 
+    **/
+    select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
+     * Filter, which User to fetch.
+     * 
+    **/
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     * 
+    **/
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     * 
+    **/
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
 
   /**
    * User findMany
@@ -5684,16 +6060,50 @@ export namespace Prisma {
 
 
   /**
-   * User: findUniqueOrThrow
+   * User.rides
    */
-  export type UserFindUniqueOrThrowArgs = UserFindUniqueArgsBase
-      
+  export type UserRidesArgs = {
+    /**
+     * Select specific fields to fetch from the Ride
+     * 
+    **/
+    select?: RideSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideInclude | null
+    where?: RideWhereInput
+    orderBy?: Enumerable<RideOrderByWithRelationInput>
+    cursor?: RideWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<RideScalarFieldEnum>
+  }
+
 
   /**
-   * User: findFirstOrThrow
+   * User.rideComments
    */
-  export type UserFindFirstOrThrowArgs = UserFindFirstArgsBase
-      
+  export type UserRideCommentsArgs = {
+    /**
+     * Select specific fields to fetch from the RideComment
+     * 
+    **/
+    select?: RideCommentSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RideCommentInclude | null
+    where?: RideCommentWhereInput
+    orderBy?: Enumerable<RideCommentOrderByWithRelationInput>
+    cursor?: RideCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<RideCommentScalarFieldEnum>
+  }
+
 
   /**
    * User without action
