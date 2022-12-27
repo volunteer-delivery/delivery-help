@@ -1,21 +1,18 @@
-import {Inject, Injectable} from "@nestjs/common";
 import {FeatureType, ResourceOptions, ResourceWithOptions} from "adminjs";
-import {Prisma, PrismaService} from "../../prisma";
+import {Prisma, PrismaClient} from "../prisma";
 
-@Injectable()
 export abstract class AdminResource {
     protected abstract model: Prisma.ModelName;
     protected options: ResourceOptions = {};
     protected features: FeatureType[] = [];
 
-    @Inject()
-    protected prismaService: PrismaService
+    constructor(protected prismaClient: PrismaClient) {}
 
     build(): ResourceWithOptions {
         return {
             resource: {
-                model: (this.prismaService as any)._baseDmmf.modelMap[this.model],
-                client: this.prismaService
+                model: (this.prismaClient as any)._baseDmmf.modelMap[this.model],
+                client: this.prismaClient
             },
             options: this.options,
             features: this.features

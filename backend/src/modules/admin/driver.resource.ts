@@ -1,9 +1,7 @@
-import {Injectable} from "@nestjs/common";
 import {ResourceOptions} from "adminjs";
-import {Prisma} from "../../prisma";
+import {Prisma} from "../prisma";
 import {AdminResource} from "./admin-resource";
 
-@Injectable()
 export class DriverResource extends AdminResource {
     protected model: Prisma.ModelName = 'Driver';
 

@@ -1,11 +1,9 @@
 import {AdminResource} from "./admin-resource";
-import {Injectable} from "@nestjs/common";
-import * as bcrypt from 'bcryptjs';
-import {Prisma} from "../../prisma";
+import bcrypt from 'bcryptjs';
+import {Prisma} from "../prisma";
 import passwordsFeature from "@adminjs/passwords";
 import {ResourceOptions} from "adminjs";
 
-@Injectable()
 export class UserResource extends AdminResource {
     protected model: Prisma.ModelName = 'User';
 

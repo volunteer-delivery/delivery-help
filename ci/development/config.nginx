@@ -28,7 +28,7 @@ server {
     }
 
     location /admin {
-        proxy_pass http://backend:8080;
+        proxy_pass http://backend-admin:8081;
     }
 
     location / {
