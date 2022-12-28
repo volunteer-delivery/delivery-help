@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs';
 import {User} from "../client";
 import {client} from "./client-provider";
 

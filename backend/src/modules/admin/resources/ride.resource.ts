@@ -1,7 +1,9 @@
 import {AdminResource} from "./admin-resource";
-import {Prisma} from "../prisma";
+import {Injectable} from "@nestjs/common";
+import {Prisma} from "../../prisma";
 import {RecordJSON, ResourceOptions} from "adminjs";
 
+@Injectable()
 export class RideResource extends AdminResource {
     protected model: Prisma.ModelName = 'Ride';
 

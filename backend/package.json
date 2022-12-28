@@ -8,12 +8,12 @@
   "scripts": {
     "build:prod": "rm -rf dist && nest build",
     "start:dev": "nest start --watch --preserveWatchOutput",
-    "admin:dev": "nodemon ./src/admin.ts",
     "console": "scripts/node-exec.sh console",
     "prisma": "prisma"
   },
   "dependencies": {
     "@adminjs/express": "^5.0.1",
+    "@adminjs/nestjs": "^5.0.1",
     "@adminjs/passwords": "^3.0.1",
     "@adminjs/prisma": "^3.0.1",
     "@bugsnag/js": "^7.18.0",
@@ -45,7 +45,6 @@
     "typescript": "^4.7.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20",
     "ts-node": "^10.9.1"
   },
   "prisma": {

@@ -1,7 +1,7 @@
 import {NestFactory} from '@nestjs/core';
 import {ValidationPipe} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
-import cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser';
 import {MainModule} from './main.module';
 import {AuthGuard} from "./modules/auth";
 import {ErrorTracker, ErrorTrackerInterceptor} from "./modules/error-tracker";
