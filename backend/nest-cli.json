@@ -1,10 +1,64 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
-  "compilerOptions": {
-    "assets": [
-      "modules/prisma/client/**/*"
-    ]
+  "monorepo": true,
+  "projects": {
+    "main": {
+      "type": "application",
+      "root": "apps/main",
+      "entryFile": "main",
+      "sourceRoot": "apps/main/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/main/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../../../libs/prisma/src/client/**/*",
+            "outDir": "dist/apps/main/libs/prisma/src"
+          }
+        ]
+      }
+    },
+    "bot-telegram": {
+      "type": "application",
+      "root": "apps/bot-telegram",
+      "entryFile": "main",
+      "sourceRoot": "apps/bot-telegram/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/bot-telegram/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../../../libs/prisma/src/client/**/*",
+            "outDir": "dist/apps/bot-telegram/libs/prisma/src"
+          }
+        ]
+      }
+    },
+    "prisma": {
+      "type": "library",
+      "root": "libs/prisma",
+      "entryFile": "index",
+      "sourceRoot": "libs/prisma/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/prisma/tsconfig.lib.json"
+      }
+    },
+    "core": {
+      "type": "library",
+      "root": "libs/core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/tsconfig.lib.json"
+      }
+    },
+    "websocket": {
+      "type": "application",
+      "root": "apps/websocket",
+      "entryFile": "main",
+      "sourceRoot": "apps/websocket/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/websocket/tsconfig.app.json"
+      }
+    }
   }
 }

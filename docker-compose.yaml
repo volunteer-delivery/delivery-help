@@ -1,19 +1,36 @@
-version: '3'
+version: '3.8'
+
+x-api-common: &backend-common
+  image: delivery_help_backend
+  build: ./backend
+  stdin_open: true
+  tty: true
+  restart: always
+  volumes:
+    - ./backend/:/app
+    - ./backend/node_modules:/app/node_modules
+    - /tmp/delivery-help:/app-tmp
+  env_file: .env
+  depends_on:
+    - postgres
 
 services:
-  backend:
-    restart: always
-    build: ./backend
-    ports:
-      - 8000:8080
-    command: npm run start:dev
-    volumes:
-      - ./backend/:/app
-      - ./backend/node_modules:/app/node_modules
-      - /tmp/delivery-help:/app-tmp
-    env_file: .env
-    depends_on:
-      - postgres
+  backend-main:
+    <<: *backend-common
+    command: npm run start:dev main
+    links:
+      - backend-websocket
+      - backend-bot-telegram
+
+  backend-websocket:
+    <<: *backend-common
+    command: npm run start:dev websocket
+
+  backend-bot-telegram:
+    <<: *backend-common
+    command: npm run start:dev bot-telegram
+    links:
+      - backend-websocket
 
   postgres:
     image: postgres:15.1-alpine
@@ -27,10 +44,12 @@ services:
     volumes:
       - ./ci/development/config.nginx:/etc/nginx/conf.d/default.conf
     ports:
-      - 8080:80
+      - '8080:80'
     depends_on:
-      - backend
       - frontend
+      - backend-main
+      - backend-websocket
+      - backend-bot-telegram
 
   frontend:
     restart: always
