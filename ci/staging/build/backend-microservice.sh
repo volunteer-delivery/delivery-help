@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+APP_NAME="$1";
+APP_IMAGE="$REPO_IMAGE/backend-$APP_NAME";
+
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
@@ -7,9 +10,6 @@ echo "Building backend microservice $APP_NAME";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-
-APP_NAME="$1";
-APP_IMAGE="$REPO_IMAGE/backend-$APP_NAME";
 
 docker pull "$APP_IMAGE-builder:latest" || true;
 docker pull "$APP_IMAGE:latest" || true;

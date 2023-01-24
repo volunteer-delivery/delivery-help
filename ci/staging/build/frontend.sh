@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+FRONTEND_IMAGE="$REPO_IMAGE/frontend"
+
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
@@ -7,8 +9,6 @@ echo "Building front-end";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-
-FRONTEND_IMAGE="$REPO_IMAGE/frontend"
 
 docker pull "$FRONTEND_IMAGE-builder:latest" || true;
 docker pull "$FRONTEND_IMAGE:latest" || true;

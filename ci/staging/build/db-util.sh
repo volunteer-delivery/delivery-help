@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+UTIL_IMAGE="$REPO_IMAGE/db-utils"
+
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
@@ -7,8 +9,6 @@ echo "Building db util";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-
-UTIL_IMAGE="$REPO_IMAGE/db-utils"
 
 docker pull "$UTIL_IMAGE-builder:latest" || true;
 docker pull "$UTIL_IMAGE:latest" || true;
