@@ -42,7 +42,7 @@ services:
     command: node ./dist/apps/websocket/apps/websocket/src/main
 
   db-util:
-    image: ${APP_IMAGE}/db-util:${APP_VERSION}
+    image: ${REPO_IMAGE}/db-util:${APP_VERSION}
     command: echo "success"
     volumes:
       - /tmp/delivery-help:/app-tmp
