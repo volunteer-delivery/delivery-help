@@ -2,7 +2,7 @@ ARG CR_BASE
 FROM $CR_BASE/node:5 as builder
 
 ARG CR_LABEL
-LABEL org.opencontainers.image.source = $CR_LABEL
+LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 
@@ -28,7 +28,7 @@ ARG CR_BASE
 FROM $CR_BASE/nginx:1
 
 ARG CR_LABEL
-LABEL org.opencontainers.image.source = $CR_LABEL
+LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 
