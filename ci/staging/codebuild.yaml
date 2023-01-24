@@ -27,7 +27,6 @@ phases:
 
       - docker pull "$CR_BASE/node:latest" || true
       - docker pull "$CR_BASE/nginx:latest" || true
-      - docker pull "$BACKEND_IMAGE:latest" || true
 
   build:
     commands:
