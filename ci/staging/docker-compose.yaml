@@ -41,6 +41,16 @@ services:
     image: ${REPO_IMAGE}/backend-websocket:${APP_VERSION}
     command: node ./dist/apps/websocket/apps/websocket/src/main
 
+  db-util:
+    image: ${APP_IMAGE}/db-util:${APP_VERSION}
+    command: echo "success"
+    volumes:
+      - /tmp/delivery-help:/app-tmp
+    env_file: .env
+    depends_on:
+      - postgres
+
+
   postgres:
     image: postgres:14.6-alpine
     restart: on-failure
