@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-UTIL_IMAGE="$REPO_IMAGE/db-utils"
+UTIL_IMAGE="$REPO_IMAGE/db-util"
 
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
