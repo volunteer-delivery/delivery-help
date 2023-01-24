@@ -35,6 +35,7 @@ phases:
       - ./ci/$ENV/build/backend-microservice.sh main
       - ./ci/$ENV/build/backend-microservice.sh bot-telegram
       - ./ci/$ENV/build/backend-microservice.sh websocket
+      - ./ci/$ENV/build/db-util.sh
 
   post_build:
     commands:
