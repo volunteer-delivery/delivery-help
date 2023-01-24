@@ -23,7 +23,6 @@ phases:
       - export APP_VERSION="$CODEBUILD_BUILD_NUMBER"
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
       - export REPO_IMAGE="$CR_BASE/$ENV-delivery-help"
-      - export BACKEND_IMAGE="$CR_BASE/$ENV-delivery-help/backend"
 
       - docker pull "$CR_BASE/node:latest" || true
       - docker pull "$CR_BASE/nginx:latest" || true
