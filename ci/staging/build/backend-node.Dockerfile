@@ -1,5 +1,5 @@
 ARG CR_BASE
-FROM $CR_BASE/node:4
+FROM $CR_BASE/node:5
 
 ARG CR_LABEL
 LABEL org.opencontainers.image.source $CR_LABEL
