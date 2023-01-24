@@ -3,7 +3,7 @@ ARG APP_VERSION
 FROM $REPO_IMAGE/backend-source:$APP_VERSION as builder
 
 ARG CR_LABEL
-LABEL org.opencontainers.image.source $CR_LABEL
+LABEL org.opencontainers.image.source = $CR_LABEL
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ ARG APP_VERSION
 FROM $REPO_IMAGE/backend-node:$APP_VERSION
 
 ARG CR_LABEL
-LABEL org.opencontainers.image.source $CR_LABEL
+LABEL org.opencontainers.image.source = $CR_LABEL
 
 WORKDIR /app
 

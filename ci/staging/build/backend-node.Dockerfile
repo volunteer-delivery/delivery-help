@@ -2,7 +2,7 @@ ARG CR_BASE
 FROM $CR_BASE/node:5
 
 ARG CR_LABEL
-LABEL org.opencontainers.image.source $CR_LABEL
+LABEL org.opencontainers.image.source = $CR_LABEL
 
 WORKDIR /app
 
