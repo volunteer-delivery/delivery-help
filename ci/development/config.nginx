@@ -1,3 +1,15 @@
+upstream frontend {
+    server frontend:8080;
+}
+
+upstream backend-main {
+    server backend-main:8080;
+}
+
+upstream backend-websocket {
+    server backend-websocket:8081;
+}
+
 server {
     listen 80 default_server;
     server_name localhost;
@@ -10,17 +22,17 @@ server {
     proxy_no_cache 1;
     proxy_cache_bypass 1;
     add_header Last-Modified $date_gmt;
-    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
     if_modified_since off;
     expires off;
     etag off;
 
     location /api/ {
-        proxy_pass http://backend-main:8080/api/;
+        add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+        proxy_pass http://backend-main/api/;
     }
 
     location /websocket/ {
-        proxy_pass http://backend-websocket:8081/websocket/;
+        proxy_pass http://backend-websocket/websocket/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -28,7 +40,7 @@ server {
     }
 
     location / {
-        proxy_pass http://frontend:8080/;
+        proxy_pass http://frontend/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
