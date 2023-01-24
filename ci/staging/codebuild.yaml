@@ -14,85 +14,40 @@ env:
 phases:
   pre_build:
     commands:
-      - curl $SECRETS_LOADER_DOWNLOAD -s -o $SECRETS_LOADER
-      - chmod +x $SECRETS_LOADER
-      - export $($SECRETS_LOADER get -r $AWS_REGION -p /$ENV -l deploy) > /dev/null
-      - export $($SECRETS_LOADER get -r $AWS_REGION -p /cr) > /dev/null
-      - echo $CR_PASSWORD | docker login $CR_HOST -u $CR_USERNAME --password-stdin
+      - curl "$SECRETS_LOADER_DOWNLOAD" -s -o "$SECRETS_LOADER"
+      - chmod +x "$SECRETS_LOADER"
+      - export $("$SECRETS_LOADER" get -r "$AWS_REGION" -p "/$ENV" -l deploy) > /dev/null
+      - export $("$SECRETS_LOADER" get -r "$AWS_REGION" -p /cr) > /dev/null
+      - echo "$CR_PASSWORD" | docker login "$CR_HOST" -u "$CR_USERNAME" --password-stdin
 
       - export APP_VERSION="$CODEBUILD_BUILD_NUMBER"
       - export CR_BASE="$CR_HOST/$CR_USERNAME"
-      - export FRONTEND_IMAGE="$CR_BASE/$ENV-delivery-help/frontend"
+      - export REPO_IMAGE="$CR_BASE/$ENV-delivery-help"
       - export BACKEND_IMAGE="$CR_BASE/$ENV-delivery-help/backend"
 
-      - docker pull $CR_BASE/node:latest || true
-      - docker pull $CR_BASE/nginx:latest || true
-      - docker pull $FRONTEND_IMAGE-builder:latest || true
-      - docker pull $FRONTEND_IMAGE:latest || true
-      - docker pull $BACKEND_IMAGE:latest || true
+      - docker pull "$CR_BASE/node:latest" || true
+      - docker pull "$CR_BASE/nginx:latest" || true
+      - docker pull "$BACKEND_IMAGE:latest" || true
 
   build:
     commands:
-      - >
-        docker build \
-          --tag frontend-builder \
-          --target builder \
-          --file ci/$ENV/frontend/Dockerfile \
-          --cache-from $FRONTEND_IMAGE-builder:latest \
-          --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_BASE \
-          --build-arg CR_LABEL \
-          --build-arg FRONTEND_API_URL \
-          --build-arg FRONTEND_SOCKET_URL \
-          --build-arg FRONTEND_ENV \
-          --build-arg FRONTEND_BUGSNAG_KEY \
-          .
+      - "ci/$ENV/build/frontend.sh"
 
-      - >
-        docker build \
-          --tag frontend-app \
-          --file ci/$ENV/frontend/Dockerfile \
-          --cache-from frontend-builder \
-          --cache-from $FRONTEND_IMAGE:latest \
-          --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_BASE \
-          --build-arg CR_LABEL \
-          --build-arg FRONTEND_API_URL \
-          --build-arg FRONTEND_SOCKET_URL \
-          --build-arg FRONTEND_ENV \
-          --build-arg FRONTEND_BUGSNAG_KEY \
-          .
+      - "ci/$ENV/build/backend-node.sh"
+      - "ci/$ENV/build/backend-source.sh"
 
-      - >
-        docker build \
-          --tag backend-app \
-          --file ci/$ENV/backend/Dockerfile \
-          --cache-from $BACKEND_IMAGE:latest \
-          --build-arg BUILDKIT_INLINE_CACHE \
-          --build-arg CR_BASE \
-          --build-arg CR_LABEL \
-          .
+      - "ci/$ENV/build/backend-microservice.sh" main
+      - "ci/$ENV/build/backend-microservice.sh" bot-telegram
+      - "ci/$ENV/build/backend-microservice.sh" websocket
 
   post_build:
     commands:
-      - docker tag frontend-builder $FRONTEND_IMAGE-builder:latest
-      - docker tag frontend-builder $FRONTEND_IMAGE-builder:$APP_VERSION
-      - docker push -a $FRONTEND_IMAGE-builder
-
-      - docker tag frontend-app $FRONTEND_IMAGE:latest
-      - docker tag frontend-app $FRONTEND_IMAGE:$APP_VERSION
-      - docker push -a $FRONTEND_IMAGE
-
-      - docker tag backend-app $BACKEND_IMAGE:latest
-      - docker tag backend-app $BACKEND_IMAGE:$APP_VERSION
-      - docker push -a $BACKEND_IMAGE
-
-      - mkdir $ARTIFACT_DIR
-      - echo $APP_VERSION >> $ARTIFACT_DIR/app-version
-      - envsubst < ci/$ENV/docker-compose.yaml >> $ARTIFACT_DIR/docker-compose.yaml
-      - cp ci/$ENV/appspec.yml $ARTIFACT_DIR/
-      - cp -r ci/$ENV/hooks $ARTIFACT_DIR/
-      - cp $SECRETS_LOADER $ARTIFACT_DIR/
+      - mkdir "$ARTIFACT_DIR"
+      - echo "$APP_VERSION" >> "$ARTIFACT_DIR/app-version"
+      - envsubst < "ci/$ENV/docker-compose.yaml" >> "$ARTIFACT_DIR/docker-compose.yaml"
+      - cp "ci/$ENV/appspec.yml" "$ARTIFACT_DIR/"
+      - cp -r "ci/$ENV/hooks" "$ARTIFACT_DIR/"
+      - cp "$SECRETS_LOADER" "$ARTIFACT_DIR/"
 
 
 artifacts:

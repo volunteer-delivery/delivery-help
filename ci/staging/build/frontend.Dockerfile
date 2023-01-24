@@ -1,7 +1,7 @@
 ARG CR_BASE
-ARG CR_LABEL
-
 FROM $CR_BASE/node:4 as builder
+
+ARG CR_LABEL
 LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
@@ -24,10 +24,13 @@ RUN npm run build
 
 
 
+ARG CR_BASE
 FROM $CR_BASE/nginx:1
+
+ARG CR_LABEL
 LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 
 COPY --from=builder /app/dist ./
-COPY ./ci/staging/frontend/config.nginx /etc/nginx/templates/default.conf.template
+COPY ./ci/staging/nginx/config.nginx /etc/nginx/templates/default.conf.template

@@ -7,7 +7,7 @@
   "license": "ISC",
   "scripts": {
     "start:dev": "nest start --watch --preserveWatchOutput",
-    "build:prod": "rm -rf dist && nest build",
+    "build:app": "rm -rf dist && nest build",
     "build:seed": "tsc -P tsconfig.seed.json",
     "build:console": "tsc -P tsconfig.console.json",
     "console": "scripts/exec-util.sh console",
