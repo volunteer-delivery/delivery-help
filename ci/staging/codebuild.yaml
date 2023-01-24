@@ -31,14 +31,12 @@ phases:
 
   build:
     commands:
-      - "ci/$ENV/build/frontend.sh"
-
-      - "ci/$ENV/build/backend-node.sh"
-      - "ci/$ENV/build/backend-source.sh"
-
-      - "ci/$ENV/build/backend-microservice.sh" main
-      - "ci/$ENV/build/backend-microservice.sh" bot-telegram
-      - "ci/$ENV/build/backend-microservice.sh" websocket
+      - ./ci/$ENV/build/frontend.sh
+      - ./ci/$ENV/build/backend-node.sh
+      - ./ci/$ENV/build/backend-source.sh
+      - ./ci/$ENV/build/backend-microservice.sh main
+      - ./ci/$ENV/build/backend-microservice.sh bot-telegram
+      - ./ci/$ENV/build/backend-microservice.sh websocket
 
   post_build:
     commands:
