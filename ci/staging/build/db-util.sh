@@ -23,7 +23,7 @@ docker build \
   --cache-from "$UTIL_IMAGE-builder:latest" \
   --build-arg BUILDKIT_INLINE_CACHE \
   --build-arg CR_LABEL \
-  --build-arg APP_IMAGE \
+  --build-arg REPO_IMAGE \
   --build-arg APP_VERSION \
   . && \
 docker push -a "$UTIL_IMAGE-builder" && \
@@ -38,7 +38,7 @@ docker build \
   --cache-from "$UTIL_IMAGE:latest" \
   --build-arg BUILDKIT_INLINE_CACHE \
   --build-arg CR_LABEL \
-  --build-arg APP_IMAGE \
+  --build-arg REPO_IMAGE \
   --build-arg APP_VERSION \
   . && \
 docker push -a "$UTIL_IMAGE";
