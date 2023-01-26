@@ -11,7 +11,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     private readonly isLoggerEnabled: boolean;
 
     constructor(environmentService: EnvironmentService) {
-        const isLoggerEnabled = environmentService.getString('BACKEND_ENV') !== 'PRODUCTION';
+        const isLoggerEnabled = !environmentService.isProduction;
         super(isLoggerEnabled ? { log: [{ level: 'query', emit: 'event' }] } : {});
 
         this.isLoggerEnabled = isLoggerEnabled;

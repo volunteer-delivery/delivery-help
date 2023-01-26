@@ -21,7 +21,7 @@ export class MicroservicesFactoryModule {
                     const client = ClientProxyFactory.create({
                         transport: Transport.TCP,
                         options: {
-                            host: environmentService.getString(`BACKEND_${serviceKey}_HOST`),
+                            host: environmentService.getMicroserviceHost(serviceKey),
                             port: 8080
                         }
                     });

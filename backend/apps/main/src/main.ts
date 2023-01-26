@@ -18,11 +18,11 @@ async function bootstrap() {
     const environmentService = app.get(EnvironmentService);
 
     app.setGlobalPrefix('/api/v1');
-    app.use(cookieParser(environmentService.getString('BACKEND_SECRET')));
+    app.use(cookieParser(environmentService.secret));
     app.useGlobalGuards(app.get(AuthGuard));
 
     app.enableCors({
-        origin: environmentService.getString('FRONTEND_ORIGIN'),
+        origin: environmentService.frontendOrigin,
         credentials: true
     })
 

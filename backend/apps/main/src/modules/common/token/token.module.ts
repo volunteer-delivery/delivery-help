@@ -9,7 +9,7 @@ import {EnvironmentService} from "@app/core/environment";
             inject: [EnvironmentService],
 
             useFactory: (environmentService: EnvironmentService) => ({
-                secret: environmentService.getString('BACKEND_SECRET')
+                secret: environmentService.secret
             })
         })
     ],

@@ -72,22 +72,18 @@ export class BotModule implements OnModuleInit, OnApplicationBootstrap {
     }
 
     async onApplicationBootstrap(): Promise<void> {
-        this.connection.create(this.token);
+        this.connection.create(this.environmentService.telegramBotToken);
         this.connection.use(session())
         this.connection.use(this.middlewares);
         this.connection.use(this.stages);
         this.menuHandler.registerHandlers();
         this.connection.onStart(this.start);
         this.connection.onError(this.error);
-        this.showInital();
+        this.showInitial();
         await this.connection.launch();
     }
 
-    get token(): string | null {
-        return this.environmentService.getString('TELEGRAM_BOT_TOKEN');
-    }
-
-    private showInital() {
+    private showInitial() {
         const displayMenu = async (context: SessionContext<any>, next: IMiddlewareNext) => {
             if (context.session.hasOwnProperty('__scenes') && context.session.__scenes.current) {
                 await next();
