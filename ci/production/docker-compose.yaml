@@ -1,18 +1,47 @@
-version: '3'
+version: '3.8'
+
+x-backend-common: &backend_common
+  restart: on-failure
+  volumes:
+    - /tmp/delivery-help:/app-tmp
+  env_file: .env
 
 services:
   frontend:
-    restart: always
-    image: ${FRONTEND_IMAGE}:${APP_VERSION}
+    restart: on-failure
+    image: ${REPO_IMAGE}/frontend:${APP_VERSION}
     command: nginx -g 'daemon off;'
     env_file: .env
     ports:
-      - 80:80
+      - "80:80"
+    depends_on:
+      - backend-main
+      - backend-bot-telegram
+      - backend-websocket
 
-  backend:
-    restart: always
-    image: ${BACKEND_IMAGE}:${APP_VERSION}
-    command: node dist/main
-    env_file: .env
+  backend-main:
+    <<: *backend_common
+    image: ${REPO_IMAGE}/backend-main:${APP_VERSION}
+    command: node ./dist/apps/main/apps/main/src/main
+    links:
+      - backend-bot-telegram
+      - backend-websocket
+
+  backend-bot-telegram:
+    <<: *backend_common
+    image: ${REPO_IMAGE}/backend-bot-telegram:${APP_VERSION}
+    command: node ./dist/apps/bot-telegram/apps/bot-telegram/src/main
+    links:
+      - backend-websocket
+
+  backend-websocket:
+    <<: *backend_common
+    image: ${REPO_IMAGE}/backend-websocket:${APP_VERSION}
+    command: node ./dist/apps/websocket/apps/websocket/src/main
+
+  db-util:
+    image: ${REPO_IMAGE}/db-util:${APP_VERSION}
+    command: echo "success"
     volumes:
       - /tmp/delivery-help:/app-tmp
+    env_file: .env

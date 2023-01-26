@@ -1,3 +1,11 @@
+upstream backend-main {
+    server backend-main:8080;
+}
+
+upstream backend-websocket {
+    server backend-websocket:8081;
+}
+
 server {
     listen 80;
     server_name $NGINX_IP;
@@ -16,11 +24,11 @@ server {
     root /app;
 
     location /api/ {
-        proxy_pass http://backend:8080/api/;
+        proxy_pass http://backend-main/api/;
     }
 
-    location /socket.io/ {
-        proxy_pass http://backend:8080/socket.io/;
+    location /websocket/ {
+        proxy_pass http://backend-websocket/websocket/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
@@ -31,7 +39,7 @@ server {
         add_header Pragma public;
         add_header Cache-Control "public";
         gzip_static on;
-        try_files $uri $uri/;
+        try_files $uri $uri/ @not-found;
     }
 
     location / {
@@ -40,5 +48,9 @@ server {
 
     location @home {
         return 301 /;
+    }
+
+    location @not-found {
+        return 404;
     }
 }
