@@ -1,4 +1,5 @@
-import {INestApplicationContext, Injectable, OnModuleInit} from '@nestjs/common';
+import {INestApplicationContext, Inject, Injectable, OnModuleInit} from '@nestjs/common';
+import {EnvironmentService} from "@app/core/environment";
 import { PrismaClient, Prisma } from './client';
 
 export type UniqueConstrainError = Prisma.PrismaClientKnownRequestError & {
@@ -7,13 +8,18 @@ export type UniqueConstrainError = Prisma.PrismaClientKnownRequestError & {
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-    constructor() {
-        super({ log: [{ level: 'query', emit: 'event' }] });
+    private readonly isLoggerEnabled: boolean;
+
+    constructor(environmentService: EnvironmentService) {
+        const isLoggerEnabled = environmentService.getString('BACKEND_ENV') !== 'PRODUCTION';
+        super(isLoggerEnabled ? { log: [{ level: 'query', emit: 'event' }] } : {});
+
+        this.isLoggerEnabled = isLoggerEnabled;
     }
 
     public async onModuleInit(): Promise<void> {
         await this.$connect();
-        this.useLogger();
+        if (this.isLoggerEnabled) this.useLogger();
     }
 
     public async enableShutdownHooks(app: INestApplicationContext): Promise<void> {
