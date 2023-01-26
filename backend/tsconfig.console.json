@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "dist/db-util/console"
+  },
+  "exclude": ["node_modules", "dist"],
+  "files": ["libs/prisma/src/console/execute"]
+}

@@ -16,6 +16,38 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/prisma": [
+        "libs/prisma/src"
+      ],
+      "@app/prisma/*": [
+        "libs/prisma/src/*"
+      ],
+      "@app/core": [
+        "libs/core/src"
+      ],
+      "@app/core/*": [
+        "libs/core/src/*"
+      ],
+      "@app/main": [
+        "apps/main/src"
+      ],
+      "@app/main/*": [
+        "apps/main/src/*"
+      ],
+      "@app/bot-telegram": [
+        "apps/bot-telegram/src"
+      ],
+      "@app/bot-telegram/*": [
+        "apps/bot-telegram/src/*"
+      ],
+      "@app/websocket": [
+        "apps/websocket/src"
+      ],
+      "@app/websocket/*": [
+        "apps/websocket/src/*"
+      ]
+    }
   }
 }
