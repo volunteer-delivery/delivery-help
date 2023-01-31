@@ -15,29 +15,16 @@
     </v-row>
 </template>
 
-<script>
+<script setup>
 import Drive from './drive';
 import Empty from './empty';
 
-export default {
-    name: 'drive-list',
-
-    components: {
-        Empty,
-        Drive
-    },
-
-    props: {
-        drives: {
-            type: Array,
-            required: true
-        }
-    },
-
-    computed: {
-        isEmpty() {
-            return !this.drives.length
-        }
+const props = defineProps({
+    drives: {
+        type: Array,
+        required: true
     }
-};
+});
+
+const isEmpty = computed(() => !props.drives.length);
 </script>

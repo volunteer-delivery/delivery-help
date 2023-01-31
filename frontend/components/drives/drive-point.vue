@@ -2,22 +2,14 @@
     <p>{{ location }}</p>
 </template>
 
-<script>
-export default {
-    name: 'drive-point',
-
-    props: {
-        point: Object
-    },
-
-    computed: {
-        isUkraine() {
-            return this.point.country === 'Україна';
-        },
-
-        location() {
-            return this.isUkraine ? this.point.city : this.point.country;
-        }
+<script setup>
+const props = defineProps({
+    point: {
+        type: Object,
+        required: true
     }
-};
+});
+
+const isUkraine = computed(() => props.point.country === 'Україна');
+const location = computed(() => isUkraine.value ? props.point.city : props.point.country);
 </script>

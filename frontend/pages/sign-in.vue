@@ -1,7 +1,7 @@
 <template>
     <v-row class="h-100" justify="center" align="center">
         <v-col class="pt-5 h-100 d-flex flex-column justify-center" cols="12" sm="8" md="6" lg="4">
-            <v-form class="sign-in__form" lazy-validation ref="form" @submit="signIn">
+            <v-form class="sign-in__form" lazy-validation ref="formRef" @submit="signIn">
                 <v-card class="sign-in__card" elevation="1">
                     <v-card-title>
                         ВолонтерВантаж ~ Вхід
@@ -12,13 +12,13 @@
                             label="Користувач"
                             autocapitalize="off"
                             v-model="credentials.username"
-                            :rules="$options.validations.username"
+                            :rules="validations.username"
                         />
 
                         <password-field
                             label="Пароль"
                             v-model="credentials.password"
-                            :rules="$options.validations.password"
+                            :rules="validations.password"
                         />
                     </v-card-text>
 
@@ -35,52 +35,49 @@
     </v-row>
 </template>
 
-<script>
+<script setup>
 import { requireField } from '~/validations';
 import { PasswordField } from "~/components/form";
+import { useAuthStore } from "~/store/auth-store";
+import {useToast} from "vue-toast-notification";
 
-export default {
-    name: 'sign-in',
+definePageMeta({
     layout: 'auth',
-
     meta: {
         auth: 'public'
-    },
-
-    components: {
-        PasswordField
-    },
-
-    validations: {
-        username: [requireField()],
-        password: [requireField()]
-    },
-
-    data: () => ({
-        isSubmitting: false,
-        credentials: {
-            username: '',
-            password: ''
-        }
-    }),
-
-    methods: {
-        async signIn(event) {
-            event.preventDefault();
-            if (!this.$refs.form.validate()) return;
-
-            try {
-                this.isSubmitting = true;
-                await this.$store.dispatch('auth-store/signIn', this.credentials);
-                await this.$router.push('/');
-            } catch (error) {
-                this.$toast.show(error.message);
-            } finally {
-                this.isSubmitting = false;
-            }
-        }
     }
+});
+
+const validations = {
+    username: [requireField()],
+    password: [requireField()]
 };
+
+const toast = useToast();
+const authStore = useAuthStore();
+
+const formRef = ref(null);
+const isSubmitting = ref(false);
+
+const credentials = reactive({
+    username: '',
+    password: ''
+});
+
+async function signIn(event) {
+    event.preventDefault();
+    if (!formRef.value.validate()) return;
+
+    try {
+        isSubmitting.value = true;
+        await authStore.signIn(credentials);
+        await navigateTo('/');
+    } catch (error) {
+        toast.default(error.message)
+    } finally {
+        isSubmitting.value = false;
+    }
+}
 </script>
 
 <style>

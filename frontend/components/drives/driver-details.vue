@@ -8,7 +8,7 @@
                     </v-card-title>
 
                     <v-btn icon @click="close">
-                        <v-icon>{{ $options.icons.mdiClose }}</v-icon>
+                        <v-icon>{{ mdiClose }}</v-icon>
                     </v-btn>
                 </div>
 
@@ -23,17 +23,11 @@
 
                 <template v-else>
                     <v-card-text class="body-1">
-<!--                        TODO DRIVER_GRADE-->
-<!--                        <p class="d-flex align-center">-->
-<!--                            <v-icon :color="verifiedIconColor">{{ verifiedIcon }}</v-icon>-->
-<!--                            <span class="ml-2">{{ verifiedMessage }}</span>-->
-<!--                        </p>-->
-
                         <a class="d-inline-flex align-center driver-details__phone" :href="driverPhoneLink">
-                            <v-icon>{{ $options.icons.mdiPhone }}</v-icon>
+                            <v-icon>{{ mdiPhone }}</v-icon>
 
                             <span class="ml-2" >
-                                {{ driverPhone }}
+                                {{ driver.phone }}
                             </span>
                         </a>
                     </v-card-text>
@@ -72,76 +66,38 @@
     </v-card>
 </template>
 
-<script>
-import { mdiCheck, mdiClose, mdiPhone } from '@mdi/js';
+<script setup>
+import { mdiClose, mdiPhone } from '@mdi/js';
 import DrivePoint from '@/components/drives/drive-point';
 import { formatDate } from '@/utils/format-date';
+import {useDrivesStore} from "~/store/drives-store";
 
-export default {
-    name: 'driver-details',
-
-    components: {
-        DrivePoint
-    },
-
-    icons: {
-        mdiClose,
-        mdiCheck,
-        mdiPhone
-    },
-
-    props: {
-        driver: Object
-    },
-
-    computed: {
-        isVerified() {
-            // TODO DRIVER_GRADE
-            // return this.driver.grade === 'VERIFIED';
-            return false;
-        },
-
-        verifiedIcon() {
-            return this.isVerified ? mdiCheck : mdiClose;
-        },
-
-        verifiedIconColor() {
-            return this.isVerified ? 'primary' : 'error';
-        },
-
-        verifiedMessage() {
-            return this.isVerified ? 'Водій перевірений' : 'Водій не перевірений';
-        },
-
-        driverPhone() {
-            return this.driver.phone;
-        },
-
-        driverPhoneLink() {
-            return `tel:${this.driverPhone}`;
-        }
-    },
-
-    data: () => ({
-        isLoading: true,
-        drives: []
-    }),
-
-    methods: {
-        formatDate,
-
-        close() {
-            this.$emit('close');
-        },
-
-        async onOpen() {
-            this.isLoading = true;
-            await this.$nextTick()
-            this.drives = await this.$store.dispatch('drives-store/loadDrivesByDriver', this.driver);
-            this.isLoading = false;
-        }
+const props = defineProps({
+    driver: {
+        type: Object,
+        required: true
     }
-};
+});
+
+const emit = defineEmits(['close']);
+
+const drivesStore = useDrivesStore();
+
+const driverPhoneLink = computed(() => `tel:${props.driver.phone}`);
+
+const isLoading = ref(true);
+const drives = ref([]);
+
+const close = () => emit('close');
+
+async function onOpen() {
+    isLoading.value = true;
+    await nextTick()
+    drives.value = await drivesStore.loadDrivesByDriver(props.driver);
+    isLoading.value = false;
+}
+
+defineExpose({ onOpen });
 </script>
 
 <style>

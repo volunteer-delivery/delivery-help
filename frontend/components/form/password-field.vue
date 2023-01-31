@@ -15,48 +15,32 @@
     </v-text-field>
 </template>
 
-<script>
+<script setup>
 import { mdiEye, mdiEyeOff } from '@mdi/js';
 
-export default {
-    name: "password-field",
-
-    props: {
-        value: {
-            type: String,
-            required: true
-        },
-        label: {
-            type: String,
-            required: false,
-            default: 'Пароль'
-        },
-        rules: {
-            type: Array,
-            required: false,
-            default: () => []
-        }
+const props = defineProps({
+    value: {
+        type: String,
+        required: true
     },
-
-    data: () => ({
-        isInsecure: false
-    }),
-
-    computed: {
-        type() {
-            return this.isInsecure ? 'text' : 'password';
-        },
-
-        icon() {
-            return this.isInsecure ? mdiEyeOff : mdiEye;
-        }
+    label: {
+        type: String,
+        required: false,
+        default: 'Пароль'
     },
-
-    methods: {
-        toggleInsecure() {
-            this.isInsecure = !this.isInsecure;
-        }
+    rules: {
+        type: Array,
+        required: false,
+        default: () => []
     }
-}
+});
+
+defineEmits(['input']);
+
+const isInsecure = ref(false);
+const type = computed(() => isInsecure.value ? 'text' : 'password');
+const icon = computed(() => isInsecure.value ? mdiEyeOff : mdiEye);
+
+const toggleInsecure = () => isInsecure.value = !isInsecure.value;
 </script>
 

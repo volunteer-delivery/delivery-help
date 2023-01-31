@@ -1,21 +1,10 @@
 <template>
-    <DriveList :drives="drives" />
+    <DriveList :drives="drivesStore.done" />
 </template>
 
-<script>
+<script setup>
 import DriveList from '~/components/drives/drive-list';
+import {useDrivesStore} from "~/store/drives-store";
 
-export default {
-    name: 'done',
-
-    components: {
-        DriveList
-    },
-
-    computed: {
-        drives() {
-            return this.$store.getters['drives-store/done'];
-        }
-    }
-};
+const drivesStore = useDrivesStore();
 </script>

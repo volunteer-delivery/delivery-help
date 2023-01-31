@@ -1,5 +1,5 @@
 <template>
-    <v-card class="drive" :class="cardClasses" elevation="1">
+    <v-card class="drive" elevation="1">
         <v-card-text class="pb-0">
             <div class="path mb-4 font-weight-medium">
                 <div class="mb-8 d-flex align-end path__point">
@@ -15,7 +15,7 @@
                 class="subtitle-2 d-flex align-center drive__driver pt-2 pb-2 pr-2"
                 @click="toggleDriverDetails(true)"
             >
-                <DriverIcon class="mr-1" :driver="drive.driver" :verified="isVerified"/>
+                <v-icon class="mr-1" dense>{{ mdiAccount }}</v-icon>
                 {{ drive.driver.name }}
             </button>
 
@@ -27,7 +27,7 @@
                             v-bind="attrs"
                             v-on="on"
                         >
-                            <v-icon class="mr-1" dense>{{ $options.icons.mdiCar }}</v-icon>
+                            <v-icon class="mr-1" dense>{{ mdiCar }}</v-icon>
                             {{ driverVehicle }}
                         </p>
                     </template>
@@ -41,13 +41,13 @@
                     <v-spacer/>
 
                     <v-btn color="primary" icon text :href="driverPhoneLink">
-                        <v-icon class="drive__phone-icon" dense>{{ $options.icons.mdiPhone }}</v-icon>
+                        <v-icon class="drive__phone-icon" dense>{{ mdiPhone }}</v-icon>
                     </v-btn>
 
                     <v-menu offset-y>
                         <template #activator="{ on, attrs }">
                             <v-btn class="ml-2" v-on="on" v-bind="attrs" color="primary" icon text>
-                                <v-icon>{{ $options.icons.mdiDotsHorizontal }}</v-icon>
+                                <v-icon>{{ mdiDotsHorizontal }}</v-icon>
                             </v-btn>
                         </template>
 
@@ -55,7 +55,7 @@
                             <v-list-item>
                                 <v-btn class="w-100" color="primary" text tile elevation="0" @click="changeStatus" v-if="canChangeStatus">
                                     <v-icon class="mr-3">
-                                        {{ isPending ? $options.icons.mdiPlay : $options.icons.mdiCheck }}
+                                        {{ isPending ? mdiPlay : mdiCheck }}
                                     </v-icon>
                                     {{ isPending ? 'В активні' : 'Завершити' }}
                                 </v-btn>
@@ -64,7 +64,7 @@
                             <v-list-item>
                                 <v-btn class="w-100" color="primary" text tile elevation="0" :to="`/drives/${drive.id}`">
                                     <v-icon class="mr-3">
-                                        {{ $options.icons.mdiChartTree }}
+                                        {{ mdiChartTree }}
                                     </v-icon>
                                     Деталі
                                 </v-btn>
@@ -78,123 +78,64 @@
         <v-bottom-sheet v-model="isDriverDetailsDisplaying" content-class="driver-details-modal">
             <DriverDetails
                 :driver="drive.driver"
-                ref="detailsView"
+                ref="detailsViewRef"
                 @close="toggleDriverDetails(false)"
             />
         </v-bottom-sheet>
     </v-card>
 </template>
 
-<script>
-import { mdiCar, mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree } from '@mdi/js';
+<script setup>
+import { mdiCar, mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree, mdiAccount } from '@mdi/js';
 import DrivePoint from '~/components/drives/drive-point';
-import DriverIcon from '~/components/drives/driver-icon';
 import { formatVehicle, formatVehicleDetails } from '~/utils/format-vehicle';
 import { formatDate } from '~/utils/format-date';
 import DriverDetails from '~/components/drives/driver-details';
 import {DriveStatus} from "~/enums";
+import {useDrivesStore} from "~/store/drives-store";
 
-export default {
-    name: 'drive',
-
-    components: {
-        DriverDetails,
-        DriverIcon,
-        DrivePoint
+const props = defineProps({
+    drive: {
+        type: Object,
+        required: true
     },
 
-    icons: {
-        mdiCar,
-        mdiPhone,
-        mdiDotsHorizontal,
-        mdiCheck,
-        mdiPlay,
-        mdiChartTree
-    },
-
-    props: {
-        drive: {
-            type: Object,
-            required: true
-        },
-
-        hideActions: {
-            type: Boolean,
-            required: false,
-            default: false
-        }
-    },
-
-    data: () => ({
-        isDriverDetailsDisplaying: false
-    }),
-
-    computed: {
-        departureTime() {
-            return formatDate(this.drive.departureTime);
-        },
-
-        driverPhone() {
-            return this.drive.driver.phone;
-        },
-
-        driverPhoneLink() {
-            return `tel:${this.driverPhone}`;
-        },
-
-        driverVehicle() {
-            return formatVehicle(this.drive.vehicle);
-        },
-
-        driverTooltip() {
-            return formatVehicleDetails(this.drive.vehicle);
-        },
-
-        isVerified() {
-            // TODO DRIVER_GRADE
-            // return this.drive.driver.grade === 'VERIFIED';
-            return false
-        },
-
-        cardClasses() {
-            return {'drive--verified': this.isVerified};
-        },
-
-        isPending() {
-            return this.drive.status === DriveStatus.PENDING;
-        },
-
-        isDone() {
-            return this.drive.status === DriveStatus.FINISHED;
-        },
-
-        canChangeStatus() {
-            return !this.isDone;
-        }
-    },
-
-    watch: {
-        async isDriverDetailsDisplaying() {
-            if (this.isDriverDetailsDisplaying) {
-                await this.$nextTick();
-                await this.$refs.detailsView.onOpen();
-            }
-        }
-    },
-
-    methods: {
-        changeStatus() {
-            this.$store.dispatch('drives-store/changeStatus', {
-                drive: this.drive,
-                status: this.isPending ? 'ACTIVE' : 'FINISHED'
-            });
-        },
-
-        toggleDriverDetails(isDisplaying) {
-            this.isDriverDetailsDisplaying = isDisplaying;
-        }
+    hideActions: {
+        type: Boolean,
+        required: false,
+        default: false
     }
-};
+})
+
+const drivesStore = useDrivesStore();
+
+const detailsViewRef = ref(null);
+const isDriverDetailsDisplaying = ref(false);
+
+const departureTime = computed(() => formatDate(props.drive.departureTime));
+const driverPhone = computed(() => props.drive.driver.phone);
+const driverPhoneLink = computed(() => `tel:${driverPhone.value}`)
+const driverVehicle = computed(() => formatVehicle(props.drive.vehicle));
+const driverTooltip = computed(() => formatVehicleDetails(props.drive.vehicle));
+const isPending = computed(() => props.drive.status === DriveStatus.PENDING);
+const isDone = computed(() => props.drive.status === DriveStatus.FINISHED);
+const canChangeStatus = computed(() => !isDone.value);
+
+watch(isDriverDetailsDisplaying, async (isDisplaying) => {
+    if (isDisplaying) {
+        await nextTick();
+        await detailsViewRef.value.onOpen();
+    }
+});
+
+function changeStatus() {
+    const status = isPending.value ? 'ACTIVE' : 'FINISHED'
+    drivesStore.changeStatus(props.drive, status);
+}
+
+function toggleDriverDetails(isDisplaying) {
+    isDriverDetailsDisplaying.value = isDisplaying;
+}
 </script>
 
 <style scoped>

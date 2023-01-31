@@ -8,20 +8,12 @@
         fab
         @click="$emit('open')"
     >
-        <v-icon>{{ $options.icons.mdiFilter }}</v-icon>
+        <v-icon>{{ mdiFilter }}</v-icon>
     </v-btn>
 </template>
 
-<script>
+<script setup>
 import { mdiFilter } from '@mdi/js';
-
-export default {
-    name: 'drives-filter-mobile-trigger',
-
-    icons: {
-        mdiFilter
-    }
-};
 </script>
 
 <style>

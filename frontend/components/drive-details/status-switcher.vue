@@ -3,35 +3,32 @@
         class="drive-status-switcher"
         prefix="Статус поїздки:"
         :value="drive.status"
-        :items="$options.statuses"
+        :items="statuses"
         @change="changeStatus"
     />
 </template>
 
-<script>
+<script setup>
 import {DriveStatus} from "~/enums";
+import {useDrivesStore} from "~/store/drives-store";
 
-export default {
-    name: "status-switcher",
+const statuses = [
+    { value: DriveStatus.PENDING, text: 'нова' },
+    { value: DriveStatus.ACTIVE, text: 'активна' },
+    { value: DriveStatus.FINISHED, text: 'завершена' }
+];
 
-    statuses: [
-        { value: DriveStatus.PENDING, text: 'нова' },
-        { value: DriveStatus.ACTIVE, text: 'активна' },
-        { value: DriveStatus.FINISHED, text: 'завершена' }
-    ],
-
-    props: {
-        drive: {
-            type: Object,
-            required: true
-        }
-    },
-
-    methods: {
-        changeStatus(status) {
-            this.$store.dispatch('drives-store/changeStatus', {drive: this.drive, status});
-        }
+const props = defineProps({
+    drive: {
+        type: Object,
+        required: true
     }
+});
+
+const drivesStore = useDrivesStore();
+
+function changeStatus(status) {
+    drivesStore.changeStatus(props.drive, status);
 }
 </script>
 

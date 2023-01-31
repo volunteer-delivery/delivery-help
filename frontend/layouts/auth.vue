@@ -2,7 +2,7 @@
     <v-app>
         <v-main>
             <v-container class="h-100">
-                <Nuxt/>
+                <slot/>
             </v-container>
         </v-main>
     </v-app>

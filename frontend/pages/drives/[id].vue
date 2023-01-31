@@ -3,7 +3,7 @@
         <v-col class="pa-0 pa-sm-3 pt-sm-7" cols="12" sm="8" md="4">
             <v-btn class="mt-n3 mb-md-3 pl-0 pl-md-3 ml-md-n3" text tile elevation="0" @click="$router.back()">
                 <v-icon class="mr-3">
-                    {{ $options.icons.mdiArrowLeft }}
+                    {{ mdiArrowLeft }}
                 </v-icon>
 
                 Назад
@@ -17,52 +17,25 @@
     </v-row>
 </template>
 
-<script>
+<script setup>
 import {mdiArrowLeft} from '@mdi/js';
 import {Drive} from '~/components/drives';
 import {CommentList, StatusSwitcher} from "~/components/drive-details";
-import {ApiCableMixin} from "~/mixins";
+import {useHttpClient} from "~/composables/use-http-client";
+import {useDrivesStore} from "~/store/drives-store";
+import {useApiCable} from "~/composables/use-api-cable";
 
-export default {
-    name: 'id',
+const http = useHttpClient();
+const apiCable = useApiCable();
+const drivesStore = useDrivesStore();
+const route = useRoute();
 
-    components: {
-        CommentList,
-        StatusSwitcher,
-        Drive
-    },
+const { data: comments } = useAsyncData('comments', () => http.get(`/rides/${route.params.id}/comments`));
+const drive = computed(() => drivesStore.drives.find(drive => drive.id === route.params.id));
 
-    mixins: [
-        ApiCableMixin
-    ],
-
-    icons: {
-        mdiArrowLeft
-    },
-
-    async asyncData({$axios, params}) {
-        const response = await $axios.get(`/rides/${params.id}/comments`);
-
-        return {comments: response.data.comments};
-    },
-
-    computed: {
-        driveId() {
-            return this.$route.params.id;
-        },
-
-        drive() {
-            const drives = this.$store.state['drives-store'].drives;
-            return drives.find(drive => drive.id === this.driveId);
-        }
-    },
-
-    created() {
-        this.listApiEvent(`rides/${this.driveId}/comments/new`, (comment) => {
-            this.comments.unshift(comment);
-        });
-    }
-};
+apiCable.on(`rides/${drive.value.id}/comments/new`, (comment) => {
+    comments.value.unshift(comment);
+});
 </script>
 
 <style scoped>

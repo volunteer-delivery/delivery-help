@@ -16,58 +16,56 @@
     </v-list-item>
 </template>
 
-<script>
-export default {
-    name: 'comment',
-
-    props: {
-        comment: Object,
-        now: Number
+<script setup>
+const props = defineProps({
+    comment: {
+        type: Object,
+        required: true
     },
-
-    computed: {
-        createdAt() {
-            const date = new Date(this.comment.createdAt);
-            const now = new Date(this.now);
-
-            if (!this.isSameDay(now, date)) {
-                return date.toLocaleDateString();
-            }
-
-            if (!this.isSameHour(now, date)) {
-                return (now.getHours() - date.getHours()) + 'г назад';
-            }
-
-            if (!this.isSameMinute(now, date)) {
-                return (now.getMinutes() - date.getMinutes()) + 'хв назад';
-            }
-
-            const secondsAgo = now.getSeconds() - date.getSeconds();
-
-            if (secondsAgo < 5) {
-                return 'Щойно'
-            }
-
-            return secondsAgo + 'с назад';
-        }
-    },
-
-    methods: {
-        isSameDay(now, date) {
-            if (date.getFullYear() !== now.getFullYear()) return false;
-            if (date.getMonth() !== now.getMonth()) return false;
-            return date.getDate() === now.getDate();
-        },
-
-        isSameHour(now, date) {
-            return now.getHours() <= date.getHours();
-        },
-
-        isSameMinute(now, date) {
-            return now.getMinutes() <= date.getMinutes();
-        }
+    now: {
+        type: Number,
+        required: true
     }
-};
+});
+
+function isSameDay(now, date) {
+    if (date.getFullYear() !== now.getFullYear()) return false;
+    if (date.getMonth() !== now.getMonth()) return false;
+    return date.getDate() === now.getDate();
+}
+
+function isSameHour(now, date) {
+    return now.getHours() <= date.getHours();
+}
+
+function isSameMinute(now, date) {
+    return now.getMinutes() <= date.getMinutes();
+}
+
+const createdAt = computed(() => {
+    const date = new Date(this.comment.createdAt);
+    const now = new Date(this.now);
+
+    if (!isSameDay(now, date)) {
+        return date.toLocaleDateString();
+    }
+
+    if (!isSameHour(now, date)) {
+        return (now.getHours() - date.getHours()) + 'г назад';
+    }
+
+    if (!isSameMinute(now, date)) {
+        return (now.getMinutes() - date.getMinutes()) + 'хв назад';
+    }
+
+    const secondsAgo = now.getSeconds() - date.getSeconds();
+
+    if (secondsAgo < 5) {
+        return 'Щойно'
+    }
+
+    return secondsAgo + 'с назад';
+});
 </script>
 
 <style scoped>

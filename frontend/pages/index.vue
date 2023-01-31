@@ -1,35 +1,27 @@
 <template>
-    <DriveList :drives="drives" />
+    <DriveList :drives="drivesStore.pendingFiltered" />
 </template>
 
-<script>
+<script setup>
 import DrivesFilter from '~/components/drives/drives-filter';
 import DriverFilterMobileTrigger from '~/components/drives/drives-filter-mobile-trigger';
 import DriveList from '@/components/drives/drive-list';
+import {useDrivesStore} from "~/store/drives-store";
+import {useNavigationStore} from "~/store/navigation-store";
 
-export default {
-    name: 'index',
+const drivesStore = useDrivesStore();
+const navigationStore = useNavigationStore();
 
-    components: { DriveList },
+onBeforeRouteUpdate((to, from, next) => {
+    navigationStore.setExtra({
+        view: DrivesFilter,
+        mobileTrigger: DriverFilterMobileTrigger
+    });
+    next();
+});
 
-    computed: {
-        drives() {
-            return this.$store.getters['drives-store/pendingFilteredSorted'];
-        }
-    },
-
-    beforeRouteEnter(to, from, next) {
-        next(vm => {
-            vm.$store.commit('navigation-store/setExtra', {
-                view: DrivesFilter,
-                mobileTrigger: DriverFilterMobileTrigger
-            });
-        });
-    },
-
-    beforeRouteLeave(to, from, next) {
-        this.$store.commit('navigation-store/setExtra', null);
-        next();
-    }
-};
+onBeforeRouteLeave((to, from, next) => {
+    navigationStore.setExtra(null);
+    next();
+});
 </script>

@@ -3,9 +3,3 @@
         Не знайдено жодної поїздки
     </p>
 </template>
-
-<script>
-export default {
-    name: 'empty'
-};
-</script>
