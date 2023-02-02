@@ -19,19 +19,30 @@
 
 <script lang="ts" setup>
 import {onClickOutside} from '@vueuse/core'
-import {FORM_FIELD_PROVIDER, IFormFieldContext} from "./form-field-context";
+import {CheckValueEntered, FORM_FIELD_PROVIDER, IFormFieldContext} from "./form-field-context";
+import {FORM_PROVIDER, IFormContext} from "~/components/app-form/form-context";
 
-defineProps({
+const props = defineProps({
     label: {
+        type: String,
+        required: true
+    },
+
+    id: {
         type: String,
         required: true
     }
 });
 
+const context = inject<IFormContext<any>>(FORM_PROVIDER)!;
+const model = context.model.field(props.id);
+
 const fieldRef = ref(null);
 
-const isClickedInside = ref(false);
+let checkValueEntered: CheckValueEntered<any>;
 const isValueEntered = ref(false);
+
+const isClickedInside = ref(false);
 const isActive = computed(() => isClickedInside.value || isValueEntered.value)
 
 const onClick = () => isClickedInside.value = true;
@@ -49,7 +60,11 @@ const underlineClasses = computed(() => ({
     'border-b-gray-500': !isClickedInside.value,
 }));
 
-provide<IFormFieldContext>(FORM_FIELD_PROVIDER, {
-    setValueEntered: (isEntered) => isValueEntered.value = isEntered
+provide<IFormFieldContext<any>>(FORM_FIELD_PROVIDER, {
+    registerValueEntered: (check) => checkValueEntered = check,
+    model
 });
+
+watch(() => model.data, (value) => isValueEntered.value = checkValueEntered(value));
+onMounted(() => isValueEntered.value = checkValueEntered(model.data));
 </script>

@@ -1,26 +1,13 @@
 <template>
-    <FormTextInput
-        :model-value="modelValue"
-        @update:model-value="$emit('update:modelValue')"
-    >
+    <AppFormTextInput>
         <template #append>
             <component :is="icon" />
         </template>
-    </FormTextInput>
+    </AppFormTextInput>
 </template>
 
 <script setup>
 import { RemoveRedEyeOutlined, RemoveRedEyeSharp } from '@vicons/material';
-import FormTextInput from './form-text-input';
-
-const props = defineProps({
-    modelValue: {
-        type: String,
-        required: true
-    }
-});
-
-const emit = defineEmits(['update:modelValue']);
 
 const isInsecure = ref(false);
 const type = computed(() => isInsecure.value ? 'text' : 'password');

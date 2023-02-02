@@ -1,22 +1,21 @@
 <template>
     <div class="h-full p-4 flex items-center justify-center">
         <div class="h-3/4 md:h-auto w-full md:max-w-sm">
-            <BaseCard class="shadow-none md:shadow-md">
-                <BaseCardTitle>
+            <AppCard class="shadow-none md:shadow-md">
+                <AppCardTitle>
                     ВолонтерВантаж ~ Вхід
-                </BaseCardTitle>
-                <BaseForm>
-                    <BaseCardBody>
-                        <BaseFormField label="Користувач" class="mb-4">
-                            <BaseFormTextInput v-model="credentials.username" />
-                        </BaseFormField>
-
-                        <BaseFormField label="Пароль">
-                            <BaseFormPasswordInput v-model="credentials.password" />
-                        </BaseFormField>
-                    </BaseCardBody>
-                </BaseForm>
-            </BaseCard>
+                </AppCardTitle>
+                <AppForm :model="form">
+                    <AppCardBody>
+                        <AppFormField id="username" label="Користувач" class="mb-4">
+                            <AppFormTextInput />
+                        </AppFormField>
+                        <AppFormField id="password" label="Пароль">
+                            <AppFormPasswordInput />
+                        </AppFormField>
+                    </AppCardBody>
+                </AppForm>
+            </AppCard>
         </div>
     </div>
 
@@ -57,33 +56,30 @@
 </template>
 
 <script lang="ts" setup>
-// import { requireField } from '~/validations';
+import type {ICredentials} from "~/stores/auth-store";
+import { string as requireString } from 'yup';
 // import {useToast} from "vue-toast-notification";
 
 definePageMeta({
     layout: 'auth'
 });
 
-const credentials = reactive({
-    username: '',
-    password: ''
+const form = useForm<ICredentials>({
+    username: {
+        initial: '',
+        validation: requireString().required()
+    },
+    password: {
+        initial: '',
+        validation: requireString().required()
+    }
 });
 
-// const validations = {
-//     username: [requireField()],
-//     password: [requireField()]
-// };
-//
 // const toast = useToast();
 // const authStore = useAuthStore();
 //
 // const formRef = ref(null);
 // const isSubmitting = ref(false);
-//
-// const credentials = reactive({
-//     username: '',
-//     password: ''
-// });
 //
 // async function signIn(event) {
 //     event.preventDefault();
