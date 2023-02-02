@@ -6,7 +6,6 @@
 import DrivesFilter from '~/components/drives/drives-filter';
 import DriverFilterMobileTrigger from '~/components/drives/drives-filter-mobile-trigger';
 import DriveList from '@/components/drives/drive-list';
-import {useNavigationStore} from "~/store/navigation-store";
 
 const drivesStore = useDrivesStore();
 const navigationStore = useNavigationStore();

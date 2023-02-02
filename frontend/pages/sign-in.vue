@@ -5,9 +5,17 @@
                 <BaseCardTitle>
                     ВолонтерВантаж ~ Вхід
                 </BaseCardTitle>
-                <BaseCardBody>
-                    card body
-                </BaseCardBody>
+                <BaseForm>
+                    <BaseCardBody>
+                        <BaseFormField label="Користувач" class="mb-4">
+                            <BaseFormTextInput v-model="credentials.username" />
+                        </BaseFormField>
+
+                        <BaseFormField label="Пароль">
+                            <BaseFormPasswordInput v-model="credentials.password" />
+                        </BaseFormField>
+                    </BaseCardBody>
+                </BaseForm>
             </BaseCard>
         </div>
     </div>
@@ -48,12 +56,17 @@
 <!--    </v-row>-->
 </template>
 
-<script setup>
-import { requireField } from '~/validations';
-import {useToast} from "vue-toast-notification";
+<script lang="ts" setup>
+// import { requireField } from '~/validations';
+// import {useToast} from "vue-toast-notification";
 
 definePageMeta({
     layout: 'auth'
+});
+
+const credentials = reactive({
+    username: '',
+    password: ''
 });
 
 // const validations = {

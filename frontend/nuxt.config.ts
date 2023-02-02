@@ -1,7 +1,7 @@
 const { FRONTEND_API_URL, FRONTEND_SOCKET_URL, FRONTEND_BUGSNAG_KEY, FRONTEND_ENV } = process.env;
 
 export default defineNuxtConfig({
-    // target: 'static',
+    ssr: false,
 
     app: {
         head: {
@@ -32,10 +32,6 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         '@nuxtjs/device'
     ],
-
-    vite: {
-        appType: 'spa'
-    },
 
     css: [
         '~/styles/global.css',
