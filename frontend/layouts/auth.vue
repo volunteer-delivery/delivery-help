@@ -1,9 +1,5 @@
 <template>
-    <v-app>
-        <v-main>
-            <v-container class="h-100">
-                <slot/>
-            </v-container>
-        </v-main>
-    </v-app>
+    <div class="h-full">
+        <slot />
+    </div>
 </template>
