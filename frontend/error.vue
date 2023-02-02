@@ -1,16 +1,16 @@
 <template>
-    <v-app>
-        <h1>{{ title }}</h1>
+    <div>
+        <h1 class="error__title">
+            {{ title }}
+        </h1>
 
         <NuxtLink to="/">
             Home page
         </NuxtLink>
-    </v-app>
+    </div>
 </template>
 
-<script setup>
-import {useHead} from "#head";
-
+<script lang="ts" setup>
 const props = defineProps({
     error: {
         type: Object,
@@ -24,7 +24,7 @@ useHead({ title });
 </script>
 
 <style scoped>
-h1 {
+.error__title {
     font-size: 20px;
 }
 </style>
