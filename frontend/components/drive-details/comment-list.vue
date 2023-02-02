@@ -27,7 +27,6 @@
 <script setup>
 import Comment from "./comment";
 import {mdiSend} from "@mdi/js";
-import {useHttpClient} from "~/composables/use-http-client";
 
 const props = defineProps({
     comments: {

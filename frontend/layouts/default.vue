@@ -76,10 +76,6 @@
 
 <script setup>
 import { mdiCar, mdiCheck, mdiClose, mdiPlay } from '@mdi/js';
-import {useApiCable} from "~/composables/use-api-cable";
-import {useDrivesStore} from "~/store/drives-store";
-import {useAuthStore} from "~/store/auth-store";
-import {useNavigationStore} from "~/store/navigation-store";
 
 const apiCable = useApiCable();
 const drivesStore = useDrivesStore();

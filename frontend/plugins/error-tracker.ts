@@ -1,7 +1,7 @@
 import type { App, Plugin } from 'vue';
 import Bugsnag from '@bugsnag/js'
 import BugsnagPluginVue from '@bugsnag/plugin-vue'
-import {User} from "~/store/auth-store";
+import type {User} from "~/stores/auth-store";
 
 interface TrackerInitOptions {
     vueApp: App<Element>;

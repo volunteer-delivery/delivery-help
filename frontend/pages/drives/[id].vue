@@ -21,9 +21,6 @@
 import {mdiArrowLeft} from '@mdi/js';
 import {Drive} from '~/components/drives';
 import {CommentList, StatusSwitcher} from "~/components/drive-details";
-import {useHttpClient} from "~/composables/use-http-client";
-import {useDrivesStore} from "~/store/drives-store";
-import {useApiCable} from "~/composables/use-api-cable";
 
 const http = useHttpClient();
 const apiCable = useApiCable();

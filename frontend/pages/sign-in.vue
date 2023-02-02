@@ -38,7 +38,6 @@
 <script setup>
 import { requireField } from '~/validations';
 import { PasswordField } from "~/components/form";
-import { useAuthStore } from "~/store/auth-store";
 import {useToast} from "vue-toast-notification";
 
 definePageMeta({

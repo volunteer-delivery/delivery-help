@@ -10,7 +10,6 @@
 
 <script setup>
 import {DriveStatus} from "~/enums";
-import {useDrivesStore} from "~/store/drives-store";
 
 const statuses = [
     { value: DriveStatus.PENDING, text: 'нова' },

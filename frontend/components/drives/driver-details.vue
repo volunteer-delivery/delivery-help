@@ -70,7 +70,6 @@
 import { mdiClose, mdiPhone } from '@mdi/js';
 import DrivePoint from '@/components/drives/drive-point';
 import { formatDate } from '@/utils/format-date';
-import {useDrivesStore} from "~/store/drives-store";
 
 const props = defineProps({
     driver: {

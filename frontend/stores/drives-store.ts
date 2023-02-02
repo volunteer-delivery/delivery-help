@@ -1,6 +1,5 @@
 import {DriveStatus, Vehicle} from "~/enums";
 import {defineStore} from "pinia";
-import {useHttpClient} from "~/composables/use-http-client";
 import {useToast} from "vue-toast-notification";
 
 export interface Address {

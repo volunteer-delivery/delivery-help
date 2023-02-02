@@ -76,7 +76,6 @@ import { formatVehicle } from '~/utils/format-vehicle';
 import { formatDate } from '~/utils/format-date';
 import { mdiCalendar } from '@mdi/js';
 import {Vehicle} from "~/enums";
-import {useDrivesStore} from "~/store/drives-store";
 
 const emit = defineEmits(['close']);
 
