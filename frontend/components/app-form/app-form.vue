@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import {IFormContext, FORM_PROVIDER} from './form-context';
+import {FORM_PROVIDER} from './form-context';
 import {PropType} from "@vue/runtime-core";
 import {IFormModel} from "~/composables/use-form";
 
@@ -16,7 +16,5 @@ const props = defineProps({
     }
 });
 
-provide<IFormContext<any>>(FORM_PROVIDER, {
-    model: props.model
-});
+provide<IFormModel<any>>(FORM_PROVIDER, props.model);
 </script>

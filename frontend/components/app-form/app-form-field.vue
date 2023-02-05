@@ -19,8 +19,8 @@
 
 <script lang="ts" setup>
 import {onClickOutside} from '@vueuse/core'
-import {CheckValueEntered, FORM_FIELD_PROVIDER, IFormFieldContext} from "./form-field-context";
-import {FORM_PROVIDER, IFormContext} from "~/components/app-form/form-context";
+import {IFormModel, IFormFieldModel} from "~/composables/use-form";
+import {FORM_PROVIDER, FORM_FIELD_PROVIDER} from "./form-context";
 
 const props = defineProps({
     label: {
@@ -34,18 +34,16 @@ const props = defineProps({
     }
 });
 
-const context = inject<IFormContext<any>>(FORM_PROVIDER)!;
-const model = context.model.field(props.id);
+const formModel = inject<IFormModel<any>>(FORM_PROVIDER)!;
+const fieldModel = formModel.field(props.id);
 
 const fieldRef = ref(null);
 
-let checkValueEntered: CheckValueEntered<any>;
-const isValueEntered = ref(false);
-
 const isClickedInside = ref(false);
-const isActive = computed(() => isClickedInside.value || isValueEntered.value)
+const isActive = computed(() => isClickedInside.value || fieldModel.isEntered)
 
 const onClick = () => isClickedInside.value = true;
+
 onClickOutside(fieldRef, () => isClickedInside.value = false)
 
 const labelClasses = computed(() => ({
@@ -60,11 +58,5 @@ const underlineClasses = computed(() => ({
     'border-b-gray-500': !isClickedInside.value,
 }));
 
-provide<IFormFieldContext<any>>(FORM_FIELD_PROVIDER, {
-    registerValueEntered: (check) => checkValueEntered = check,
-    model
-});
-
-watch(() => model.data, (value) => isValueEntered.value = checkValueEntered(value));
-onMounted(() => isValueEntered.value = checkValueEntered(model.data));
+provide<IFormFieldModel<any>>(FORM_FIELD_PROVIDER, fieldModel);
 </script>

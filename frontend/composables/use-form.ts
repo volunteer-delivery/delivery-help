@@ -15,8 +15,12 @@ interface IFormValidatable<E> {
     errors: E;
 }
 
+export type CheckValueEntered<V> = (value: V) => boolean;
+
 export interface IFormFieldModel<F> extends IFormValidatable<IFormFieldErrors> {
     data: UnwrapRef<F>;
+    isEntered: boolean;
+    registerEnteredCheck(check: CheckValueEntered<F>): void;
 }
 
 export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormFieldModel<F> {
@@ -24,6 +28,8 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
     const errors = ref<IFormFieldErrors>([]);
     const isValid = computed(() => !errors.value.length);
     const isInvalid = computed(() => !!errors.value.length);
+    const isEntered = ref(false);
+    let checkEntered: CheckValueEntered<F>;
 
     function validate(): IFormFieldErrors {
         if (!definition.validation) return [];
@@ -33,12 +39,24 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
         return errors.value;
     }
 
+    function registerEnteredCheck(check: CheckValueEntered<F>) {
+        checkEntered = check;
+        isEntered.value = check(data.value as F);
+    }
+
+    watch(data, () => {
+        if (!checkEntered) return;
+        isEntered.value = checkEntered(data.value as F)
+    });
+
     return reactive({
         data,
         errors,
         isValid,
         isInvalid,
         validate,
+        isEntered,
+        registerEnteredCheck
     });
 }
 
