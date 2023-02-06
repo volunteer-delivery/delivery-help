@@ -1,7 +1,9 @@
 export enum ButtonType {
-    ICON = 'icon'
+    ICON = 'icon',
+    PRIMARY = 'primary'
 }
 
 export enum ButtonSize {
-    SM = 'sm'
+    SM = 'sm',
+    MD = 'md'
 }

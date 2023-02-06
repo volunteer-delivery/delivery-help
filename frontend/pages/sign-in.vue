@@ -14,6 +14,11 @@
                             <AppFormPasswordInput />
                         </AppFormField>
                     </AppCardBody>
+                    <AppCardActions>
+                        <AppButton class="ml-auto w-2/5" type="primary" size="md">
+                            УВІЙТИ
+                        </AppButton>
+                    </AppCardActions>
                 </AppForm>
             </AppCard>
         </div>
