@@ -1,12 +1,17 @@
 <template>
-    <AppFormTextInput>
+    <AppFormTextInput :type="type">
         <template #append>
-            <component :is="icon" />
+            <AppButton type="icon" size="sm" @click.stop.prevent="toggleInsecure">
+                <Icon class="text-gray-600" size="24">
+                    <component :is="icon" />
+                </Icon>
+            </AppButton>
         </template>
     </AppFormTextInput>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Icon } from '@vicons/utils'
 import { RemoveRedEyeOutlined, RemoveRedEyeSharp } from '@vicons/material';
 
 const isInsecure = ref(false);

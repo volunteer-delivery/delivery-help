@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import {onClickOutside} from '@vueuse/core'
 import {IFormModel, IFormFieldModel} from "~/composables/use-form";
-import {FORM_PROVIDER, FORM_FIELD_PROVIDER} from "./form-context";
+import {InjectionToken} from "~/enums";
 
 // Dynamic Classes
 // text-red-600 border-b-red-600
@@ -48,7 +48,7 @@ const props = defineProps({
     }
 });
 
-const formModel = inject<IFormModel<any>>(FORM_PROVIDER)!;
+const formModel = inject<IFormModel<any>>(InjectionToken.FORM)!;
 const fieldModel = formModel.field(props.id);
 
 const fieldRef = ref(null);
@@ -88,7 +88,7 @@ const underlineClasses = computed(() => [
     underlineColorClass.value
 ]);
 
-provide<IFormFieldModel<any>>(FORM_FIELD_PROVIDER, fieldModel);
+provide<IFormFieldModel<any>>(InjectionToken.FORM_FIELD, fieldModel);
 </script>
 
 <style scoped>

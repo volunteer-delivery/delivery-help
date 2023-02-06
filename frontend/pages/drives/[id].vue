@@ -9,18 +9,16 @@
                 Назад
             </v-btn>
 
-            <drive class="drive-details__info mb-3" :drive="drive" hide-actions/>
+            <DrivesDrive class="drive-details__info mb-3" :drive="drive" hide-actions/>
 
-            <StatusSwitcher class="mb-3" :drive="drive" />
-            <CommentList :drive="drive" :comments="comments" />
+            <DriveDetailsStatusSwitcher class="mb-3" :drive="drive" />
+            <DriveDetailsCommentList :drive="drive" :comments="comments" />
         </v-col>
     </v-row>
 </template>
 
 <script setup>
 import {mdiArrowLeft} from '@mdi/js';
-import {Drive} from '~/components/drives';
-import {CommentList, StatusSwitcher} from "~/components/drive-details";
 
 const http = useHttpClient();
 const apiCable = useApiCable();

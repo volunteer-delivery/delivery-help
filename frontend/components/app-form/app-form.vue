@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts" setup>
-import {FORM_PROVIDER} from './form-context';
-import {PropType} from "@vue/runtime-core";
+import {PropType} from "vue";
 import {IFormModel} from "~/composables/use-form";
+import {InjectionToken} from "~/enums";
 
 const props = defineProps({
     model: {
@@ -16,5 +16,5 @@ const props = defineProps({
     }
 });
 
-provide<IFormModel<any>>(FORM_PROVIDER, props.model);
+provide<IFormModel<any>>(InjectionToken.FORM, props.model);
 </script>
