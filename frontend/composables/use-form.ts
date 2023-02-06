@@ -1,5 +1,5 @@
 import type {UnwrapRef} from "vue";
-import type {AnySchema} from 'yup';
+import {AnySchema, ValidationError} from "yup";
 
 export interface IFormFieldDefinition<V> {
     initial: V;
@@ -34,9 +34,17 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
     function validate(): IFormFieldErrors {
         if (!definition.validation) return [];
 
-        const result = definition.validation.validateSync(data.value);
-        errors.value = result.errors;
-        return errors.value;
+        try {
+            definition.validation.validateSync(data.value);
+            errors.value = [];
+            return errors.value;
+        } catch (validation: unknown) {
+            if (ValidationError.isError(validation)) {
+                errors.value = validation.errors;
+                return errors.value;
+            }
+            throw validation;
+        }
     }
 
     function registerEnteredCheck(check: CheckValueEntered<F>) {
@@ -45,8 +53,13 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
     }
 
     watch(data, () => {
-        if (!checkEntered) return;
-        isEntered.value = checkEntered(data.value as F)
+        if (definition.validation && isInvalid.value) {
+            validate();
+        }
+
+        if (checkEntered) {
+            isEntered.value = checkEntered(data.value as F)
+        }
     });
 
     return reactive({
@@ -89,7 +102,7 @@ export function useForm<FD extends object>(definition: IFormFieldDefinitions<FD>
     const fields = buildFormFields(definition);
     const errors = ref<IFormErrors<FD>>({});
     const isValid = computed(() => !Object.keys(errors).length);
-    const isInvalid = computed(() => !!Object.keys(errors).length);
+    const isInvalid = computed(() => !isValid.value);
 
     function validate(): IFormErrors<FD> {
         const result: IFormErrors<FD> = {};
