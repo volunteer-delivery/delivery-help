@@ -37,10 +37,10 @@ export const ripple: RippleDirective = {
                 el.style.setProperty('--ripple-size', size + 'px');
                 el.style.setProperty('--ripple-x', (event.offsetX - size / 2) + 'px');
                 el.style.setProperty('--ripple-y', (event.offsetY - size / 2) + 'px');
-                el.style.setProperty('--ripple-duration', '500ms')
+                el.style.setProperty('--ripple-duration', '400ms')
                 el.classList.add('ripple');
 
-                self._activeAnimationTimeout = setTimeout(complete, 500);
+                self._activeAnimationTimeout = setTimeout(complete, 400);
             });
         }
 

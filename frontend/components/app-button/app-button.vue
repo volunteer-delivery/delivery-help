@@ -44,7 +44,7 @@ const props = defineProps({
 const tagClasses = computed(() => ({
     [BUTTON_TYPES[props.size!][props.type]]: props.size,
     'transition-colors hover:bg-gray-200 rounded-full flex': props.type === ButtonType.ICON,
-    'transition-colors bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md': props.type === ButtonType.PRIMARY
+    'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md active:shadow-xl': props.type === ButtonType.PRIMARY
 }));
 
 const ripple = computed(() => [ButtonType.PRIMARY].includes(props.type));
