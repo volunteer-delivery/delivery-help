@@ -1,24 +1,35 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
-        './components/**/*.{js,vue,ts}',
+        './components/**/*.{vue,ts}',
         './layouts/**/*.vue',
         './pages/**/*.vue',
-        './directives/**/*.js',
-        './plugins/**/*.{js,ts}',
-        './nuxt.config.{js,ts}',
+        './directives/**/*.ts',
+        './plugins/**/*.ts',
+        './nuxt.config.ts',
         './app.vue',
     ],
     theme: {
         extend: {
             animation: {
-                shake: 'shake 0.6s cubic-bezier(.25,.8,.5,1)'
+                shake: 'shake 0.6s cubic-bezier(.25,.8,.5,1)',
+                'spin-progress': 'spin-progress 1s linear infinite'
             },
             keyframes: {
                 shake: {
                     '59%': {'margin-left': '0'},
                     '60%, 80%': {'margin-left': '2px'},
                     '70%, 90%': {'margin-left': '-2px'}
+                },
+                'spin-progress': {
+                    '0%': {
+                        'stroke-dashoffset': '50',
+                        'transform': 'rotate(0)'
+                    },
+                    '100%': {
+                        'stroke-dashoffset': '130',
+                        'transform': 'rotate(-360deg)',
+                    }
                 }
             },
             transitionProperty: {

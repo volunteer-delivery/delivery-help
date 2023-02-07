@@ -6,10 +6,10 @@ export interface IFormFieldDefinition<V> {
     validation?: AnySchema;
 }
 
-type IFormFieldErrors = Array<string | null>;
+type IFormFieldErrors = Array<string>;
 
 interface IFormValidatable<E> {
-    validate(): E;
+    validate(): Promise<E>;
     isValid: boolean;
     isInvalid: boolean;
     errors: E;
@@ -20,7 +20,9 @@ export type CheckValueEntered<V> = (value: V) => boolean;
 export interface IFormFieldModel<F> extends IFormValidatable<IFormFieldErrors> {
     data: UnwrapRef<F>;
     isEntered: boolean;
+    isDisabled: boolean;
     registerEnteredCheck(check: CheckValueEntered<F>): void;
+    setDisabled(toDisabled: boolean): void;
 }
 
 export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormFieldModel<F> {
@@ -28,23 +30,25 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
     const errors = ref<IFormFieldErrors>([]);
     const isValid = computed(() => !errors.value.length);
     const isInvalid = computed(() => !!errors.value.length);
+    const isDisabled = ref(false);
     const isEntered = ref(false);
     let checkEntered: CheckValueEntered<F>;
 
-    function validate(): IFormFieldErrors {
+    async function validate(): Promise<IFormFieldErrors> {
         if (!definition.validation) return [];
 
-        try {
-            definition.validation.validateSync(data.value);
-            errors.value = [];
-            return errors.value;
-        } catch (validation: unknown) {
-            if (ValidationError.isError(validation)) {
-                errors.value = validation.errors;
+        return definition.validation.validate(data.value)
+            .then(() => {
+                errors.value = [];
                 return errors.value;
-            }
-            throw validation;
-        }
+            })
+            .catch((validation: unknown) => {
+                if (ValidationError.isError(validation)) {
+                    errors.value = validation.errors;
+                    return errors.value;
+                }
+                throw validation;
+            });
     }
 
     function registerEnteredCheck(check: CheckValueEntered<F>) {
@@ -62,12 +66,18 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
         }
     });
 
+    function setDisabled(toDisabled: boolean): void {
+        isDisabled.value = toDisabled;
+    }
+
     return reactive({
         data,
         errors,
         isValid,
         isInvalid,
         validate,
+        isDisabled,
+        setDisabled,
         isEntered,
         registerEnteredCheck
     });
@@ -87,8 +97,9 @@ type IFormErrors<FD extends object> = Partial<{
 
 export interface IFormModel<FD extends object> extends IFormValidatable<IFormErrors<FD>> {
     fields: UnwrapRef<IFormFields<FD>>;
-    field<FV>(id: keyof FD): IFormFieldModel<FV>;
     data: FD;
+    field<FV>(id: keyof FD): IFormFieldModel<FV>;
+    setDisabled(toDisabled: boolean): void;
 }
 
 function buildFormFields<FD extends object>(definition: IFormFieldDefinitions<FD>): IFormFields<FD> {
@@ -101,17 +112,19 @@ function buildFormFields<FD extends object>(definition: IFormFieldDefinitions<FD
 export function useForm<FD extends object>(definition: IFormFieldDefinitions<FD>): IFormModel<FD> {
     const fields = buildFormFields(definition);
     const errors = ref<IFormErrors<FD>>({});
-    const isValid = computed(() => !Object.keys(errors).length);
+    const isValid = computed(() => !Object.keys(errors.value).length);
     const isInvalid = computed(() => !isValid.value);
 
-    function validate(): IFormErrors<FD> {
+    async function validate(): Promise<IFormErrors<FD>> {
         const result: IFormErrors<FD> = {};
 
         for (const id in fields) {
-            result[id] = fields[id].validate();
+            const errors = await fields[id].validate();
+            if (errors.length) result[id] = errors;
         }
 
         errors.value = result;
+        await nextTick();
         return errors.value;
     }
 
@@ -133,6 +146,12 @@ export function useForm<FD extends object>(definition: IFormFieldDefinitions<FD>
         return result as FD;
     });
 
+    function setDisabled(toDisabled: boolean): void {
+        for (const id in fields) {
+            fields[id].setDisabled(toDisabled);
+        }
+    }
+
     return reactive({
         fields,
         field,
@@ -140,6 +159,7 @@ export function useForm<FD extends object>(definition: IFormFieldDefinitions<FD>
         isValid,
         isInvalid,
         validate,
-        data
+        data,
+        setDisabled
     }) as IFormModel<FD>;
 }

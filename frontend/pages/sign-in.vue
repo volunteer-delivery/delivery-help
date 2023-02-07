@@ -5,7 +5,7 @@
                 <AppCardTitle>
                     ВолонтерВантаж ~ Вхід
                 </AppCardTitle>
-                <AppForm :model="form">
+                <AppForm :model="form" :disabled="isSubmitting">
                     <AppCardBody>
                         <AppFormField id="username" label="Користувач" class="mb-4">
                             <AppFormTextInput />
@@ -15,7 +15,13 @@
                         </AppFormField>
                     </AppCardBody>
                     <AppCardActions>
-                        <AppButton class="ml-auto w-2/5" type="primary" size="md">
+                        <AppButton
+                            class="ml-auto w-2/5"
+                            type="primary"
+                            size="md"
+                            :loading="isSubmitting"
+                            @click="signIn"
+                        >
                             УВІЙТИ
                         </AppButton>
                     </AppCardActions>
@@ -79,6 +85,15 @@ const form = useForm<ICredentials>({
         validation: requireString().required()
     }
 });
+
+const isSubmitting = ref(false);
+
+async function signIn(): Promise<void> {
+    await form.validate();
+    if (form.isInvalid) return;
+
+    isSubmitting.value = true;
+}
 
 // const toast = useToast();
 // const authStore = useAuthStore();

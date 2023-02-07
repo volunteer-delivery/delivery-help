@@ -19,11 +19,13 @@ const props = defineProps({
 });
 
 const slots = useSlots();
+const attrs = useAttrs();
 
 function Render(): VNode {
     const tag = props.to ? NuxtLink : 'button';
-    const attrs = props.to ? { to: props.to } : { type: 'button' };
-    const node = h(tag, attrs, slots.default!());
-    return props.ripple ? withDirectives(node, [[ripple]]) : node;
+    const tagAttrs = props.to ? { to: props.to } : { type: 'button' };
+    const renderAttrs = { ...attrs, ...tagAttrs };
+    const node = h(tag, renderAttrs, slots.default!());
+    return props.ripple ? withDirectives(node, [[vRipple]]) : node;
 }
 </script>

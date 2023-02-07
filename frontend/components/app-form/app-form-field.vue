@@ -35,16 +35,23 @@ import {InjectionToken} from "~/enums";
 // text-red-600 border-b-red-600
 // text-blue-700 border-b-blue-700
 // text-gray-500 border-b-gray-500
+// text-gray-400 border-b-gray-400
 
 const props = defineProps({
+    id: {
+        type: String,
+        required: true
+    },
+
     label: {
         type: String,
         required: true
     },
 
-    id: {
-        type: String,
-        required: true
+    disabled: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 
@@ -59,11 +66,14 @@ const isActive = computed(() => isClickedInside.value || fieldModel.isEntered)
 const onClick = () => isClickedInside.value = true;
 
 onClickOutside(fieldRef, () => {
-    if (isActive.value) fieldModel.validate();
+    if (isClickedInside.value) fieldModel.validate();
     isClickedInside.value = false;
 })
 
 const stateColor = computed(() => {
+    if (fieldModel.isDisabled) {
+        return 'gray-400';
+    }
     if (fieldModel.isInvalid) {
         return 'red-600';
     }
@@ -89,6 +99,7 @@ const underlineClasses = computed(() => [
 ]);
 
 provide<IFormFieldModel<any>>(InjectionToken.FORM_FIELD, fieldModel);
+watch(toRef(props, 'disabled'), fieldModel.setDisabled, { immediate: true });
 </script>
 
 <style scoped>

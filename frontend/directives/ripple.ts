@@ -1,16 +1,16 @@
 import { ObjectDirective } from 'vue';
 
-interface RippleDirective extends ObjectDirective<HTMLElement> {
+interface RippleDirective extends ObjectDirective<HTMLButtonElement> {
     _clickHandler?(event: MouseEvent): void;
     _activeAnimationTimeout?: any;
 }
 
-export const ripple: RippleDirective = {
+export const vRipple: RippleDirective = {
     mounted(el, binding) {
         const self = (binding.dir as RippleDirective);
 
         self._clickHandler = (event: MouseEvent) => {
-            const el = event.target as HTMLElement;
+            const el = event.currentTarget as HTMLButtonElement;
 
             function complete() {
                 el.classList.remove('ripple');
@@ -44,11 +44,21 @@ export const ripple: RippleDirective = {
             });
         }
 
-        el.addEventListener('click', self._clickHandler);
+        if (!el.disabled) {
+            el.addEventListener('click', self._clickHandler);
+        }
+    },
+
+    updated(el, binding) {
+        const self = binding as RippleDirective;
+
+        el.disabled
+            ? el.removeEventListener('click', self._clickHandler!)
+            : el.addEventListener('click', self._clickHandler!);
     },
 
     beforeUnmount(el, binding) {
         const self = (binding.dir as RippleDirective);
-        self._clickHandler && el.removeEventListener('click', self._clickHandler);
+        el.removeEventListener('click', self._clickHandler!);
     }
 };

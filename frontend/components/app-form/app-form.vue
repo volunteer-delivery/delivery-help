@@ -13,8 +13,15 @@ const props = defineProps({
     model: {
         type: Object as PropType<IFormModel<any>>,
         required: true
+    },
+
+    disabled: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 
 provide<IFormModel<any>>(InjectionToken.FORM, props.model);
+watch(toRef(props, 'disabled'), props.model!.setDisabled, { immediate: true });
 </script>
