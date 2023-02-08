@@ -18,11 +18,13 @@
             />
         </label>
 
-        <transition name="font-field-error" duration="150">
-            <p class="text-xs text-red-600 pt-1" v-if="fieldModel.isInvalid">
-                {{ fieldModel.errors[0] }}
-            </p>
-        </transition>
+        <div class="overflow-y-hidden">
+            <transition name="font-field-error" duration="150">
+                <p class="text-xs text-red-600 pt-1" v-if="fieldModel.isInvalid">
+                    {{ fieldModel.errors[0] }}
+                </p>
+            </transition>
+        </div>
     </div>
 </template>
 

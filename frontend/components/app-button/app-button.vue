@@ -21,9 +21,8 @@ import { vVisible } from '#imports';
 import { ButtonSize, ButtonType } from "~/enums";
 
 type ButtonSizeConfig = Record<ButtonType, string>;
-type ButtonTypeConfig = Record<ButtonSize, ButtonSizeConfig>;
 
-const BUTTON_TYPES: ButtonTypeConfig = {
+const BUTTON_SIZES: Record<ButtonSize, ButtonSizeConfig> = {
     sm: {
         icon: 'p-1',
         primary: 'py-1 px-1.5 text-sm'
@@ -63,8 +62,8 @@ const props = defineProps({
 });
 
 const tagClasses = computed(() => ({
-    [BUTTON_TYPES[props.size!][props.type]]: props.size,
-    'transition-colors hover:bg-gray-200 rounded-full flex': props.type === ButtonType.ICON,
+    [BUTTON_SIZES[props.size!][props.type]]: props.size,
+    'transition-colors hover:bg-gray-200 text-gray-600 disabled:text-gray-400 rounded-full flex': props.type === ButtonType.ICON,
     'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md active:shadow-xl disabled:shadow': props.type === ButtonType.PRIMARY
 }));
 

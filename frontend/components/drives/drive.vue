@@ -88,8 +88,6 @@
 <script setup>
 import { mdiCar, mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree, mdiAccount } from '@mdi/js';
 import DrivePoint from '~/components/drives/drive-point';
-import { formatVehicle, formatVehicleDetails } from '~/utils/format-vehicle';
-import { formatDate } from '~/utils/format-date';
 import DriverDetails from '~/components/drives/driver-details';
 import {DriveStatus} from "~/enums";
 

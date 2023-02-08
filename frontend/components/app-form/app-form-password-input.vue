@@ -1,8 +1,13 @@
 <template>
     <AppFormTextInput :type="type">
-        <template #append v-if="!model.isDisabled">
-            <AppButton type="icon" size="sm" @click.stop.prevent="toggleInsecure">
-                <Icon class="text-gray-600" size="24">
+        <template #append>
+            <AppButton
+                type="icon"
+                size="sm"
+                :disabled="model.isDisabled"
+                @click.stop.prevent="toggleInsecure"
+            >
+                <Icon size="24">
                     <component :is="icon" />
                 </Icon>
             </AppButton>

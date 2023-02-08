@@ -3,6 +3,8 @@ import type {FetchContext, FetchResponse} from "ofetch";
 
 type $FetchErrorContext = FetchContext & { response: FetchResponse<ResponseType> };
 
+export class HttpError extends Error {}
+
 class HttpClient {
     private readonly fetch: $Fetch;
 
@@ -15,9 +17,14 @@ class HttpClient {
     }
 
     private onError(error: $FetchErrorContext): void {
-        if (error.response?.status === 403) {
+        if (!error.response) {
+            throw error;
+        }
+        if (error.response.status === 403) {
             window.location.reload();
         }
+        const { message } = error.response._data;
+        throw (message ? new HttpError(message) : error);
     }
 
     async get<Response extends object>(url: string, params: Record<string, any> = {}): Promise<Response> {

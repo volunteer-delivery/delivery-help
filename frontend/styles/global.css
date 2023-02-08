@@ -15,3 +15,7 @@ body {
 button {
     -webkit-tap-highlight-color: transparent;
 }
+
+.xicon.xicon {
+    display: block;
+}

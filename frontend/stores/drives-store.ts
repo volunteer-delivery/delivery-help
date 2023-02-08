@@ -1,6 +1,6 @@
 import {DriveStatus, Vehicle} from "~/enums";
 import {defineStore} from "pinia";
-import {useToast} from "vue-toast-notification";
+// import {useToast} from "vue-toast-notification";
 
 export interface Address {
     country?: string;
@@ -36,7 +36,7 @@ interface DrivesFilterValues {
 
 export const useDrivesStore = defineStore('drives', () => {
     const http = useHttpClient();
-    const toast = useToast();
+    // const toast = useToast();
 
     const drives = ref<Drive[]>([]);
     const isLoaded = ref(false);
@@ -138,7 +138,7 @@ export const useDrivesStore = defineStore('drives', () => {
         if (!confirm('Ви впевнені що хочете змінити статус заявки?')) return;
 
         await http.patch(`rides/${drive.id}/status`, { status });
-        toast.default('Статус змінено', { duration: 3000 })
+        // toast.default('Статус змінено', { duration: 3000 })
     }
 
     function applyPendingFilter(filter: DrivesFilter) {

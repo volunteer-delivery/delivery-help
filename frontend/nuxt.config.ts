@@ -26,7 +26,8 @@ export default defineNuxtConfig({
     imports: {
         dirs: [
             'stores',
-            'directives'
+            'directives',
+            'utils'
         ]
     },
 
@@ -37,8 +38,7 @@ export default defineNuxtConfig({
     ],
 
     css: [
-        '~/styles/global.css',
-        'vue-toast-notification/dist/theme-default.css'
+        '~/styles/global.css'
     ],
 
     postcss: {
