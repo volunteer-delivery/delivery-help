@@ -18,9 +18,9 @@
 import { PropType } from "vue";
 import { RouteLocationRaw } from 'vue-router';
 import { vVisible } from '#imports';
-import { ButtonSize, ButtonType } from "~/enums";
+import { ButtonSize, ButtonLook } from "~/enums";
 
-type ButtonSizeConfig = Record<ButtonType, string>;
+type ButtonSizeConfig = Record<ButtonLook, string>;
 
 const BUTTON_SIZES: Record<ButtonSize, ButtonSizeConfig> = {
     sm: {
@@ -34,10 +34,10 @@ const BUTTON_SIZES: Record<ButtonSize, ButtonSizeConfig> = {
 };
 
 const props = defineProps({
-    type: {
-        type: String as PropType<ButtonType>,
+    look: {
+        type: String as PropType<ButtonLook>,
         required: true,
-        validator: (type: ButtonType) => Object.values(ButtonType).includes(type)
+        validator: (type: ButtonLook) => Object.values(ButtonLook).includes(type)
     },
     size: {
         type: String as PropType<ButtonSize>,
@@ -62,10 +62,10 @@ const props = defineProps({
 });
 
 const tagClasses = computed(() => ({
-    [BUTTON_SIZES[props.size!][props.type]]: props.size,
-    'transition-colors hover:bg-gray-200 text-gray-600 disabled:text-gray-400 rounded-full flex': props.type === ButtonType.ICON,
-    'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md active:shadow-xl disabled:shadow': props.type === ButtonType.PRIMARY
+    [BUTTON_SIZES[props.size!][props.look]]: props.size,
+    'transition-colors hover:bg-gray-200 text-gray-600 disabled:text-gray-400 rounded-full flex': props.look === ButtonLook.ICON,
+    'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md active:shadow-xl disabled:shadow': props.look === ButtonLook.PRIMARY
 }));
 
-const ripple = computed(() => [ButtonType.PRIMARY].includes(props.type));
+const ripple = computed(() => [ButtonLook.PRIMARY].includes(props.look));
 </script>

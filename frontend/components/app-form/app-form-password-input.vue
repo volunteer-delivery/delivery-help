@@ -2,7 +2,7 @@
     <AppFormTextInput :type="type">
         <template #append>
             <AppButton
-                type="icon"
+                look="icon"
                 size="sm"
                 :disabled="model.isDisabled"
                 @click.stop.prevent="toggleInsecure"

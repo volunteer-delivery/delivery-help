@@ -24,7 +24,7 @@ const attrs = useAttrs();
 function Render(): VNode {
     const tag = props.to ? NuxtLink : 'button';
     const tagAttrs = props.to ? { to: props.to } : { type: 'button' };
-    const renderAttrs = { ...attrs, ...tagAttrs };
+    const renderAttrs = { ...tagAttrs, ...attrs };
     const node = h(tag, renderAttrs, slots.default!());
     return props.ripple ? withDirectives(node, [[vRipple]]) : node;
 }

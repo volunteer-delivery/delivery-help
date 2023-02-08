@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <form @submit.prevent="$emit('submit')">
         <slot />
     </form>
 </template>
@@ -21,6 +21,8 @@ const props = defineProps({
         default: false
     }
 });
+
+defineEmits(['submit'])
 
 provide<IFormModel<any>>(InjectionToken.FORM, props.model);
 watch(toRef(props, 'disabled'), props.model!.setDisabled, { immediate: true });

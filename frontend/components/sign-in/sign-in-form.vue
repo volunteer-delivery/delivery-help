@@ -1,5 +1,5 @@
 <template>
-    <AppForm :model="form" :disabled="isSubmitting">
+    <AppForm :model="form" :disabled="isSubmitting" @submit="signIn">
         <AppCardBody>
             <AppFormField id="username" label="Користувач" class="mb-4">
                 <AppFormTextInput />
@@ -11,10 +11,10 @@
         <AppCardActions>
             <AppButton
                 class="ml-auto w-2/5"
-                type="primary"
+                type="submit"
+                look="primary"
                 size="md"
                 :loading="isSubmitting"
-                @click="signIn"
             >
                 УВІЙТИ
             </AppButton>

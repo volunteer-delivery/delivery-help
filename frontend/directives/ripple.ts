@@ -19,8 +19,20 @@ function completeRipple(el: HTMLElement): void {
     el.style.removeProperty('--ripple-duration')
 }
 
-function renderRipple(el: HTMLElement, position: IRipplePosition): void {
+function computePosition(clientRect: DOMRect, event: MouseEvent): IRipplePosition {
+    // offsetX and offsetY can be empty if clicked by js
+    if (!event.offsetX && !event.offsetY) {
+        return {
+            x: clientRect.width / 2,
+            y: clientRect.height / 2
+        };
+    }
+    return { x: event.offsetX, y: event.offsetY };
+}
+
+function renderRipple(el: HTMLElement, event: MouseEvent): void {
     const clientRect = el.getBoundingClientRect();
+    const position = computePosition(clientRect, event);
     const computedStyles = getComputedStyle(el);
 
     if (computedStyles.position === 'static') {
@@ -45,7 +57,7 @@ function clickHandler(event: MouseEvent) {
     }
 
     requestAnimationFrame(() => {
-        renderRipple(el, { x: event.offsetX, y: event.offsetY });
+        renderRipple(el, event);
         const timeoutId = setTimeout(() => completeRipple(el), 400);
         stateMap.set(el, { activeAnimationTimeout: timeoutId });
     });
