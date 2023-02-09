@@ -1,6 +1,7 @@
 export enum ButtonLook {
     ICON = 'icon',
-    PRIMARY = 'primary'
+    PRIMARY = 'primary',
+    RAW = 'raw'
 }
 
 export enum ButtonSize {

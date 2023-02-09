@@ -1,35 +1,30 @@
-.ripple {
-    --ripple-size: 0px;
-    --ripple-x: 0px;
-    --ripple-y: 0px;
-    --ripple-duration: 0ms;
-}
-
-.ripple::after {
-    content: "";
-    width: calc(var(--ripple-size));
-    height: calc(var(--ripple-size));
-    left: var(--ripple-x);
-    top: var(--ripple-y);
-    animation: ripple var(--ripple-duration) ease-out forwards;
-
-    @apply absolute;
-    @apply rounded-full;
-    @apply bg-slate-50/[.2];
-    @apply pointer-events-none;
-    @apply overflow-clip;
-}
-
-@keyframes ripple {
-    from {
-        transform: scale(0);
-        opacity: 0;
+@layer components {
+    .ripple {
+        --ripple-size: 0px;
+        --ripple-x: 0px;
+        --ripple-y: 0px;
+        --ripple-duration: 0ms;
     }
-    20%, 80% {
-        opacity: 1;
+
+    .ripple::after {
+        content: "";
+        width: calc(var(--ripple-size));
+        height: calc(var(--ripple-size));
+        left: var(--ripple-x);
+        top: var(--ripple-y);
+
+        @apply animate-ripple;
+        @apply absolute;
+        @apply pointer-events-none;
+        @apply rounded-full;
+        @apply overflow-clip;
     }
-    to {
-        transform: scale(1);
-        opacity: 0;
+
+    .ripple-slate-50::after {
+        @apply bg-slate-50/[.2];
+    }
+
+    .ripple-blue-800::after {
+        @apply bg-blue-800/[.2];
     }
 }

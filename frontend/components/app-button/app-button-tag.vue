@@ -22,10 +22,10 @@ const slots = useSlots();
 const attrs = useAttrs();
 
 function Render(): VNode {
-    const tag = props.to ? NuxtLink : 'button';
-    const tagAttrs = props.to ? { to: props.to } : { type: 'button' };
-    const renderAttrs = { ...tagAttrs, ...attrs };
-    const node = h(tag, renderAttrs, slots.default!());
+    const node = props.to
+        ? h(NuxtLink, {to: props.to, ...attrs}, slots.default!)
+        : h('button', {type: 'button', ...attrs}, slots.default!());
+
     return props.ripple ? withDirectives(node, [[vRipple]]) : node;
 }
 </script>

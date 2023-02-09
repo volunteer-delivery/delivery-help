@@ -12,8 +12,10 @@ module.exports = {
     theme: {
         extend: {
             animation: {
-                shake: 'shake 0.6s cubic-bezier(.25,.8,.5,1)',
-                'spin-progress': 'spin-progress 1s linear infinite'
+                'shake': 'shake 0.6s cubic-bezier(.25,.8,.5,1)',
+                'spin-progress': 'spin-progress 1s linear infinite',
+                'ripple': 'ripple var(--ripple-duration) ease-out forwards'
+
             },
             keyframes: {
                 shake: {
@@ -30,10 +32,26 @@ module.exports = {
                         'stroke-dashoffset': '130',
                         'transform': 'rotate(-360deg)',
                     }
+                },
+                'ripple': {
+                    '0%': {
+                        transform: 'scale(0)',
+                        opacity: '0'
+                    },
+                    '10%': {
+                        opacity: '1'
+                    },
+                    '80%': {
+                        opacity: '1'
+                    },
+                    '100%': {
+                        transform: 'scale(1.2)',
+                        opacity: '0'
+                    }
                 }
             },
             transitionProperty: {
-                spacing: 'margin, padding',
+                'spacing': 'margin, padding',
                 'font-field': 'transform, color, border-color',
                 'button-primary': 'box-shadow, color'
             },
