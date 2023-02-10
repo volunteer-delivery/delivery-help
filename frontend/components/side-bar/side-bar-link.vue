@@ -1,16 +1,18 @@
 <template>
     <AppButton
-        class="bottom-bar-link text-gray-600 min-w-[80px] transition-colors overflow-clip"
+        class="side-bar-link text-gray-600 transition-colors overflow-clip rounded"
         :to="to"
         v-ripple.blue-800
     >
-        <span class="h-14 px-4 text-xs h-full flex flex-col items-center justify-center font-medium tracking-wider">
-            <Icon size="24px">
+        <div class="flex h-full flex items-center h-10 px-2">
+            <Icon size="24">
                 <component :is="icon" />
             </Icon>
 
-            {{ title }}
-        </span>
+            <span class="block ml-8 font-medium text-sm">
+                {{ title }}
+            </span>
+        </div>
     </AppButton>
 </template>
 
@@ -35,7 +37,12 @@ defineProps({
 </script>
 
 <style scoped>
-.bottom-bar-link.router-link-exact-active {
+.side-bar-link:hover,
+.side-bar-link:focus {
+    @apply bg-slate-50;
+}
+
+.side-bar-link.router-link-exact-active {
     @apply text-blue-800 bg-slate-100;
 }
 </style>

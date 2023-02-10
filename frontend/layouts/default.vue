@@ -1,9 +1,12 @@
 <template>
-    <div class="h-full pb-14" v-if="device.isMobileOrTablet">
-        <slot />
+    <BottomBar v-if="device.isMobileOrTablet">
+        <main class="pt-4 pb-24 h-full">
+            <slot />
+        </main>
 
-        <BottomBar class="fixed bottom-0 left-0 w-full">
+        <template #bar>
             <AppBadge
+                class="bottom-bar-badge"
                 v-for="nav of navItems"
                 :key="nav.id"
                 :content="nav.count"
@@ -16,31 +19,34 @@
                     :icon="nav.icon"
                 />
             </AppBadge>
-        </BottomBar>
-    </div>
+        </template>
+    </BottomBar>
 
-    <slot v-else />
+    <SideBar v-else>
+        <template #bar>
+            <AppBadge
+                class="mb-1 side-bar-badge"
+                v-for="nav of navItems"
+                :key="nav.id"
+                :content="nav.count"
+                :show="nav.hasCount"
+                :color="nav.badgeColor"
+            >
+                <SideBarLink
+                    :to="nav.url"
+                    :title="nav.title"
+                    :icon="nav.icon"
+                />
+            </AppBadge>
+        </template>
+
+        <main class="pt-4 pb-24 px-6 h-full">
+            <slot />
+        </main>
+    </SideBar>
 
 <!--    <v-app>-->
 <!--        <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent app>-->
-<!--            <v-list class="pt-5" nav dense>-->
-<!--                <v-list-item-->
-<!--                    v-for="item of navItems"-->
-<!--                    :key="item.url"-->
-<!--                    :to="item.url"-->
-<!--                    :ripple="false"-->
-<!--                    exact-->
-<!--                >-->
-<!--                    <v-list-item-icon>-->
-<!--                        <v-badge :content="drivesStore.counter[item.id]" :value="drivesStore.counter[item.id]">-->
-<!--                            <v-icon>{{ item.icon }}</v-icon>-->
-<!--                        </v-badge>-->
-<!--                    </v-list-item-icon>-->
-
-<!--                    <v-list-item-title>{{ item.title }}</v-list-item-title>-->
-<!--                </v-list-item>-->
-<!--            </v-list>-->
-
 <!--            <component-->
 <!--                v-if="navigationStore.extra"-->
 <!--                class="pt-5 pb-5 drawer__navigation-extra"-->
@@ -55,22 +61,6 @@
 <!--        </v-main>-->
 
 <!--        <template v-if="isBottomNavigation">-->
-<!--            <v-bottom-navigation fixed>-->
-<!--                <v-btn-->
-<!--                    v-for="item of navItems"-->
-<!--                    :key="item.url"-->
-<!--                    :to="item.url"-->
-<!--                    :ripple="false"-->
-<!--                    exact-->
-<!--                >-->
-<!--                    <span>{{ item.title }}</span>-->
-
-<!--                    <v-badge :content="drivesStore.counter[item.id]" :value="drivesStore.counter[item.id]">-->
-<!--                        <v-icon>{{ item.icon }}</v-icon>-->
-<!--                    </v-badge>-->
-<!--                </v-btn>-->
-<!--            </v-bottom-navigation>-->
-
 <!--            <template v-if="navigationStore.extra">-->
 <!--                <v-fade-transition>-->
 <!--                    <component-->
@@ -172,50 +162,25 @@ apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, drivesStore.updat
 // });
 </script>
 
-<style>
-.v-list-item--active .v-icon,
-.v-btn--active .v-icon {
-    color: #3F51B5 !important;
+<style scoped>
+.bottom-bar-badge:deep(.badge) {
+    @apply -top-2 right-0;
 }
 
-.v-bottom-navigation .v-btn {
-    min-width: 80px !important;
-    height: 100% !important;
-    background-color: #fff !important;
+.side-bar-badge:deep(.badge) {
+    @apply -top-1.5 left-8;
 }
 
-.v-bottom-navigation .v-btn.v-btn--active {
-    color: #3F51B5 !important;
-    background-color: #f5f5f5 !important;
-}
 
-.layout__main {
-    padding-top: 16px !important;
-    padding-bottom: 96px !important;
-}
-
+/*
 .layout__close-navigation-extra {
     position: absolute;
     top: 16px;
     right: 16px;
 }
 
-.v-navigation-drawer__content {
-    display: flex;
-    flex-direction: column;
-}
-
 .drawer__navigation-extra {
     margin-top: auto;
 }
-
-.v-bottom-navigation .v-btn::before {
-    display: none;
-}
-
-.v-list-item:not(.v-list-item--active) .v-badge__badge,
-.v-bottom-navigation .v-btn:not(.v-btn--active) .v-badge__badge {
-    background-color: #6f6f6f !important;
-    border-color: #6f6f6f !important;
-}
+*/
 </style>

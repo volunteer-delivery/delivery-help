@@ -17,8 +17,7 @@ const toastStore = useToastStore();
 .toast-move,
 .toast-enter-active,
 .toast-leave-active {
-    @apply transition-transform;
-    @apply duration-150
+    @apply transition-transform duration-150;
 }
 
 .toast-enter-from,
@@ -27,7 +26,6 @@ const toastStore = useToastStore();
 }
 
 .toast-leave-active {
-    @apply absolute;
-    @apply z-40
+    @apply absolute z-40;
 }
 </style>

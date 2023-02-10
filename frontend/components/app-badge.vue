@@ -3,7 +3,7 @@
         <slot />
 
         <p
-            class="absolute top-0 right-0 rounded-full m-0 text-white h-5 min-w-[20px] flex items-center justify-center leading-none text-xs -translate-y-1/2 transition-colors"
+            class="badge absolute rounded-full m-0 text-white h-5 min-w-[20px] flex items-center justify-center leading-none text-xs transition-colors z-50"
             :class="badgeClasses"
             v-if="show"
         >

@@ -13,11 +13,7 @@
         left: var(--ripple-x);
         top: var(--ripple-y);
 
-        @apply animate-ripple;
-        @apply absolute;
-        @apply pointer-events-none;
-        @apply rounded-full;
-        @apply overflow-clip;
+        @apply animate-ripple absolute pointer-events-none rounded-full overflow-clip;
     }
 
     .ripple-slate-50::after {
