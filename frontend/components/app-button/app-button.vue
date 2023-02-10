@@ -2,7 +2,7 @@
     <AppButtonTag
         :to="to"
         :ripple="ripple"
-        class="relative outline-none"
+        class="relative block outline-none"
         :class="tagClasses"
         :disabled="disabled || loading"
     >

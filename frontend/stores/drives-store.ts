@@ -55,7 +55,7 @@ export const useDrivesStore = defineStore('drives', () => {
     const done = computed(() => drives.value.filter((drive: Drive) => drive.status === DriveStatus.FINISHED));
 
     const counter = computed(() => {
-        const format = (value: number) => value > 100 ? `100+` : value;
+        const format = (value: number) => value > 100 ? `100+` : value.toString();
 
         return {
             pending: format(pending.value.length),
@@ -91,7 +91,8 @@ export const useDrivesStore = defineStore('drives', () => {
             cities: new Set()
         };
 
-        drives.value = await http.get('rides');
+        const { rides } = await http.get<{ rides: Drive[] }>('rides');
+        drives.value = rides;
 
         for (const drive of drives.value) {
             filter.countries.add(drive.from.country!);

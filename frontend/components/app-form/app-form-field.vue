@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @focusin="focus" @focusout="unfocus">
         <label
             class="block border-b w-full relative pt-4"
             :class="underlineColorClass"
@@ -62,15 +62,15 @@ const fieldModel = formModel.field(props.id);
 
 const fieldRef = ref(null);
 
-const isClickedInside = ref(false);
-const isActive = computed(() => isClickedInside.value || fieldModel.isEntered)
+const isFocused = ref(false);
+const focus = () => isFocused.value = true;
 
-const onClick = () => isClickedInside.value = true;
+const unfocus = () => {
+    fieldModel.validate();
+    isFocused.value = false;
+};
 
-onClickOutside(fieldRef, () => {
-    if (isClickedInside.value) fieldModel.validate();
-    isClickedInside.value = false;
-})
+const isActive = computed(() => isFocused.value || fieldModel.isEntered)
 
 const stateColor = computed(() => {
     if (fieldModel.isDisabled) {
@@ -79,7 +79,7 @@ const stateColor = computed(() => {
     if (fieldModel.isInvalid) {
         return 'red-600';
     }
-    if (isClickedInside.value) {
+    if (isFocused.value) {
         return 'blue-700';
     }
     return 'gray-500';

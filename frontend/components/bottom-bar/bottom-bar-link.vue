@@ -1,9 +1,14 @@
 <template>
-    <AppButton class="bottom-bar-link text-gray-600 min-w-[80px] transition-colors overflow-clip" :to="to" v-ripple.blue-800>
+    <AppButton
+        class="bottom-bar-link text-gray-600 min-w-[80px] transition-colors overflow-clip"
+        :to="to"
+        v-ripple.blue-800
+    >
         <span class="h-14 px-4 text-xs h-full flex flex-col items-center justify-center font-medium tracking-wider">
             <Icon size="24px">
                 <component :is="icon" />
             </Icon>
+
             {{ title }}
         </span>
     </AppButton>

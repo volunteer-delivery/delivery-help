@@ -57,7 +57,7 @@ function renderRipple(el: HTMLElement, event: MouseEvent): void {
     el.style.setProperty('--ripple-size', size + 'px');
     el.style.setProperty('--ripple-x', (position.x - size / 2) + 'px');
     el.style.setProperty('--ripple-y', (position.y - size / 2) + 'px');
-    el.style.setProperty('--ripple-duration', '400ms');
+    el.style.setProperty('--ripple-duration', '300ms');
 
     requestAnimationFrame(() => {
         el.classList.add('ripple', `ripple-${state.color}`);
@@ -76,7 +76,7 @@ function clickHandler(event: MouseEvent) {
 
     requestAnimationFrame(() => {
         renderRipple(el, event);
-        const timeoutId = setTimeout(() => completeRipple(el), 400);
+        const timeoutId = setTimeout(() => completeRipple(el), 300);
         storage.set(el, { activeAnimationTimeout: timeoutId });
     });
 }

@@ -3,13 +3,19 @@
         <slot />
 
         <BottomBar class="fixed bottom-0 left-0 w-full">
-            <BottomBarLink
+            <AppBadge
                 v-for="nav of navItems"
-                :key="nav.url"
-                :title="nav.title"
-                :icon="nav.icon"
-                :to="nav.url"
-            />
+                :key="nav.id"
+                :content="nav.count"
+                :show="nav.hasCount"
+                :color="nav.badgeColor"
+            >
+                <BottomBarLink
+                    :to="nav.url"
+                    :title="nav.title"
+                    :icon="nav.icon"
+                />
+            </AppBadge>
         </BottomBar>
     </div>
 
@@ -91,56 +97,72 @@
 </template>
 
 <script lang="ts" setup>
-import { DirectionsCarFilledRound, PlayArrowRound, CheckRound } from '@vicons/material';
+import type {Component} from "vue";
+import {CheckRound, DirectionsCarFilledRound, PlayArrowRound} from '@vicons/material';
+import {BadgeColor} from "~/enums/badge";
+
+interface INavItem {
+    id: 'active' | 'pending' | 'done';
+    title: string;
+    icon: Component;
+    url: string;
+    count: string;
+    hasCount: boolean;
+    badgeColor: BadgeColor,
+    active: boolean;
+}
+
+type INavOptions = Pick<INavItem, 'id' | 'title' | 'url' | 'icon'>;
 
 const device = useDevice();
+const route = useRoute();
+const apiCable = useApiCable();
+const drivesStore = useDrivesStore();
+const authStore = useAuthStore();
 
-const navItems = [
-    {
+function useNavItem(item: INavOptions): INavItem {
+    const count = drivesStore.counter[item.id];
+    const active = item.url === route.path;
+    return ({
+        ...item,
+        active,
+        count,
+        hasCount: !!parseInt(count),
+        badgeColor: active ? BadgeColor.BLUE_800 : BadgeColor.SLATE_600
+    });
+}
+
+const navItems = computed((): INavItem[] => [
+    useNavItem({
+        id: 'pending',
+        url: '/',
         title: 'Нові',
-        icon: DirectionsCarFilledRound,
-        url: '/'
-    },
-    {
+        icon: DirectionsCarFilledRound
+    }),
+    useNavItem({
+        id: 'active',
+        url: '/active',
         title: 'Активні',
         icon: PlayArrowRound,
-        url: '/active'
-    },
-    {
+    }),
+    useNavItem({
+        id: 'done',
+        url: '/done',
         title: 'Завершені',
         icon: CheckRound,
-        url: '/done'
-    }
-];
+    })
+]);
+
+await useAsyncData(() => Promise.all([
+    drivesStore.load(),
+    authStore.loadCurrentUser(),
+]));
+
+apiCable.on('rides/new', drivesStore.add);
+apiCable.on('rides/update', drivesStore.update);
+apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, drivesStore.update);
 
 
-// import { mdiCar, mdiCheck, mdiClose, mdiPlay } from '@mdi/js';
-//
-// const apiCable = useApiCable();
-// const drivesStore = useDrivesStore();
-// const authStore = useAuthStore();
-// const navigationStore = useNavigationStore();
-// const device = useDevice();
-//
-// let subscriptions = [];
-//
-// addRouteMiddleware('listen-global-events', async () => {
-//     subscriptions.forEach(unsubscribe => unsubscribe());
-//
-//     await Promise.all([
-//         drivesStore.load(),
-//         authStore.loadCurrentUser(),
-//     ]);
-//
-//     const userId = authStore.currentUser.id;
-//
-//     subscriptions = [
-//         apiCable.on('rides/new', drivesStore.add),
-//         apiCable.on('rides/update', drivesStore.update),
-//         apiCable.on(`users/${userId.id}/rides/update`, drivesStore.update)
-//     ];
-// });
-//
 //
 // const isBottomNavigation = computed(() => device.isMobileOrTablet);
 //
@@ -195,9 +217,5 @@ const navItems = [
 .v-bottom-navigation .v-btn:not(.v-btn--active) .v-badge__badge {
     background-color: #6f6f6f !important;
     border-color: #6f6f6f !important;
-}
-
-.toasted {
-    font-family: "Roboto", sans-serif;
 }
 </style>
