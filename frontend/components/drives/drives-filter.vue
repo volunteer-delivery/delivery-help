@@ -86,15 +86,15 @@ const vehicles = [Vehicle.CAR, Vehicle.VAN, Vehicle.TRUCK].map(type => ({
     title: formatVehicle(type)
 }))
 
-const drivesStore = useDrivesStore();
+const ridesStore = useRidesStore();
 
 const menuRef = ref(null);
 
-const filter = reactive(clone(drivesStore.pendingFilter));
+const filter = reactive(clone(ridesStore.pendingFilter));
 const { fromCountry, departureRange } = toRefs(filter);
 const isSelectingDepartureTime = ref(false);
 
-const filterValues = computed(() => drivesStore.filterValues);
+const filterValues = computed(() => ridesStore.filterValues);
 const isFromUkraine = computed(() => filter.fromCountry === 'Україна');
 const departureTimeTriggerText = computed(() => filter.departureRange.map(formatDate).join(' - '));
 
@@ -107,7 +107,7 @@ watch(departureRange, () => {
 });
 
 function apply() {
-    drivesStore.applyPendingFilter(clone(filter));
+    ridesStore.applyPendingFilter(clone(filter));
     emit('close');
 }
 </script>

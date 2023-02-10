@@ -107,11 +107,11 @@ type INavOptions = Pick<INavItem, 'id' | 'title' | 'url' | 'icon'>;
 const device = useDevice();
 const route = useRoute();
 const apiCable = useApiCable();
-const drivesStore = useDrivesStore();
+const ridesStore = useRidesStore();
 const authStore = useAuthStore();
 
 function useNavItem(item: INavOptions): INavItem {
-    const count = drivesStore.counter[item.id];
+    const count = ridesStore.counter[item.id];
     const active = item.url === route.path;
     return ({
         ...item,
@@ -144,13 +144,13 @@ const navItems = computed((): INavItem[] => [
 ]);
 
 await useAsyncData(() => Promise.all([
-    drivesStore.load(),
+    ridesStore.load(),
     authStore.loadCurrentUser(),
 ]));
 
-apiCable.on('rides/new', drivesStore.add);
-apiCable.on('rides/update', drivesStore.update);
-apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, drivesStore.update);
+apiCable.on('rides/new', ridesStore.add);
+apiCable.on('rides/update', ridesStore.update);
+apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, ridesStore.update);
 
 
 //

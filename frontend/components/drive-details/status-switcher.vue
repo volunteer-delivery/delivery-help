@@ -9,12 +9,12 @@
 </template>
 
 <script setup>
-import {DriveStatus} from "~/enums";
+import {RideStatus} from "~/enums";
 
 const statuses = [
-    { value: DriveStatus.PENDING, text: 'нова' },
-    { value: DriveStatus.ACTIVE, text: 'активна' },
-    { value: DriveStatus.FINISHED, text: 'завершена' }
+    { value: RideStatus.PENDING, text: 'нова' },
+    { value: RideStatus.ACTIVE, text: 'активна' },
+    { value: RideStatus.FINISHED, text: 'завершена' }
 ];
 
 const props = defineProps({
@@ -24,10 +24,10 @@ const props = defineProps({
     }
 });
 
-const drivesStore = useDrivesStore();
+const ridesStore = useRidesStore();
 
 function changeStatus(status) {
-    drivesStore.changeStatus(props.drive, status);
+    ridesStore.changeStatus(props.drive, status);
 }
 </script>
 

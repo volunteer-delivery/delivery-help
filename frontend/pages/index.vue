@@ -1,16 +1,14 @@
 <template>
-<!--    <DriveList :drives="drivesStore.pendingFiltered" />-->
-    <div>
-        index page
-    </div>
+    <RideList :rides="ridesStore.pendingFiltered" />
 </template>
 
-<script setup>
+<script lang="ts" setup>
+const ridesStore = useRidesStore();
 // import DrivesFilter from '~/components/drives/drives-filter';
 // import DriverFilterMobileTrigger from '~/components/drives/drives-filter-mobile-trigger';
 // import DriveList from '@/components/drives/drive-list';
 //
-// const drivesStore = useDrivesStore();
+// const ridesStore = useRidesStore();
 // const navigationStore = useNavigationStore();
 //
 // onBeforeRouteUpdate((to, from, next) => {

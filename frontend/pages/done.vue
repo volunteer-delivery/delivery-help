@@ -1,12 +1,7 @@
 <template>
-<!--    <DriveList :drives="drivesStore.done" />-->
-    <div>
-        done page
-    </div>
+    <RideList :rides="ridesStore.done" />
 </template>
 
-<script setup>
-// import DriveList from '~/components/drives/drive-list';
-//
-// const drivesStore = useDrivesStore();
+<script lang="ts" setup>
+const ridesStore = useRidesStore();
 </script>

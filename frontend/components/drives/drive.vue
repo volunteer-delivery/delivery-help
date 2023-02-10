@@ -89,7 +89,7 @@
 import { mdiCar, mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree, mdiAccount } from '@mdi/js';
 import DrivePoint from '~/components/drives/drive-point';
 import DriverDetails from '~/components/drives/driver-details';
-import {DriveStatus} from "~/enums";
+import {RideStatus} from "~/enums";
 
 const props = defineProps({
     drive: {
@@ -104,7 +104,7 @@ const props = defineProps({
     }
 })
 
-const drivesStore = useDrivesStore();
+const ridesStore = useRidesStore();
 
 const detailsViewRef = ref(null);
 const isDriverDetailsDisplaying = ref(false);
@@ -114,8 +114,8 @@ const driverPhone = computed(() => props.drive.driver.phone);
 const driverPhoneLink = computed(() => `tel:${driverPhone.value}`)
 const driverVehicle = computed(() => formatVehicle(props.drive.vehicle));
 const driverTooltip = computed(() => formatVehicleDetails(props.drive.vehicle));
-const isPending = computed(() => props.drive.status === DriveStatus.PENDING);
-const isDone = computed(() => props.drive.status === DriveStatus.FINISHED);
+const isPending = computed(() => props.drive.status === RideStatus.PENDING);
+const isDone = computed(() => props.drive.status === RideStatus.FINISHED);
 const canChangeStatus = computed(() => !isDone.value);
 
 watch(isDriverDetailsDisplaying, async (isDisplaying) => {
@@ -127,7 +127,7 @@ watch(isDriverDetailsDisplaying, async (isDisplaying) => {
 
 function changeStatus() {
     const status = isPending.value ? 'ACTIVE' : 'FINISHED'
-    drivesStore.changeStatus(props.drive, status);
+    ridesStore.changeStatus(props.drive, status);
 }
 
 function toggleDriverDetails(isDisplaying) {

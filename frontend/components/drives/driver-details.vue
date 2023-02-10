@@ -79,7 +79,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const drivesStore = useDrivesStore();
+const ridesStore = useRidesStore();
 
 const driverPhoneLink = computed(() => `tel:${props.driver.phone}`);
 
@@ -91,7 +91,7 @@ const close = () => emit('close');
 async function onOpen() {
     isLoading.value = true;
     await nextTick()
-    drives.value = await drivesStore.loadDrivesByDriver(props.driver);
+    drives.value = await ridesStore.loadRidesByDriver(props.driver);
     isLoading.value = false;
 }
 
