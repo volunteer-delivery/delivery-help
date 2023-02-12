@@ -4,6 +4,8 @@
             class="border-none py-1.5 w-full outline-none grow bg-transparent"
             :type="type"
             :disabled="model.isDisabled"
+            :autocapitalize="autocapitalize"
+            :autocomplete="autocomplete"
             v-model="model.data"
         >
         <div class="ml-2" v-if="$slots.append">
@@ -21,6 +23,18 @@ defineProps({
         type: String,
         required: false,
         default: 'text'
+    },
+
+    autocapitalize: {
+        type: Boolean,
+        required: false,
+        default: true
+    },
+
+    autocomplete: {
+        type: Boolean,
+        required: false,
+        default: true
     }
 });
 

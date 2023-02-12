@@ -1,21 +1,22 @@
 import {defineStore} from "pinia";
 
-type ToastCloseById = (id: number) => void;
+type ToastCloseById = (id: string) => void;
 
 interface IToastOptions {
-    id: number;
     message: string;
     closeById: ToastCloseById;
 }
 
+const uniqueId = useUniqueId('toast');
+
 export class Toast {
-    public readonly id: number;
+    public readonly id: string;
     public readonly message: string;
     private readonly closeById: ToastCloseById;
     private closingTimeout: any;
 
     constructor(options: IToastOptions) {
-        this.id = options.id;
+        this.id = uniqueId.next();
         this.message = options.message;
         this.closeById = options.closeById;
     }
@@ -31,17 +32,14 @@ export class Toast {
 }
 
 export const useToastStore = defineStore('toast', () => {
-    let toastLastId = 0;
     const list = ref<Toast[]>([]);
 
-    function close(id: number) {
+    const close: ToastCloseById = (id: string) => {
         list.value = list.value.filter((toast) => toast.id !== id);
-    }
+    };
 
     function open(message: string): Toast {
-        const id = toastLastId++;
         const toast = new Toast({
-            id,
             message,
             closeById: close
         });

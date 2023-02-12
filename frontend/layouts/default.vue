@@ -48,46 +48,6 @@
             <slot />
         </LayoutMain>
     </SideBar>
-
-<!--    <v-app>-->
-<!--        <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent app>-->
-<!--            <component-->
-<!--                v-if="navigationStore.extra"-->
-<!--                class="pt-5 pb-5 drawer__navigation-extra"-->
-<!--                :is="navigationStore.extra.view"-->
-<!--            />-->
-<!--        </v-navigation-drawer>-->
-
-<!--        <v-main class="layout__main">-->
-<!--            <v-container>-->
-<!--                <slot/>-->
-<!--            </v-container>-->
-<!--        </v-main>-->
-
-<!--        <template v-if="isBottomNavigation">-->
-<!--            <template v-if="navigationStore.extra">-->
-<!--                <v-fade-transition>-->
-<!--                    <component-->
-<!--                        :is="navigationStore.extra.mobileTrigger"-->
-<!--                        @open="navigationStore.openExtra"-->
-<!--                    />-->
-<!--                </v-fade-transition>-->
-
-<!--                <v-bottom-sheet v-model="navigationExtraModel">-->
-<!--                    <v-card tile>-->
-<!--                        <component-->
-<!--                            :is="navigationStore.extra.view"-->
-<!--                            @close="navigationStore.closeExtra"-->
-<!--                        />-->
-
-<!--                        <v-btn class="layout__close-navigation-extra" icon @click="navigationStore.closeExtra">-->
-<!--                            <v-icon>{{ mdiClose }}</v-icon>-->
-<!--                        </v-btn>-->
-<!--                    </v-card>-->
-<!--                </v-bottom-sheet>-->
-<!--            </template>-->
-<!--        </template>-->
-<!--    </v-app>-->
 </template>
 
 <script lang="ts" setup>

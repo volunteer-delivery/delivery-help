@@ -1,5 +1,5 @@
 <template>
-    <AppFormTextInput :type="type">
+    <AppFormTextInput :type="type" :autocomplete="false" :autocapitalize="false">
         <template #append>
             <AppButton
                 look="icon"
