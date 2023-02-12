@@ -1,22 +1,11 @@
+import type {Component} from "vue";
 import {defineStore} from "pinia";
 
 export const useNavigationStore = defineStore('navigation', () => {
-    const extra = ref(null);
-    const extraOpened = ref(false);
+    const extra = ref<Component | null>(null);
 
-    function setExtra(extra: any) {
-        extra.value = extra;
-        extraOpened.value = false;
-    }
+    const setExtra = (newExtra: Component) => extra.value = markRaw(newExtra);
+    const resetExtra = () => extra.value = null;
 
-    const openExtra = () => extraOpened.value = true;
-    const closeExtra = () => extraOpened.value = false;
-
-    return {
-        extra,
-        extraOpened,
-        setExtra,
-        openExtra,
-        closeExtra
-    };
+    return { extra, setExtra, resetExtra };
 });

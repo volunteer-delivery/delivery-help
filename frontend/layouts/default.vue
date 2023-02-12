@@ -1,8 +1,8 @@
 <template>
     <BottomBar v-if="device.isMobileOrTablet">
-        <main class="pt-4 pb-24 h-full">
+        <LayoutMain>
             <slot />
-        </main>
+        </LayoutMain>
 
         <template #bar>
             <AppBadge
@@ -19,6 +19,8 @@
                     :icon="nav.icon"
                 />
             </AppBadge>
+
+            <NavigationExtra />
         </template>
     </BottomBar>
 
@@ -38,11 +40,13 @@
                     :icon="nav.icon"
                 />
             </AppBadge>
+
+            <NavigationExtra />
         </template>
 
-        <main class="pt-4 pb-24 px-6 h-full">
+        <LayoutMain class="px-6">
             <slot />
-        </main>
+        </LayoutMain>
     </SideBar>
 
 <!--    <v-app>-->
@@ -87,9 +91,10 @@
 </template>
 
 <script lang="ts" setup>
-import type {Component} from "vue";
+import {Transition} from "vue";
+import type { Component, FunctionalComponent } from "vue";
 import {CheckRound, DirectionsCarFilledRound, PlayArrowRound} from '@vicons/material';
-import {BadgeColor} from "~/enums/badge";
+import {BadgeColor} from "~/enums";
 
 interface INavItem {
     id: 'active' | 'pending' | 'done';
@@ -109,6 +114,7 @@ const route = useRoute();
 const apiCable = useApiCable();
 const ridesStore = useRidesStore();
 const authStore = useAuthStore();
+const navigationStore = useNavigationStore();
 
 function useNavItem(item: INavOptions): INavItem {
     const count = ridesStore.counter[item.id];
@@ -152,14 +158,23 @@ apiCable.on('rides/new', ridesStore.add);
 apiCable.on('rides/update', ridesStore.update);
 apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, ridesStore.update);
 
+const LayoutMain: FunctionalComponent = (_, {attrs, slots}) => {
+    const renderAttrs = {
+        ...attrs,
+        class: ['pt-4 pb-24 h-full', attrs.class]
+    }
+    return h('main', renderAttrs, slots.default!());
+};
 
-//
-// const isBottomNavigation = computed(() => device.isMobileOrTablet);
-//
-// const navigationExtraModel = computed({
-//     get: () => navigationStore.extraOpened,
-//     set: (toOpened) => toOpened ? navigationStore.openExtra() : navigationStore.closeExtra()
-// });
+const NavigationExtra = () => {
+    const transitionProps = {
+        name: 'navigation-extra',
+        duration: { enter: 200, leave: 150 }
+    };
+    return h(Transition, transitionProps, () => {
+        return navigationStore.extra ? h(navigationStore.extra) : null;
+    });
+}
 </script>
 
 <style scoped>
@@ -171,16 +186,19 @@ apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, ridesStore.update
     @apply -top-1.5 left-8;
 }
 
-
-/*
-.layout__close-navigation-extra {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+.navigation-extra-enter-active {
+    @apply transition-fade duration-200;
 }
 
-.drawer__navigation-extra {
-    margin-top: auto;
+.navigation-extra-leave-active {
+    @apply transition-fade duration-150;
 }
-*/
+
+.navigation-extra-enter-from {
+    @apply opacity-0 scale-75 md:scale-95;
+}
+
+.navigation-extra-leave-to {
+    @apply opacity-0;
+}
 </style>
