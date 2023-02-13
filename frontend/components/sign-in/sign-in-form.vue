@@ -2,7 +2,7 @@
     <AppForm :model="form" :disabled="isSubmitting" @submit="signIn">
         <AppCardBody>
             <AppFormField id="username" label="Користувач" class="mb-4">
-                <AppFormTextInput />
+                <AppFormTextInput :autocapitalize="false" />
             </AppFormField>
             <AppFormField id="password" label="Пароль">
                 <AppFormPasswordInput />

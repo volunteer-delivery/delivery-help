@@ -43,9 +43,3 @@ const modalStyles = computed(() => {
 
 provide(ACTIVE_MODAL, props.modal);
 </script>
-
-<style scoped>
-.modal-content {
-    @apply transition-transform;
-}
-</style>
