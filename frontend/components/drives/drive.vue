@@ -2,23 +2,6 @@
     <v-card class="drive" elevation="1">
         <v-card-text class="pb-0">
             <div class="d-flex pb-4 pb-sm-2">
-                <v-tooltip right color="rgba(97, 97, 97, 1)">
-                    <template #activator="{ on, attrs }">
-                        <p
-                            class="subtitle-2 d-flex align-center mb-0 drive__car"
-                            v-bind="attrs"
-                            v-on="on"
-                        >
-                            <v-icon class="mr-1" dense>{{ mdiCar }}</v-icon>
-                            {{ driverVehicle }}
-                        </p>
-                    </template>
-
-                    <span>{{ driverTooltip }}</span>
-                </v-tooltip>
-
-                <v-spacer />
-
                 <v-card-actions class="pa-0" v-if="!hideActions">
                     <v-spacer/>
 
@@ -56,20 +39,11 @@
                 </v-card-actions>
             </div>
         </v-card-text>
-
-        <v-bottom-sheet v-model="isDriverDetailsDisplaying" content-class="driver-details-modal">
-            <DriverDetails
-                :driver="drive.driver"
-                ref="detailsViewRef"
-                @close="toggleDriverDetails(false)"
-            />
-        </v-bottom-sheet>
     </v-card>
 </template>
 
 <script setup>
-import { mdiCar, mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree, mdiAccount } from '@mdi/js';
-import DriverDetails from '~/components/drives/driver-details';
+import { mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree } from '@mdi/js';
 import {RideStatus} from "~/enums";
 
 const props = defineProps({
@@ -87,32 +61,16 @@ const props = defineProps({
 
 const ridesStore = useRidesStore();
 
-const detailsViewRef = ref(null);
-const isDriverDetailsDisplaying = ref(false);
-
 const departureTime = computed(() => formatDate(props.drive.departureTime));
 const driverPhone = computed(() => props.drive.driver.phone);
 const driverPhoneLink = computed(() => `tel:${driverPhone.value}`)
-const driverVehicle = computed(() => formatVehicle(props.drive.vehicle));
-const driverTooltip = computed(() => formatVehicleDetails(props.drive.vehicle));
 const isPending = computed(() => props.drive.status === RideStatus.PENDING);
 const isDone = computed(() => props.drive.status === RideStatus.FINISHED);
 const canChangeStatus = computed(() => !isDone.value);
 
-watch(isDriverDetailsDisplaying, async (isDisplaying) => {
-    if (isDisplaying) {
-        await nextTick();
-        await detailsViewRef.value.onOpen();
-    }
-});
-
 function changeStatus() {
     const status = isPending.value ? 'ACTIVE' : 'FINISHED'
     ridesStore.changeStatus(props.drive, status);
-}
-
-function toggleDriverDetails(isDisplaying) {
-    isDriverDetailsDisplaying.value = isDisplaying;
 }
 </script>
 
@@ -132,88 +90,6 @@ function toggleDriverDetails(isDisplaying) {
 .drive {
     overflow: hidden;
     position: relative;
-}
-
-.drive:not(.drive--verified)::before {
-    filter: grayscale(100%);
-    opacity: 0.05;
-}
-
-.path {
-    position: relative;
-}
-
-.path::before,
-.path::after {
-    content: "";
-    position: absolute;
-    display: block;
-    border-left: 2px solid #3F51B5;
-    left: 8px;
-}
-
-.path::before {
-    top: 16px;
-    height: 14px;
-}
-
-.path::after {
-    bottom: 13px;
-    height: 18px;
-}
-
-.path__arrow {
-    position: absolute;
-    display: block;
-    top: calc(50% - 3px);
-    left: 4px;
-    border: 5px solid transparent;
-    border-top-color: #3F51B5;
-}
-
-.path__point {
-    position: relative;
-    padding-left: 24px;
-    display: flex;
-    margin: 0;
-    color: #424242;
-    font-size: 19px;
-    line-height: 1;
-}
-
-.path__point-date {
-    font-size: 16px;
-    line-height: 1;
-    color: #757575;
-}
-
-.path__point::before {
-    position: absolute;
-    content: "";
-    display: block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    transform: translateY(-50%);
-    top: 50%;
-    left: 4px;
-    border: 2px solid #3F51B5;
-}
-
-.path__point:first-child::before {
-    background-color: #3F51B5;
-}
-
-.drive__driver {
-    border: none;
-    background: none;
-    display: block;
-    text-decoration: underline;
-    font-size: 16px !important;
-}
-
-.drive__car {
-    font-size: 16px !important;
 }
 
 .drive__phone {

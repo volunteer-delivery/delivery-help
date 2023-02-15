@@ -25,9 +25,9 @@
 <script lang="ts" setup>
 import { Icon } from '@vicons/utils';
 import { FilterAltFilled } from '@vicons/material';
-import { RideListFilter } from '#components'
+import { RideListFilterModal } from '#components'
 
 const device = useDevice();
 const modalStore = useModalStore();
-const openFilter = () => modalStore.open(RideListFilter);
+const openFilter = () => modalStore.open(RideListFilterModal);
 </script>

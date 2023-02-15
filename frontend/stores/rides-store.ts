@@ -8,6 +8,7 @@ export interface Address {
 
 export interface Driver {
     id: string;
+    phone: string;
 }
 
 export interface RidePathPoint {
@@ -123,7 +124,7 @@ export const useRidesStore = defineStore('rides', () => {
         rides.value[index] = ride;
     }
 
-    async function loadRidesByDriver(driver: Driver) {
+    function loadRidesByDriver(driver: Driver) {
         return rides.value.filter((ride: Ride) => ride.driver.id === driver.id);
     }
 

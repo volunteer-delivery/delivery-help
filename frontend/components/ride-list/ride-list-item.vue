@@ -3,8 +3,9 @@
         <RidePath class="mb-3" :path="ride.path" />
 
         <AppButton
-            class="p-1 -ml-1 flex font-medium text-gray-500"
+            class="p-1 -ml-1 mb-2 flex font-medium text-gray-500"
             :ripple="RippleColor.BLUE_800"
+            @click="openDriverDetails"
         >
             <Icon size="24">
                 <AccountBoxRound />
@@ -32,6 +33,7 @@ import type {PropType} from "vue";
 import {Icon} from "@vicons/utils";
 import {AccountBoxRound, DirectionsCarRound} from '@vicons/material';
 import {Ride} from "~/stores/rides-store";
+import {DriverDetailsModal} from "#components";
 
 const props = defineProps({
     ride: {
@@ -40,5 +42,11 @@ const props = defineProps({
     }
 });
 
+const modalStore = useModalStore();
+
 const vehicleDetails = computed(() => formatVehicleDetails(props.ride.vehicle));
+
+const openDriverDetails = () => modalStore.open(DriverDetailsModal, {
+    props: { driver: props.ride.driver }
+});
 </script>

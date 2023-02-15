@@ -2,38 +2,6 @@
     <v-card tile>
         <v-row class="driver-details__row" justify="center" align="center">
             <v-col class="pt-5" cols="12" sm="8" md="4">
-                <div class="d-flex align-center justify-space-between pr-4 driver-details__heading">
-                    <v-card-title>
-                        {{ driver.name }}
-                    </v-card-title>
-
-                    <v-btn icon @click="close">
-                        <v-icon>{{ mdiClose }}</v-icon>
-                    </v-btn>
-                </div>
-
-                <div class="driver-details__body--loading" v-if="isLoading">
-                    <v-progress-circular
-                        indeterminate
-                        color="primary"
-                        size="48"
-                        class="mb-10"
-                    />
-                </div>
-
-                <template v-else>
-                    <v-card-text class="body-1">
-                        <a class="d-inline-flex align-center driver-details__phone" :href="driverPhoneLink">
-                            <v-icon>{{ mdiPhone }}</v-icon>
-
-                            <span class="ml-2" >
-                                {{ driver.phone }}
-                            </span>
-                        </a>
-                    </v-card-text>
-
-                    <v-divider/>
-
                     <v-list class="pb-5 pb-md-10" subheader>
                         <v-subheader class="text-h6 driver-details__section-heading">
                             Історія
@@ -60,42 +28,10 @@
 <!--                            />-->
                         </v-list-item>
                     </v-list>
-                </template>
             </v-col>
         </v-row>
     </v-card>
 </template>
-
-<script setup>
-import { mdiClose, mdiPhone } from '@mdi/js';
-
-const props = defineProps({
-    driver: {
-        type: Object,
-        required: true
-    }
-});
-
-const emit = defineEmits(['close']);
-
-const ridesStore = useRidesStore();
-
-const driverPhoneLink = computed(() => `tel:${props.driver.phone}`);
-
-const isLoading = ref(true);
-const drives = ref([]);
-
-const close = () => emit('close');
-
-async function onOpen() {
-    isLoading.value = true;
-    await nextTick()
-    drives.value = await ridesStore.loadRidesByDriver(props.driver);
-    isLoading.value = false;
-}
-
-defineExpose({ onOpen });
-</script>
 
 <style>
 .driver-details-modal {

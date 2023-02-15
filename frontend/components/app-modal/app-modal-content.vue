@@ -1,6 +1,7 @@
 <template>
     <component
         :is="modal.content"
+        v-bind="modal.props"
         class="modal-content absolute left-0 bottom-0 w-full"
         ref="modalRef"
         :style="modalStyles"
@@ -10,6 +11,7 @@
 
     <component
         :is="modal.content"
+        v-bind="modal.props"
         class="modal-content absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
         v-on-click-outside="modal.close"
         v-else
