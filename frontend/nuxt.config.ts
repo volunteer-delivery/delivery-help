@@ -48,18 +48,9 @@ export default defineNuxtConfig({
         },
     },
 
-    // vuetify: {
-    //     theme: {
-    //         dark: false,
-    //         themes: {
-    //             light: { primary: '#3f51b5' }
-    //         }
-    //     },
-    //     icons: { iconfont: 'mdiSvg' },
-    //     defaultAssets: { icons: false }
-    // },
-
-    device: { refreshOnResize: true },
+    device: {
+        refreshOnResize: true
+    },
 
     runtimeConfig: {
         public: {

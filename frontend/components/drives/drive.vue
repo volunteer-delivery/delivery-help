@@ -1,15 +1,6 @@
 <template>
     <v-card class="drive" elevation="1">
         <v-card-text class="pb-0">
-            <button
-                type="button"
-                class="subtitle-2 d-flex align-center drive__driver pt-2 pb-2 pr-2"
-                @click="toggleDriverDetails(true)"
-            >
-                <v-icon class="mr-1" dense>{{ mdiAccount }}</v-icon>
-                {{ drive.driver.name }}
-            </button>
-
             <div class="d-flex pb-4 pb-sm-2">
                 <v-tooltip right color="rgba(97, 97, 97, 1)">
                     <template #activator="{ on, attrs }">

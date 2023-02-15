@@ -6,8 +6,8 @@ export const formatVehicle = (vehicle: Vehicle)  => ({
     TRUCK: 'Фура'
 })[vehicle];
 
-export const formatVehicleDetails = (vehicle: Vehicle)  => ({
-    CAR: '( < 2т)',
-    VAN: '( < 10т)',
-    TRUCK: '( > 10т)'
+export const formatVehicleDetails = (vehicle: Vehicle) => ({
+    CAR: 'Легковушка ( < 2т )',
+    VAN: 'Грузова ( < 10т )',
+    TRUCK: 'Фура ( > 10т )'
 })[vehicle];
