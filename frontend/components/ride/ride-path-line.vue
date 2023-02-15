@@ -1,5 +1,5 @@
 <template>
-    <div class="h-10 relative path-line">
+    <div class="h-8 relative path-line">
         <div class="path-line-arrow"/>
     </div>
 </template>
@@ -7,7 +7,7 @@
 <style scoped>
 .path-line::before,
 .path-line::after {
-    @apply content-[''] absolute block left-2 h-4 border-l-2 border-blue-800;
+    @apply content-[''] absolute block left-2 h-3 border-l-2 border-blue-800;
 }
 
 .path-line::before {
