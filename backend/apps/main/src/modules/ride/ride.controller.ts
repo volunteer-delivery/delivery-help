@@ -9,7 +9,7 @@ import {
     Patch,
     UseInterceptors
 } from "@nestjs/common";
-import {Address, Driver, PrismaService, Ride, RideStatus, User} from "@app/prisma";
+import {Driver, PrismaService, Ride, RideStatus, User} from "@app/prisma";
 import {BotMicroserviceApi} from "@app/bot-telegram/bot.microservice-api";
 import {WebsocketMicroserviceApi} from "@app/websocket/websocket.microservice-api";
 import {CurrentUser} from "../auth";

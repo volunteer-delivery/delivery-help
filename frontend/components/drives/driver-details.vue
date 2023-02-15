@@ -47,17 +47,17 @@
                             <p class="mb-0 mt-0 mr-10 driver-details__history-item-time">
                                 {{ formatDate(drive.departureTime) }}
                             </p>
-                            <DrivePoint
-                                class="mb-0 driver-details__history-item-point"
-                                :point="drive.from"
-                            />
+<!--                            <DrivePoint-->
+<!--                                class="mb-0 driver-details__history-item-point"-->
+<!--                                :point="drive.from"-->
+<!--                            />-->
 
                             <div class="ml-2 driver-details__history-item-arrow"/>
 
-                            <DrivePoint
-                                class="ml-4 mb-0 driver-details__history-item-point text-right"
-                                :point="drive.destination"
-                            />
+<!--                            <DrivePoint-->
+<!--                                class="ml-4 mb-0 driver-details__history-item-point text-right"-->
+<!--                                :point="drive.destination"-->
+<!--                            />-->
                         </v-list-item>
                     </v-list>
                 </template>
@@ -68,7 +68,6 @@
 
 <script setup>
 import { mdiClose, mdiPhone } from '@mdi/js';
-import DrivePoint from '@/components/drives/drive-point';
 
 const props = defineProps({
     driver: {

@@ -3,11 +3,9 @@
         <v-card-text class="pb-0">
             <div class="path mb-4 font-weight-medium">
                 <div class="mb-8 d-flex align-end path__point">
-                    <DrivePoint class="ma-0" :point="drive.from"/>
                     <span class="path__point-date">, {{ departureTime }}</span>
                 </div>
                 <div class="path__arrow"/>
-                <DrivePoint class="path__point" :point="drive.destination"/>
             </div>
 
             <button
@@ -87,7 +85,6 @@
 
 <script setup>
 import { mdiCar, mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree, mdiAccount } from '@mdi/js';
-import DrivePoint from '~/components/drives/drive-point';
 import DriverDetails from '~/components/drives/driver-details';
 import {RideStatus} from "~/enums";
 
@@ -152,22 +149,6 @@ function toggleDriverDetails(isDisplaying) {
     overflow: hidden;
     position: relative;
 }
-
-/*
-TODO DRIVER_GRADE
-
-.drive::before {
-    content: "";
-    background-image: url("/verified-stamp.png");
-    background-size: contain;
-    transform: rotate(22deg) translate(-7px, 12px);
-    width: 100px;
-    height: 90px;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
- */
 
 .drive:not(.drive--verified)::before {
     filter: grayscale(100%);

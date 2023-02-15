@@ -10,14 +10,20 @@ export interface Driver {
     id: string;
 }
 
+export interface RidePathPoint {
+    address: Address;
+    departureTime?: string;
+}
+
+export type RidePath = RidePathPoint[];
+
 export interface Ride {
     id: string;
     status: RideStatus;
-    from: Address;
     destination: Address;
     vehicle: Vehicle;
-    departureTime: string;
     driver: Driver;
+    path: RidePathPoint[];
 }
 
 interface RidesFilter {
@@ -29,9 +35,11 @@ interface RidesFilter {
 }
 
 interface RidesFilterValues {
-    countries: string[];
-    cities: string[];
+    countries: Set<string>;
+    cities: Set<string>;
 }
+
+const format = (value: number) => value > 100 ? `100+` : value.toString();
 
 export const useRidesStore = defineStore('rides', () => {
     const http = useHttpClient();
@@ -39,7 +47,11 @@ export const useRidesStore = defineStore('rides', () => {
 
     const rides = ref<Ride[]>([]);
     const isLoaded = ref(false);
-    const filterValues = ref<RidesFilterValues | null>(null);
+
+    const filterValues = reactive<RidesFilterValues>({
+        countries: new Set(),
+        cities: new Set()
+    });
 
     const pendingFilter = reactive<RidesFilter>({
         fromCountry: null,
@@ -53,70 +65,51 @@ export const useRidesStore = defineStore('rides', () => {
     const active = computed(() => rides.value.filter((ride: Ride) => ride.status === RideStatus.ACTIVE));
     const done = computed(() => rides.value.filter((ride: Ride) => ride.status === RideStatus.FINISHED));
 
-    const counter = computed(() => {
-        const format = (value: number) => value > 100 ? `100+` : value.toString();
-
-        return {
-            pending: format(pending.value.length),
-            active: format(active.value.length),
-            done: format(done.value.length)
-        };
-    });
+    const counter = computed(() => ({
+        pending: format(pending.value.length),
+        active: format(active.value.length),
+        done: format(done.value.length)
+    }));
 
     const pendingFiltered = computed(() => {
         return pending.value.filter((ride: Ride) => {
-            if (pendingFilter.fromCountry && pendingFilter.fromCountry !== ride.from.country) return false;
-            if (pendingFilter.fromCity && pendingFilter.fromCity !== ride.from.city) return false;
-            if (pendingFilter.destinationCity && pendingFilter.destinationCity !== ride.destination.city) return false;
+            const [from, destination] = ride.path;
+
+            if (pendingFilter.fromCountry && pendingFilter.fromCountry !== from.address.country) return false;
+            if (pendingFilter.fromCity && pendingFilter.fromCity !== from.address.city) return false;
+            if (pendingFilter.destinationCity && pendingFilter.destinationCity !== destination.address.city) return false;
             if (pendingFilter.vehicles.length && !pendingFilter.vehicles.includes(ride.vehicle)) return false;
 
             if (pendingFilter.departureRange.length) {
-                const departureTime = Number(new Date(ride.departureTime));
-                const [from, to] = pendingFilter.departureRange;
+                const departureTime = Number(new Date(from.departureTime!));
+                const [fromDate, toDate] = pendingFilter.departureRange;
 
-                if (departureTime < Number(new Date(from!))) return false;
-                if (departureTime > Number(new Date(to!))) return false;
+                if (departureTime < Number(new Date(fromDate!))) return false;
+                if (departureTime > Number(new Date(toDate!))) return false;
             }
 
             return true;
         });
     });
 
+    function patchFilterValues(ride: Ride) {
+        for (const point of ride.path) {
+            filterValues.countries.add(point.address.country!);
+            if (point.address.city) filterValues.cities.add(point.address.city);
+        }
+    }
+
     async function load() {
         if (isLoaded.value) return;
-
-        const filter: Record<keyof RidesFilterValues, Set<string>> = {
-            countries: new Set(),
-            cities: new Set()
-        };
 
         const { rides: data } = await http.get<{ rides: Ride[] }>('rides');
         rides.value = data;
 
         for (const ride of rides.value) {
-            filter.countries.add(ride.from.country!);
-            if (ride.from.city) filter.cities.add(ride.from.city);
-            filter.cities.add(ride.destination.city);
+            patchFilterValues(ride);
         }
-
-        filterValues.value = {
-            countries: Array.from(filter.countries),
-            cities: Array.from(filter.cities)
-        };
 
         isLoaded.value = true;
-    }
-
-    function patchFilterValues(ride: Ride) {
-        if (!filterValues.value!.countries.includes(ride.from.country!)) {
-            filterValues.value!.countries.push(ride.from.country!);
-        }
-        if (
-            ride.from.city && !filterValues.value!.cities.includes(ride.from.city)
-            && !filterValues.value!.cities.includes(ride.destination.city)
-        ) {
-            filterValues.value!.cities.push(ride.from.country!);
-        }
     }
 
     function add(ride: Ride) {
