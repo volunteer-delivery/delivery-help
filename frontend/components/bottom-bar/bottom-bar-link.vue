@@ -1,8 +1,8 @@
 <template>
     <AppButton
-        class="bottom-bar-link text-gray-600 min-w-[80px] transition-colors overflow-clip"
+        class="bottom-bar-link text-gray-600 min-w-[80px] transition-colors"
         :to="to"
-        v-ripple.blue-800
+        :ripple="RippleColor.BLUE_800"
     >
         <span class="h-14 px-4 text-xs h-full flex flex-col items-center justify-center font-medium tracking-wider">
             <Icon size="24px">
@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import {Icon} from "@vicons/utils";
-import {vRipple} from "#imports";
 
 defineProps({
     to: {

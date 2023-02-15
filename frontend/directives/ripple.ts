@@ -5,7 +5,7 @@ interface IRipplePosition {
     y: number;
 }
 
-enum RippleColor {
+export enum RippleColor {
     SLATE_50 = 'slate-50',
     BLUE_800 = 'blue-800'
 }

@@ -1,10 +1,10 @@
 <template>
-    <div class="flex items-end path__point">
+    <div class="flex items-end relative pl-6 leading-none text-xl text-gray-700 path__point">
         <p class="ma-0">
             {{ location }}
         </p>
 
-        <span class="path__point-date" v-if="departureTime">
+        <span class="path__point-date text-gray-500 text-base leading-none" v-if="departureTime">
             , {{ departureTime }}
         </span>
     </div>
@@ -29,20 +29,6 @@ const departureTime = computed(() => props.point.departureTime && formatDate(pro
 </script>
 
 <style scoped>
-.path__point {
-    position: relative;
-    padding-left: 24px;
-    color: #424242;
-    font-size: 19px;
-    line-height: 1;
-}
-
-.path__point-date {
-    font-size: 16px;
-    line-height: 1;
-    color: #757575;
-}
-
 .path__point::before {
     position: absolute;
     content: "";

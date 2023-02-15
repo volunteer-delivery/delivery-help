@@ -4,7 +4,7 @@
         :class="tagClasses"
         :disabled="disabled || loading"
     >
-        <span class="block h-full" v-visible="!loading">
+        <span class="[display:inherit] h-full" v-visible="!loading">
             <slot />
         </span>
 
@@ -18,26 +18,28 @@ import {RouteLocationRaw} from 'vue-router';
 import {vVisible} from '#imports';
 import {NuxtLink} from "#components";
 import {ButtonLook, ButtonSize} from "~/enums";
+import {RippleColor} from "~/directives/ripple";
 
 type ButtonSizeConfig = Record<ButtonSize, string>;
+type ButtonRippledLook = ButtonLook.PRIMARY | ButtonLook.ICON_PRIMARY;
 
 const BUTTON_SIZES: Record<ButtonLook, ButtonSizeConfig> = {
-    raw: {
+    [ButtonLook.RAW]: {
         sm: '',
         md: '',
         lg: ''
     },
-    icon: {
+    [ButtonLook.ICON]: {
         sm: 'p-1',
         md: 'p-2',
         lg: 'p-4'
     },
-    'icon-primary': {
+    [ButtonLook.ICON_PRIMARY]: {
         sm: 'p-1',
         md: 'p-2',
         lg: 'p-4'
     },
-    primary: {
+    [ButtonLook.PRIMARY]: {
         sm: 'py-1 px-1.5 text-sm',
         md: 'py-2 px-2.5 text-sm',
         lg: 'py-3 px-4 text-md'
@@ -70,6 +72,17 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: false
+    },
+    ripple: {
+        type: String as PropType<RippleColor>,
+        required: false,
+        default: (props: { look: ButtonLook }): RippleColor | null => {
+            const colors: Pick<Record<ButtonLook, RippleColor>, ButtonRippledLook> = {
+                [ButtonLook.PRIMARY]: RippleColor.SLATE_50,
+                [ButtonLook.ICON_PRIMARY]: RippleColor.SLATE_50,
+            }
+            return colors[props.look as ButtonRippledLook] || null;
+        }
     }
 });
 
@@ -79,8 +92,6 @@ const tagClasses = computed(() => ({
     'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded-full text-white flex shadow-md active:shadow-xl disabled:shadow': props.look === ButtonLook.ICON_PRIMARY,
     'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md active:shadow-xl disabled:shadow': props.look === ButtonLook.PRIMARY
 }));
-
-const ripple = computed(() => [ButtonLook.PRIMARY, ButtonLook.ICON_PRIMARY].includes(props.look));
 
 function withRelativePosition(attrs: Record<string, unknown>) {
     const classes = new Set((attrs.class as string || '').split(' '));
@@ -95,9 +106,12 @@ function withRelativePosition(attrs: Record<string, unknown>) {
 const ButtonRoot: FunctionalComponent = (_, { attrs: inputAttrs, slots }) => {
     const attrs = withRelativePosition(inputAttrs);
 
+    if (props.ripple) attrs.class.push('overflow-clip');
+
     const node = props.to
         ? h(NuxtLink, {to: props.to, ...attrs}, slots.default!)
         : h('button', {type: 'button', ...attrs}, slots.default!());
-    return ripple.value ? withDirectives(node, [[vRipple]]) : node;
+
+    return props.ripple ? withDirectives(node, [[vRipple, null, '', {[props.ripple]: true}]]) : node;
 };
 </script>

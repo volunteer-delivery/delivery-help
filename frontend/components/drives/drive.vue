@@ -1,13 +1,6 @@
 <template>
     <v-card class="drive" elevation="1">
         <v-card-text class="pb-0">
-            <div class="path mb-4 font-weight-medium">
-                <div class="mb-8 d-flex align-end path__point">
-                    <span class="path__point-date">, {{ departureTime }}</span>
-                </div>
-                <div class="path__arrow"/>
-            </div>
-
             <button
                 type="button"
                 class="subtitle-2 d-flex align-center drive__driver pt-2 pb-2 pr-2"
