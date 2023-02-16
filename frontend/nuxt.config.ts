@@ -11,34 +11,34 @@ export default defineNuxtConfig({
 
             meta: [
                 { charset: 'utf-8' },
-                { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
             ],
 
             link: [
                 { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
                 { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
                 { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-                { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap' }
-            ]
-        }
+                { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap' },
+            ],
+        },
     },
 
     imports: {
         dirs: [
             'stores',
             'directives',
-            'utils'
-        ]
+            'utils',
+        ],
     },
 
     modules: [
         '@vueuse/nuxt',
         '@pinia/nuxt',
-        '@nuxtjs/device'
+        '@nuxtjs/device',
     ],
 
     css: [
-        '~/styles/global.css'
+        '~/styles/global.css',
     ],
 
     postcss: {
@@ -49,7 +49,7 @@ export default defineNuxtConfig({
     },
 
     device: {
-        refreshOnResize: true
+        refreshOnResize: true,
     },
 
     runtimeConfig: {
@@ -58,6 +58,6 @@ export default defineNuxtConfig({
             apiUrl: FRONTEND_API_URL,
             socketUrl: FRONTEND_SOCKET_URL,
             bugsnagKey: FRONTEND_BUGSNAG_KEY,
-        }
-    }
+        },
+    },
 });

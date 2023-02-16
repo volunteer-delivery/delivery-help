@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import { defineStore } from 'pinia';
 
 type ToastCloseById = (id: string) => void;
 
@@ -13,7 +13,7 @@ export class Toast {
     public readonly id: string;
     public readonly message: string;
     private readonly closeById: ToastCloseById;
-    private closingTimeout: any;
+    private closingTimeout?: NodeJS.Timeout;
 
     constructor(options: IToastOptions) {
         this.id = uniqueId.next();
@@ -21,12 +21,12 @@ export class Toast {
         this.closeById = options.closeById;
     }
 
-    close(): void {
+    public close(): void {
         this.closeById(this.id);
-        clearTimeout(this.closingTimeout);
+        this.closingTimeout && clearTimeout(this.closingTimeout);
     }
 
-    closeAfter(timeout: number = 5000): void {
+    public closeAfter(timeout = 5000): void {
         this.closingTimeout = setTimeout(() => this.close(), timeout);
     }
 }
@@ -41,7 +41,7 @@ export const useToastStore = defineStore('toast', () => {
     function open(message: string): Toast {
         const toast = new Toast({
             message,
-            closeById: close
+            closeById: close,
         });
         list.value = list.value.concat(toast);
         return toast;

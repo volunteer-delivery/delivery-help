@@ -1,9 +1,9 @@
-import {RideCommentResponse, RideCommentResponseAttrs} from "./ride-comment.response";
+import { RideCommentResponse, RideCommentResponseAttrs } from './ride-comment.response';
 
 export class RideCommentListResponse {
-    comments: RideCommentResponse[];
+    public comments: RideCommentResponse[];
 
     constructor(comments: RideCommentResponseAttrs[]) {
-        this.comments = comments.map(comment => new RideCommentResponse(comment));
+        this.comments = comments.map((comment) => new RideCommentResponse(comment));
     }
 }

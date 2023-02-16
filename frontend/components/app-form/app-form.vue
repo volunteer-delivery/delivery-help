@@ -5,25 +5,25 @@
 </template>
 
 <script lang="ts" setup>
-import {PropType} from "vue";
-import {IFormModel} from "~/composables/use-form";
-import {InjectionToken} from "~/enums";
+import { PropType } from 'vue';
+import { IFormModel } from '~/composables/use-form';
+import { InjectionToken } from '~/enums';
 
 const props = defineProps({
     model: {
-        type: Object as PropType<IFormModel<any>>,
-        required: true
+        type: Object as PropType<IFormModel<object>>,
+        required: true,
     },
 
     disabled: {
         type: Boolean,
         required: false,
-        default: false
-    }
+        default: false,
+    },
 });
 
-defineEmits(['submit'])
+defineEmits(['submit']);
 
-provide<IFormModel<any>>(InjectionToken.FORM, props.model);
+provide<IFormModel<object>>(InjectionToken.FORM, props.model);
 watch(toRef(props, 'disabled'), props.model!.setDisabled, { immediate: true });
 </script>

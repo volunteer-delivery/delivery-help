@@ -1,4 +1,4 @@
-import {DirectiveBinding, ObjectDirective} from 'vue';
+import { DirectiveBinding, ObjectDirective } from 'vue';
 
 interface IRipplePosition {
     x: number;
@@ -7,12 +7,12 @@ interface IRipplePosition {
 
 export enum RippleColor {
     SLATE_50 = 'slate-50',
-    BLUE_800 = 'blue-800'
+    BLUE_800 = 'blue-800',
 }
 
 interface IRippleDirectiveState {
     color: RippleColor;
-    activeAnimationTimeout: any | null;
+    activeAnimationTimeout: NodeJS.Timeout | null;
 }
 
 const storage = useWeakState<HTMLElement, IRippleDirectiveState>();
@@ -26,7 +26,7 @@ function completeRipple(el: HTMLElement): void {
     el.style.removeProperty('--ripple-size');
     el.style.removeProperty('--ripple-x');
     el.style.removeProperty('--ripple-y');
-    el.style.removeProperty('--ripple-duration')
+    el.style.removeProperty('--ripple-duration');
 }
 
 function computePosition(clientRect: DOMRect, event: MouseEvent): IRipplePosition {
@@ -34,12 +34,12 @@ function computePosition(clientRect: DOMRect, event: MouseEvent): IRipplePositio
     if (!event.offsetX && !event.offsetY) {
         return {
             x: clientRect.width / 2,
-            y: clientRect.height / 2
+            y: clientRect.height / 2,
         };
     }
     return {
         x: event.clientX - clientRect.x,
-        y: event.clientY - clientRect.y
+        y: event.clientY - clientRect.y,
     };
 }
 
@@ -54,17 +54,17 @@ function renderRipple(el: HTMLElement, event: MouseEvent): void {
     }
 
     const size = Math.max(clientRect.height, clientRect.width);
-    el.style.setProperty('--ripple-size', size + 'px');
-    el.style.setProperty('--ripple-x', (position.x - size / 2) + 'px');
-    el.style.setProperty('--ripple-y', (position.y - size / 2) + 'px');
+    el.style.setProperty('--ripple-size', `${size}px`);
+    el.style.setProperty('--ripple-x', `${position.x - size / 2}px`);
+    el.style.setProperty('--ripple-y', `${position.y - size / 2}px`);
     el.style.setProperty('--ripple-duration', '300ms');
 
     requestAnimationFrame(() => {
         el.classList.add('ripple', `ripple-${state.color}`);
-    })
+    });
 }
 
-function clickHandler(event: MouseEvent) {
+function clickHandler(event: MouseEvent): void {
     const el = event.currentTarget as HTMLButtonElement;
     const state = storage.get(el)!;
 
@@ -112,5 +112,5 @@ export const vRipple: ObjectDirective<HTMLButtonElement> = {
     beforeUnmount(el) {
         toggleListener(el, false);
         storage.delete(el);
-    }
+    },
 };

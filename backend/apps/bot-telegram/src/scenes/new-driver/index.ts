@@ -1,1 +1,1 @@
-export {NewDriverScene} from './new-driver.scene';
+export { NewDriverScene } from './new-driver.scene';

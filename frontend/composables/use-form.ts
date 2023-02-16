@@ -1,5 +1,5 @@
-import type {UnwrapRef} from "vue";
-import {AnySchema, ValidationError} from "yup";
+import type { UnwrapRef } from 'vue';
+import { AnySchema, ValidationError } from 'yup';
 
 export interface IFormFieldDefinition<V> {
     initial: V;
@@ -51,7 +51,7 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
             });
     }
 
-    function registerEnteredCheck(check: CheckValueEntered<F>) {
+    function registerEnteredCheck(check: CheckValueEntered<F>): void {
         checkEntered = check;
         isEntered.value = check(data.value as F);
     }
@@ -62,7 +62,7 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
         }
 
         if (checkEntered) {
-            isEntered.value = checkEntered(data.value as F)
+            isEntered.value = checkEntered(data.value as F);
         }
     });
 
@@ -79,13 +79,13 @@ export function useFormField<F>(definition: IFormFieldDefinition<F>): IFormField
         isDisabled,
         setDisabled,
         isEntered,
-        registerEnteredCheck
+        registerEnteredCheck,
     });
 }
 
 type IFormFieldDefinitions<FD extends object> = {
     [FF in keyof FD]: IFormFieldDefinition<FD[FF]>;
-}
+};
 
 type IFormFields<FD extends object> = {
     [FF in keyof FD]: IFormFieldModel<FD[FF]>;
@@ -104,7 +104,7 @@ export interface IFormModel<FD extends object> extends IFormValidatable<IFormErr
 
 function buildFormFields<FD extends object>(definition: IFormFieldDefinitions<FD>): IFormFields<FD> {
     const entries = Object.entries(definition).map(([name, definition]) => {
-        return [name, useFormField(definition as IFormFieldDefinition<any>)];
+        return [name, useFormField(definition as IFormFieldDefinition<unknown>)];
     });
     return Object.fromEntries(entries);
 }
@@ -160,6 +160,6 @@ export function useForm<FD extends object>(definition: IFormFieldDefinitions<FD>
         isInvalid,
         validate,
         data,
-        setDisabled
+        setDisabled,
     }) as IFormModel<FD>;
 }

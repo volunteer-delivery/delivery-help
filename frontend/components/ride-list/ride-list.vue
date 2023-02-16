@@ -1,5 +1,5 @@
 <template>
-    <RideListEmpty v-if="isEmpty"/>
+    <RideListEmpty v-if="isEmpty" />
 
     <template v-else>
         <RideListItem
@@ -15,8 +15,8 @@
 const props = defineProps({
     rides: {
         type: Array,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const isEmpty = computed(() => !props.rides.length);

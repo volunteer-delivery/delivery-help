@@ -1,7 +1,7 @@
 import type { App, Plugin } from 'vue';
-import Bugsnag from '@bugsnag/js'
-import BugsnagPluginVue from '@bugsnag/plugin-vue'
-import type {User} from "~/stores/auth-store";
+import Bugsnag, { BugsnagStatic } from '@bugsnag/js';
+import BugsnagPluginVue from '@bugsnag/plugin-vue';
+import type { User } from '~/stores/auth-store';
 
 interface TrackerInitOptions {
     vueApp: App<Element>;
@@ -10,13 +10,13 @@ interface TrackerInitOptions {
 }
 
 class ErrorTracker {
-    isInitied = false;
+    public isInitied = false;
 
-    init({ vueApp, apiKey, releaseStage }: TrackerInitOptions) {
+    public init({ vueApp, apiKey, releaseStage }: TrackerInitOptions): void {
         Bugsnag.start({
             apiKey,
             releaseStage,
-            plugins: [new BugsnagPluginVue()]
+            plugins: [new BugsnagPluginVue()],
         });
         const plugin = Bugsnag.getPlugin('vue') as Plugin;
 
@@ -25,12 +25,12 @@ class ErrorTracker {
         this.isInitied = true;
     }
 
-    get _bugsnag() {
+    private get bugsnag(): BugsnagStatic | null {
         return this.isInitied ? Bugsnag : null;
     }
 
-    setUser(user: User) {
-        this._bugsnag?.setUser(user.id, undefined, user.username);
+    public setUser(user: User): void {
+        this.bugsnag?.setUser(user.id, undefined, user.username);
     }
 }
 
@@ -41,12 +41,12 @@ export default defineNuxtPlugin((nuxt) => {
     bugsnagKey && errorTracker.init({
         vueApp: nuxt.vueApp,
         apiKey: bugsnagKey,
-        releaseStage: env
+        releaseStage: env,
     });
 
     return {
         provide: {
-            errorTracker
-        }
+            errorTracker,
+        },
     };
-})
+});

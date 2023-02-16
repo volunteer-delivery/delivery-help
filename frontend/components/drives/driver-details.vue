@@ -2,32 +2,32 @@
     <v-card tile>
         <v-row class="driver-details__row" justify="center" align="center">
             <v-col class="pt-5" cols="12" sm="8" md="4">
-                    <v-list class="pb-5 pb-md-10" subheader>
-                        <v-subheader class="text-h6 driver-details__section-heading">
-                            Історія
-                        </v-subheader>
+                <v-list class="pb-5 pb-md-10" subheader>
+                    <v-subheader class="text-h6 driver-details__section-heading">
+                        Історія
+                    </v-subheader>
 
-                        <v-list-item
-                            class="d-flex pl-5 pr-5 align-center driver-details__history-item"
-                            v-for="drive of drives"
-                            :key="drive.id"
-                        >
-                            <p class="mb-0 mt-0 mr-10 driver-details__history-item-time">
-                                {{ formatDate(drive.departureTime) }}
-                            </p>
-<!--                            <DrivePoint-->
-<!--                                class="mb-0 driver-details__history-item-point"-->
-<!--                                :point="drive.from"-->
-<!--                            />-->
+                    <v-list-item
+                        class="d-flex pl-5 pr-5 align-center driver-details__history-item"
+                        v-for="drive of drives"
+                        :key="drive.id"
+                    >
+                        <p class="mb-0 mt-0 mr-10 driver-details__history-item-time">
+                            {{ formatDate(drive.departureTime) }}
+                        </p>
+                        <!--                            <DrivePoint-->
+                        <!--                                class="mb-0 driver-details__history-item-point"-->
+                        <!--                                :point="drive.from"-->
+                        <!--                            />-->
 
-                            <div class="ml-2 driver-details__history-item-arrow"/>
+                        <div class="ml-2 driver-details__history-item-arrow" />
 
-<!--                            <DrivePoint-->
-<!--                                class="ml-4 mb-0 driver-details__history-item-point text-right"-->
-<!--                                :point="drive.destination"-->
-<!--                            />-->
-                        </v-list-item>
-                    </v-list>
+                        <!--                            <DrivePoint-->
+                        <!--                                class="ml-4 mb-0 driver-details__history-item-point text-right"-->
+                        <!--                                :point="drive.destination"-->
+                        <!--                            />-->
+                    </v-list-item>
+                </v-list>
             </v-col>
         </v-row>
     </v-card>

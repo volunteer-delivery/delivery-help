@@ -1,4 +1,4 @@
-import type {Ref, ComponentPublicInstance} from "vue";
+import type { Ref, ComponentPublicInstance } from 'vue';
 
 interface ISwipeModalOptions {
     onClose(): void;
@@ -30,7 +30,7 @@ export function useSwipeModal(modalRef: Ref<ComponentPublicInstance | null>, opt
             if (offsetY.value < SAFE_ZONE) {
                 offsetY.value = 0;
             }
-        }
+        },
     });
 
     return reactive({ offsetY });

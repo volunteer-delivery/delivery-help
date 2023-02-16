@@ -15,27 +15,27 @@
 </template>
 
 <script lang="ts" setup>
-import {IFormFieldModel} from "~/composables/use-form";
-import {InjectionToken} from "~/enums";
+import { IFormFieldModel } from '~/composables/use-form';
+import { InjectionToken } from '~/enums';
 
 defineProps({
     type: {
         type: String,
         required: false,
-        default: 'text'
+        default: 'text',
     },
 
     autocapitalize: {
         type: Boolean,
         required: false,
-        default: true
+        default: true,
     },
 
     autocomplete: {
         type: Boolean,
         required: false,
-        default: true
-    }
+        default: true,
+    },
 });
 
 const model = inject<IFormFieldModel<string>>(InjectionToken.FORM_FIELD)!;

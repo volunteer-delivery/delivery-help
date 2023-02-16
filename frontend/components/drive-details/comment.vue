@@ -17,15 +17,16 @@
 </template>
 
 <script setup>
+/* eslint-disable */
 const props = defineProps({
     comment: {
         type: Object,
-        required: true
+        required: true,
     },
     now: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
 });
 
 function isSameDay(now, date) {
@@ -51,20 +52,20 @@ const createdAt = computed(() => {
     }
 
     if (!isSameHour(now, date)) {
-        return (now.getHours() - date.getHours()) + 'г назад';
+        return `${now.getHours() - date.getHours()}г назад`;
     }
 
     if (!isSameMinute(now, date)) {
-        return (now.getMinutes() - date.getMinutes()) + 'хв назад';
+        return `${now.getMinutes() - date.getMinutes()}хв назад`;
     }
 
     const secondsAgo = now.getSeconds() - date.getSeconds();
 
     if (secondsAgo < 5) {
-        return 'Щойно'
+        return 'Щойно';
     }
 
-    return secondsAgo + 'с назад';
+    return `${secondsAgo}с назад`;
 });
 </script>
 

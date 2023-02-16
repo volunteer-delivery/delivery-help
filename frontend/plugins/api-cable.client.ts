@@ -9,25 +9,26 @@ class ApiCable {
     constructor(url: string) {
         this.socket = connect(url, {
             transports: ['websocket'],
-            path: '/websocket'
+            path: '/websocket',
         });
     }
 
-    on<Payload extends object>(event: string, handler: ApiCableHandler<Payload>): ApiCableOff {
+    public on<Payload extends object>(event: string, handler: ApiCableHandler<Payload>): ApiCableOff {
         this.socket.on(event, handler);
         return () => this.off(event, handler);
     }
 
-    off<Payload extends object>(event: string, handler: ApiCableHandler<Payload>) {
+    public off<Payload extends object>(event: string, handler: ApiCableHandler<Payload>): void {
         this.socket.off(event, handler);
     }
 }
 
-export default defineNuxtPlugin((nuxt) => {
+export default defineNuxtPlugin(() => {
     const { socketUrl } = useRuntimeConfig().public;
+
     return {
         provide: {
-            apiCable: new ApiCable(socketUrl)
-        }
+            apiCable: new ApiCable(socketUrl),
+        },
     };
-})
+});

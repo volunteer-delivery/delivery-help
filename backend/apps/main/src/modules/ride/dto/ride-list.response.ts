@@ -1,9 +1,9 @@
-import {RideResponse, RideResponseAttrs} from "./ride.response";
+import { RideResponse, RideResponseAttrs } from './ride.response';
 
 export class RideListResponse {
-    rides: RideResponse[];
+    public rides: RideResponse[];
 
     constructor(rides: RideResponseAttrs[]) {
-        this.rides = rides.map(ride => new RideResponse(ride));
+        this.rides = rides.map((ride) => new RideResponse(ride));
     }
 }

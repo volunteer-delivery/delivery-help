@@ -1,1 +1,1 @@
-export {NewRideScene} from './new-ride.scene';
+export { NewRideScene } from './new-ride.scene';

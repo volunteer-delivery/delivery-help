@@ -1,18 +1,18 @@
-import type {$Fetch} from "nitropack";
-import type {FetchContext, FetchResponse} from "ofetch";
+import type { $Fetch } from 'nitropack';
+import type { FetchContext, FetchResponse } from 'ofetch';
 
 type $FetchErrorContext = FetchContext & { response: FetchResponse<ResponseType> };
 
 export class HttpError extends Error {}
 
-class HttpClient {
+export class HttpClient {
     private readonly fetch: $Fetch;
 
     constructor(baseURL: string) {
         this.fetch = $fetch.create({
             credentials: 'same-origin',
             baseURL,
-            onResponseError: this.onError.bind(this)
+            onResponseError: this.onError.bind(this),
         });
     }
 
@@ -27,15 +27,15 @@ class HttpClient {
         throw (message ? new HttpError(message) : error);
     }
 
-    async get<Response extends object>(url: string, params: Record<string, any> = {}): Promise<Response> {
+    public async get<Response extends object>(url: string, params: Record<string, unknown> = {}): Promise<Response> {
         return this.fetch<Response>(url, { method: 'GET', params });
     }
 
-    async post<Body extends object, Response = null>(url: string, body: Body): Promise<Response | null> {
+    public async post<Body extends object, Response = null>(url: string, body: Body): Promise<Response | null> {
         return this.fetch<Response>(url, { method: 'POST', body });
     }
 
-    async patch<Body extends object, Response = null>(url: string, body: Body): Promise<Response | null> {
+    public async patch<Body extends object, Response = null>(url: string, body: Body): Promise<Response | null> {
         return this.fetch<Response>(url, { method: 'PATCH', body });
     }
 }
@@ -44,7 +44,7 @@ export default defineNuxtPlugin((nuxt) => {
     const { apiUrl } = useRuntimeConfig().public;
     return {
         provide: {
-            http: new HttpClient(`${apiUrl}/v1`)
-        }
-    }
+            http: new HttpClient(`${apiUrl}/v1`),
+        },
+    };
 });

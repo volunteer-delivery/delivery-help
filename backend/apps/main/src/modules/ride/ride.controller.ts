@@ -7,19 +7,19 @@ import {
     NotFoundException,
     Param,
     Patch,
-    UseInterceptors
-} from "@nestjs/common";
-import {Driver, PrismaService, Ride, RideStatus, User} from "@app/prisma";
-import {BotMicroserviceApi} from "@app/bot-telegram/bot.microservice-api";
-import {WebsocketMicroserviceApi} from "@app/websocket/websocket.microservice-api";
-import {CurrentUser} from "../auth";
-import {ISuccessResponse} from "../common/types";
-import {RideListResponse, RideResponse, RideResponseAttrs, UpdateStatusRequest} from "./dto";
+    UseInterceptors,
+} from '@nestjs/common';
+import { Driver, PrismaService, Ride, RideStatus, User } from '@app/prisma';
+import { BotMicroserviceApi } from '@app/bot-telegram/bot.microservice-api';
+import { WebsocketMicroserviceApi } from '@app/websocket/websocket.microservice-api';
+import { CurrentUser } from '../auth';
+import { ISuccessResponse } from '../common/types';
+import { RideListResponse, RideResponse, RideResponseAttrs, UpdateStatusRequest } from './dto';
 
 const CHANGE_STATUS: Record<RideStatus, string> = {
     [RideStatus.PENDING]: '',
     [RideStatus.ACTIVE]: 'Інформацію про вашу поїздку оброблено і тепер вона активна. Бажаємо гарної дороги 🙌🏻',
-    [RideStatus.FINISHED]: 'Ваша поїздка завершилася. Дякуємо за допомогу! Слава Україні 💙💛'
+    [RideStatus.FINISHED]: 'Ваша поїздка завершилася. Дякуємо за допомогу! Слава Україні 💙💛',
 };
 
 @Controller('rides')
@@ -35,32 +35,32 @@ export class RideController {
     private botMicroservice: BotMicroserviceApi;
 
     @Get()
-    async getRides(@CurrentUser() user: User): Promise<{ rides: Ride[] }> {
+    public async getRides(@CurrentUser() user: User): Promise<{ rides: Ride[] }> {
         const rides = await this.prisma.ride.findMany({
             where: {
                 OR: [
                     { volunteer: null },
-                    { volunteer: { id: user.id } }
-                ]
+                    { volunteer: { id: user.id } },
+                ],
             },
             include: {
                 driver: true,
                 from: true,
-                destination: true
-            }
+                destination: true,
+            },
         });
         return new RideListResponse(rides);
     }
 
     @Patch(':id/status')
-    async updateStatus(
+    public async updateStatus(
         @Body() body: UpdateStatusRequest,
         @Param('id') rideId: string,
-        @CurrentUser() currentUser: User
+        @CurrentUser() currentUser: User,
     ): Promise<ISuccessResponse> {
         const ride = await this.prisma.ride.findUnique({
             where: { id: rideId },
-            include: { driver: true }
+            include: { driver: true },
         });
 
         if (!ride) throw new NotFoundException('Ride not found');
@@ -70,24 +70,24 @@ export class RideController {
             data: {
                 status: body.status,
                 volunteer: {
-                    connect: { id: currentUser.id }
-                }
+                    connect: { id: currentUser.id },
+                },
             },
             include: {
                 driver: true,
                 from: true,
-                destination: true
-            }
+                destination: true,
+            },
         });
 
         const socketUpdateUserId = ride.status === RideStatus.PENDING ? null : currentUser.id;
         await this.broadcastUpdateRide(socketUpdateUserId, updated);
         await this.notifyNewStatus(updated);
 
-        return {success: true};
+        return { success: true };
     }
 
-    async broadcastUpdateRide(userId: string | null, ride: RideResponseAttrs): Promise<void> {
+    private async broadcastUpdateRide(userId: string | null, ride: RideResponseAttrs): Promise<void> {
         const namespace = userId ? `users/${userId}/rides` : 'rides';
         await this.websocketMicroservice.broadcast(`${namespace}/update`, new RideResponse(ride));
     }

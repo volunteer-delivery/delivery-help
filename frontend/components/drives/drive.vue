@@ -3,10 +3,12 @@
         <v-card-text class="pb-0">
             <div class="d-flex pb-4 pb-sm-2">
                 <v-card-actions class="pa-0" v-if="!hideActions">
-                    <v-spacer/>
+                    <v-spacer />
 
                     <v-btn color="primary" icon text :href="driverPhoneLink">
-                        <v-icon class="drive__phone-icon" dense>{{ mdiPhone }}</v-icon>
+                        <v-icon class="drive__phone-icon" dense>
+                            {{ mdiPhone }}
+                        </v-icon>
                     </v-btn>
 
                     <v-menu offset-y>
@@ -43,33 +45,34 @@
 </template>
 
 <script setup>
+/* eslint-disable */
 import { mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree } from '@mdi/js';
-import {RideStatus} from "~/enums";
+import { RideStatus } from '~/enums';
 
 const props = defineProps({
     drive: {
         type: Object,
-        required: true
+        required: true,
     },
 
     hideActions: {
         type: Boolean,
         required: false,
-        default: false
-    }
-})
+        default: false,
+    },
+});
 
 const ridesStore = useRidesStore();
 
 const departureTime = computed(() => formatDate(props.drive.departureTime));
 const driverPhone = computed(() => props.drive.driver.phone);
-const driverPhoneLink = computed(() => `tel:${driverPhone.value}`)
+const driverPhoneLink = computed(() => `tel:${driverPhone.value}`);
 const isPending = computed(() => props.drive.status === RideStatus.PENDING);
 const isDone = computed(() => props.drive.status === RideStatus.FINISHED);
 const canChangeStatus = computed(() => !isDone.value);
 
 function changeStatus() {
-    const status = isPending.value ? 'ACTIVE' : 'FINISHED'
+    const status = isPending.value ? 'ACTIVE' : 'FINISHED';
     ridesStore.changeStatus(props.drive, status);
 }
 </script>

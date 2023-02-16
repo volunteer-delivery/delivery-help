@@ -13,16 +13,16 @@
 </template>
 
 <script lang="ts" setup>
-import type {PropType} from "vue";
-import {Icon} from "@vicons/utils";
-import {LocalPhoneRound} from '@vicons/material';
-import type {Driver} from "~/stores/rides-store";
+import type { PropType } from 'vue';
+import { Icon } from '@vicons/utils';
+import { LocalPhoneRound } from '@vicons/material';
+import type { Driver } from '~/stores/rides-store';
 
 const props = defineProps({
     driver: {
         type: Object as PropType<Driver>,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const modal = useActiveModal();

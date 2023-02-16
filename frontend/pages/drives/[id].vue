@@ -9,7 +9,7 @@
                 Назад
             </v-btn>
 
-            <DrivesDrive class="drive-details__info mb-3" :drive="drive" hide-actions/>
+            <DrivesDrive class="drive-details__info mb-3" :drive="drive" hide-actions />
 
             <DriveDetailsStatusSwitcher class="mb-3" :drive="drive" />
             <DriveDetailsCommentList :drive="drive" :comments="comments" />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import {mdiArrowLeft} from '@mdi/js';
+import { mdiArrowLeft } from '@mdi/js';
 
 const http = useHttpClient();
 const apiCable = useApiCable();
@@ -26,7 +26,7 @@ const ridesStore = useRidesStore();
 const route = useRoute();
 
 const { data: comments } = useAsyncData('comments', () => http.get(`/rides/${route.params.id}/comments`));
-const drive = computed(() => ridesStore.drives.find(drive => drive.id === route.params.id));
+const drive = computed(() => ridesStore.drives.find((drive) => drive.id === route.params.id));
 
 apiCable.on(`rides/${drive.value.id}/comments/new`, (comment) => {
     comments.value.unshift(comment);

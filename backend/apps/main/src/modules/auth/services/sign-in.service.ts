@@ -1,9 +1,9 @@
-import * as bcrypt from "bcryptjs";
-import {Inject, Injectable} from "@nestjs/common";
-import {PrismaService, User} from "@app/prisma";
-import {SignInCredentials} from "../dto";
-import {TokenService} from "../../common/token";
-import {EnvironmentService} from "@app/core/environment";
+import * as bcrypt from 'bcryptjs';
+import { Inject, Injectable } from '@nestjs/common';
+import { PrismaService, User } from '@app/prisma';
+import { EnvironmentService } from '@app/core/environment';
+import { SignInCredentials } from '../dto';
+import { TokenService } from '../../common/token';
 
 interface IAuthToken {
     token: string;
@@ -25,18 +25,18 @@ export class SignInService {
     @Inject()
     private environmentService: EnvironmentService;
 
-    async validateCredentials(credentials: SignInCredentials): Promise<User | false> {
+    public async validateCredentials(credentials: SignInCredentials): Promise<User | false> {
         const user = await this.prisma.user.findUnique({ where: { name: credentials.username } });
         const isCredentialsValid = user && await bcrypt.compare(credentials.password, user.password);
 
         return isCredentialsValid ? user : false;
     }
 
-    async generateToken(user: User): Promise<IAuthToken> {
-        const payload = {userId: user.id};
-        const options = {expiresIn: this.environmentService.authExpiration};
+    public async generateToken(user: User): Promise<IAuthToken> {
+        const payload = { userId: user.id };
+        const options = { expiresIn: this.environmentService.authExpiration };
         const token = await this.tokenService.encode<IAuthTokenPayload>(payload, options);
 
-        return {expiresIn: this.environmentService.authExpiration, token};
+        return { expiresIn: this.environmentService.authExpiration, token };
     }
 }

@@ -51,10 +51,10 @@
 </template>
 
 <script lang="ts" setup>
-import {Transition} from "vue";
-import type { Component, FunctionalComponent } from "vue";
-import {CheckRound, DirectionsCarFilledRound, PlayArrowRound} from '@vicons/material';
-import {BadgeColor} from "~/enums";
+import { Transition } from 'vue';
+import type { Component, FunctionalComponent } from 'vue';
+import { CheckRound, DirectionsCarFilledRound, PlayArrowRound } from '@vicons/material';
+import { BadgeColor } from '~/enums';
 
 interface INavItem {
     id: 'active' | 'pending' | 'done';
@@ -63,7 +63,7 @@ interface INavItem {
     url: string;
     count: string;
     hasCount: boolean;
-    badgeColor: BadgeColor,
+    badgeColor: BadgeColor;
     active: boolean;
 }
 
@@ -84,7 +84,7 @@ function useNavItem(item: INavOptions): INavItem {
         active,
         count,
         hasCount: !!parseInt(count),
-        badgeColor: active ? BadgeColor.BLUE_800 : BadgeColor.SLATE_600
+        badgeColor: active ? BadgeColor.BLUE_800 : BadgeColor.SLATE_600,
     });
 }
 
@@ -93,7 +93,7 @@ const navItems = computed((): INavItem[] => [
         id: 'pending',
         url: '/',
         title: 'Нові',
-        icon: DirectionsCarFilledRound
+        icon: DirectionsCarFilledRound,
     }),
     useNavItem({
         id: 'active',
@@ -106,7 +106,7 @@ const navItems = computed((): INavItem[] => [
         url: '/done',
         title: 'Завершені',
         icon: CheckRound,
-    })
+    }),
 ]);
 
 await useAsyncData(() => Promise.all([
@@ -118,23 +118,23 @@ apiCable.on('rides/new', ridesStore.add);
 apiCable.on('rides/update', ridesStore.update);
 apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, ridesStore.update);
 
-const LayoutMain: FunctionalComponent = (_, {attrs, slots}) => {
+const LayoutMain: FunctionalComponent = (_, { attrs, slots }) => {
     const renderAttrs = {
         ...attrs,
-        class: ['pt-4 pb-24 h-full', attrs.class]
-    }
+        class: ['pt-4 pb-24 h-full', attrs.class],
+    };
     return h('main', renderAttrs, slots.default!());
 };
 
-const NavigationExtra = () => {
+const NavigationExtra: FunctionalComponent = () => {
     const transitionProps = {
         name: 'navigation-extra',
-        duration: { enter: 200, leave: 150 }
+        duration: { enter: 200, leave: 150 },
     };
     return h(Transition, transitionProps, () => {
         return navigationStore.extra ? h(navigationStore.extra) : null;
     });
-}
+};
 </script>
 
 <style scoped>

@@ -5,5 +5,5 @@ interface IUniqueId {
 let counter = 0;
 
 export function useUniqueId(scope: string): IUniqueId {
-    return { next: () => [scope, ++counter].join('-') }
+    return { next: () => [scope, ++counter].join('-') };
 }

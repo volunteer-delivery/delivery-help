@@ -15,22 +15,22 @@
 </template>
 
 <script setup lang="ts">
-import {Icon} from "@vicons/utils";
+import { Icon } from '@vicons/utils';
 
 defineProps({
     to: {
         type: [String, Object],
-        required: true
+        required: true,
     },
     title: {
         type: String,
-        required: true
+        required: true,
     },
     icon: {
         type: Object,
-        required: true
-    }
-})
+        required: true,
+    },
+});
 </script>
 
 <style scoped>

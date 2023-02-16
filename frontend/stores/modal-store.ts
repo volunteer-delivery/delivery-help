@@ -1,13 +1,14 @@
-import type {Component} from "vue";
-import {defineStore} from "pinia";
+import type { Component } from 'vue';
+import { defineStore } from 'pinia';
 
 type ModalCloseById = (id: string) => void;
+type ContentProps = Record<string, unknown>;
 
-interface IModalOpenOptions<P extends Record<string, any>> {
+interface IModalOpenOptions<P extends ContentProps> {
     props: P;
 }
 
-interface IModalOptions extends IModalOpenOptions<Record<string, any>> {
+interface IModalOptions extends IModalOpenOptions<ContentProps> {
     content: Component;
     closeById: ModalCloseById;
 }
@@ -17,7 +18,7 @@ const uniqueId = useUniqueId('modal');
 export class Modal {
     public readonly id: string;
     public readonly content: Component;
-    public readonly props: Record<string, any>;
+    public readonly props: ContentProps;
     private readonly closeById: ModalCloseById;
 
     constructor(options: IModalOptions) {
@@ -28,7 +29,7 @@ export class Modal {
         this.close = this.close.bind(this);
     }
 
-    close(): void {
+    public close(): void {
         this.closeById(this.id);
     }
 }
@@ -37,14 +38,14 @@ export const useModalStore = defineStore('modal', () => {
     const list = ref<Modal[]>([]);
 
     const closeById: ModalCloseById = (id: string) => {
-        list.value = list.value.filter(modal => modal.id !== id);
+        list.value = list.value.filter((modal) => modal.id !== id);
     };
 
-    function open<P extends Record<string, any>>(content: Component, options: Partial<IModalOpenOptions<P>> = {}) {
+    function open<P extends ContentProps>(content: Component, options: Partial<IModalOpenOptions<P>> = {}): Modal {
         const modal = new Modal({
             content: markRaw(content),
             closeById,
-            props: options.props || {}
+            props: options.props || {},
         });
         list.value.push(modal);
         return modal;

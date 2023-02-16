@@ -1,8 +1,8 @@
-import {DynamicModule, Provider, Type} from '@nestjs/common';
-import {ClientProxyFactory, Transport} from '@nestjs/microservices';
-import {EnvironmentModule, EnvironmentService} from "../environment";
-import {MicroserviceApi, MicroserviceKey} from "./microservice-api";
-import {DynamicDependencyResolver} from "../dynamic-dependency-resolver";
+import { DynamicModule, Provider, Type } from '@nestjs/common';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { EnvironmentModule, EnvironmentService } from '../environment';
+import { DynamicDependencyResolver } from '../dynamic-dependency-resolver';
+import { MicroserviceApi, MicroserviceKey } from './microservice-api';
 
 type IncludeMicroservices<Key extends MicroserviceKey, ApiClassType extends Type<MicroserviceApi>> = Record<Key, ApiClassType>;
 
@@ -22,13 +22,13 @@ export class MicroservicesFactoryModule {
                         transport: Transport.TCP,
                         options: {
                             host: environmentService.getMicroserviceHost(serviceKey),
-                            port: 8080
-                        }
+                            port: 8080,
+                        },
                     });
                     const api = await dependencyResolver.resolve(ApiClass);
                     api.setClient(client);
                     return api;
-                }
+                },
             });
         }
 

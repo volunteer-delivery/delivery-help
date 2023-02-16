@@ -9,19 +9,20 @@
 </template>
 
 <script setup>
-import {RideStatus} from "~/enums";
+/* eslint-disable */
+import { RideStatus } from '~/enums';
 
 const statuses = [
     { value: RideStatus.PENDING, text: 'нова' },
     { value: RideStatus.ACTIVE, text: 'активна' },
-    { value: RideStatus.FINISHED, text: 'завершена' }
+    { value: RideStatus.FINISHED, text: 'завершена' },
 ];
 
 const props = defineProps({
     drive: {
         type: Object,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const ridesStore = useRidesStore();

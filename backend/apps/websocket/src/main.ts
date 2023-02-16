@@ -1,5 +1,5 @@
-import {WebsocketModule} from './websocket.module';
-import {HybridApplicationAdapter, MicroserviceStarter} from "@app/core/microservices";
+import { HybridApplicationAdapter, MicroserviceStarter } from '@app/core/microservices';
+import { WebsocketModule } from './websocket.module';
 
 MicroserviceStarter.run({
     name: 'WEBSOCKET',

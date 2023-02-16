@@ -19,14 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-import {Icon} from "@vicons/utils";
-import {CloseRound} from '@vicons/material';
+import { Icon } from '@vicons/utils';
+import { CloseRound } from '@vicons/material';
 
 defineProps({
     title: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const modal = useActiveModal();

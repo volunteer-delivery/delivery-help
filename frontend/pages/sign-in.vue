@@ -5,6 +5,7 @@
                 <AppCardTitle>
                     ВолонтерВантаж ~ Вхід
                 </AppCardTitle>
+
                 <SignInForm />
             </AppCard>
         </div>
@@ -13,6 +14,6 @@
 
 <script lang="ts" setup>
 definePageMeta({
-    layout: 'auth'
+    layout: 'auth',
 });
 </script>

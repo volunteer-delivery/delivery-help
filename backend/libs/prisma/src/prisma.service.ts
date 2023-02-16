@@ -1,5 +1,5 @@
-import {INestApplicationContext, Inject, Injectable, OnModuleInit} from '@nestjs/common';
-import {EnvironmentService} from "@app/core/environment";
+import { INestApplicationContext, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { EnvironmentService } from '@app/core/environment';
 import { PrismaClient, Prisma } from './client';
 
 export type UniqueConstrainError = Prisma.PrismaClientKnownRequestError & {

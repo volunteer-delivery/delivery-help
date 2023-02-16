@@ -1,4 +1,4 @@
-export function formatDate(dateString: string) {
+export function formatDate(dateString: string): string {
     const date = new Date(dateString);
 
     const month = [
@@ -13,7 +13,7 @@ export function formatDate(dateString: string) {
         'Вересня',
         'Жовтня',
         'Листопада',
-        'Грудня'
+        'Грудня',
     ][date.getMonth()];
 
     return `${date.getDate()} ${month}`;

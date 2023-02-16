@@ -1,15 +1,15 @@
-import {CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor} from "@nestjs/common";
-import {catchError, Observable, throwError} from "rxjs";
-import {NextFunction, Request, Response} from "express";
-import {ErrorTracker} from "./error-tracker";
-import {ISignedRequest} from "../types";
+import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common';
+import { catchError, Observable, throwError } from 'rxjs';
+import { NextFunction, Request, Response } from 'express';
+import { ISignedRequest } from '../types';
+import { ErrorTracker } from './error-tracker';
 
 @Injectable()
 export class ErrorTrackerInterceptor implements NestInterceptor {
     @Inject()
     private errorTracker: ErrorTracker;
 
-    intercept(host: ExecutionContext, next: CallHandler): Observable<any> {
+    public intercept(host: ExecutionContext, next: CallHandler): Observable<unknown> {
         const context = host.switchToHttp();
         const request = context.getRequest<ISignedRequest>();
         const response = context.getResponse<Response>();

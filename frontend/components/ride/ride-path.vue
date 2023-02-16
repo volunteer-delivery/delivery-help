@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts" setup>
-import type {PropType} from "vue";
-import type {RidePath, RidePathPoint} from "~/stores/rides-store";
+import type { PropType } from 'vue';
+import type { RidePath, RidePathPoint } from '~/stores/rides-store';
 
 const props = defineProps({
     path: {
         type: Array as PropType<RidePath>,
-        required: true
-    }
+        required: true,
+    },
 });
 </script>

@@ -25,19 +25,20 @@
 </template>
 
 <script setup>
-import Comment from "./comment";
-import {mdiSend} from "@mdi/js";
+/* eslint-disable */
+import { mdiSend } from '@mdi/js';
+import Comment from './comment';
 
 const props = defineProps({
     comments: {
         type: Array,
-        required: true
+        required: true,
     },
 
     drive: {
         type: Object,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const http = useHttpClient();
@@ -45,7 +46,7 @@ const newComment = ref('');
 
 const now = ref(Date.now());
 const timeUpdater = setInterval(() => now.value = Date.now(), 5000);
-onUnmounted(() => clearInterval(timeUpdater))
+onUnmounted(() => clearInterval(timeUpdater));
 
 function sendComment(event) {
     event.preventDefault();

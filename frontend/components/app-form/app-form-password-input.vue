@@ -16,10 +16,10 @@
 </template>
 
 <script lang="ts" setup>
-import { Icon } from '@vicons/utils'
+import { Icon } from '@vicons/utils';
 import { RemoveRedEyeOutlined, RemoveRedEyeSharp } from '@vicons/material';
-import {InjectionToken} from "~/enums";
-import {IFormFieldModel} from "~/composables/use-form";
+import { InjectionToken } from '~/enums';
+import { IFormFieldModel } from '~/composables/use-form';
 
 const model = inject<IFormFieldModel<string>>(InjectionToken.FORM_FIELD)!;
 
@@ -28,5 +28,5 @@ const isInsecure = computed(() => insecure.value && !model.isDisabled);
 const type = computed(() => isInsecure.value ? 'text' : 'password');
 const icon = computed(() => isInsecure.value ? RemoveRedEyeOutlined : RemoveRedEyeSharp);
 
-const toggleInsecure = () => insecure.value = !insecure.value;
+const toggleInsecure = (): void => void (insecure.value = !insecure.value);
 </script>

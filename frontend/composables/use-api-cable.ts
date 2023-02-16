@@ -1,10 +1,14 @@
-import {ApiCableHandler, ApiCableOff} from "~/plugins/api-cable.client";
+import { ApiCableHandler, ApiCableOff } from '~/plugins/api-cable.client';
 
-export function useApiCable() {
+interface IApiCable {
+    on<Payload extends object>(event: string, handler: ApiCableHandler<Payload>): ApiCableOff;
+}
+
+export function useApiCable(): IApiCable {
     const nuxt = useNuxtApp();
     const offs: ApiCableOff[] = [];
 
-    function on<Payload extends object>(event: string, handler: ApiCableHandler<Payload>) {
+    function on<Payload extends object>(event: string, handler: ApiCableHandler<Payload>): ApiCableOff {
         const off = nuxt.$apiCable.on(event, handler);
         offs.push(off);
         return off;

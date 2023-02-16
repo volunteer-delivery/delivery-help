@@ -1,12 +1,12 @@
-import {User} from "@app/prisma";
-import {Exclude} from "class-transformer";
+import { User } from '@app/prisma';
+import { Exclude } from 'class-transformer';
 
 export class UserResponse implements User {
-    id: string;
-    name: string
+    public id: string;
+    public name: string;
 
     @Exclude()
-    password: string;
+    public password: string;
 
     constructor(user: User) {
         Object.assign(this, user);

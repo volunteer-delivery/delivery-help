@@ -40,7 +40,7 @@
             ref="menuRef"
             v-model="isSelectingDepartureTime"
             :close-on-content-click="false"
-            :return-value.sync="filter.departureRange"
+            v-model:return-value="filter.departureRange"
             offset-y
             min-width="auto"
         >
@@ -72,8 +72,9 @@
 </template>
 
 <script setup>
+/* eslint-disable */
 import { mdiCalendar } from '@mdi/js';
-import {Vehicle} from "~/enums";
+import { Vehicle } from '~/enums';
 
 const emit = defineEmits(['close']);
 
@@ -81,10 +82,10 @@ function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
-const vehicles = [Vehicle.CAR, Vehicle.VAN, Vehicle.TRUCK].map(type => ({
+const vehicles = [Vehicle.CAR, Vehicle.VAN, Vehicle.TRUCK].map((type) => ({
     value: type,
-    title: formatVehicle(type)
-}))
+    title: formatVehicle(type),
+}));
 
 const ridesStore = useRidesStore();
 

@@ -1,6 +1,6 @@
 <template>
     <div class="h-8 relative path-line">
-        <div class="path-line-arrow"/>
+        <div class="path-line-arrow" />
     </div>
 </template>
 

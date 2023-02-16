@@ -1,6 +1,6 @@
 declare global {
     type UseDevice = () => {
-        isMobileOrTablet: boolean
+        isMobileOrTablet: boolean;
     };
     const useDevice: UseDevice;
 }

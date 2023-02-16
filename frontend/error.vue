@@ -14,8 +14,8 @@
 const props = defineProps({
     error: {
         type: Object,
-        default: null
-    }
+        default: null,
+    },
 });
 
 const title = computed(() => props.error.statusCode === 404 ? '404 Not Found' : 'An error occurred');

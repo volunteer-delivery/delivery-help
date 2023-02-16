@@ -1,14 +1,14 @@
-import Bugsnag, { Client } from "@bugsnag/js";
-import BugsnagPluginExpress from "@bugsnag/plugin-express";
-import {ErrorRequestHandler, RequestHandler} from "express";
-import {Driver, User} from "@app/prisma";
+import Bugsnag, { Client } from '@bugsnag/js';
+import BugsnagPluginExpress from '@bugsnag/plugin-express';
+import { ErrorRequestHandler, RequestHandler } from 'express';
+import { Driver, User } from '@app/prisma';
 
 interface BugsnagPluginExpress {
     requestHandler: RequestHandler;
     errorHandler: ErrorRequestHandler;
 }
 
-interface IErrorTracker {
+export interface IErrorTracker {
     express: BugsnagPluginExpress;
     setVolunteer(user: User): void;
     setDriver(driver: Driver): void;
@@ -16,24 +16,25 @@ interface IErrorTracker {
 }
 
 class ErrorTrackerStub implements IErrorTracker {
-    express = {
-        errorHandler: () => {},
-        requestHandler: () => {}
+    public express = {
+        errorHandler: (): void => {},
+        requestHandler: (): void => {},
     };
-    setVolunteer = () => {};
-    setDriver = () => {};
-    sendError = () => {}
+
+    public setVolunteer = (): void => {};
+    public setDriver = (): void => {};
+    public sendError = (): void => {};
 }
 
 enum UserRole {
     VOLUNTEER = 'volunteer',
-    DRIVER = 'driver'
+    DRIVER = 'driver',
 }
 
 export class ErrorTracker implements IErrorTracker {
-    static instance: IErrorTracker;
+    public static instance: IErrorTracker;
 
-    static init(): IErrorTracker {
+    public static init(): IErrorTracker {
         if (this.instance) return this.instance;
 
         const { BACKEND_BUGSNAG_KEY, BACKEND_ENV } = process.env;
@@ -46,21 +47,21 @@ export class ErrorTracker implements IErrorTracker {
         Bugsnag.start({
             apiKey: BACKEND_BUGSNAG_KEY,
             releaseStage: BACKEND_ENV,
-            plugins: [BugsnagPluginExpress]
+            plugins: [BugsnagPluginExpress],
         });
 
         this.instance = new ErrorTracker(Bugsnag);
     }
 
-    readonly express: BugsnagPluginExpress = this.client.getPlugin('express');
+    public readonly express: BugsnagPluginExpress = this.client.getPlugin('express');
 
     constructor(private readonly client: Client) {}
 
-    setVolunteer(user: User): void {
+    public setVolunteer(user: User): void {
         this.setUser(user.id, user.name, UserRole.VOLUNTEER);
     }
 
-    setDriver(driver: Driver): void {
+    public setDriver(driver: Driver): void {
         this.setUser(driver.id, driver.name, UserRole.DRIVER);
     }
 
@@ -69,7 +70,7 @@ export class ErrorTracker implements IErrorTracker {
         this.client.addMetadata('user', 'role', role);
     }
 
-    sendError(error: Error): void {
+    public sendError(error: Error): void {
         this.client.notify(error);
     }
 }

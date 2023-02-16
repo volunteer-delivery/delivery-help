@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import {PropType} from "vue";
-import {BadgeColor} from "~/enums/badge";
+import { PropType } from 'vue';
+import { BadgeColor } from '~/enums/badge';
 
 // Dynamic Classes
 // bg-slate-600
@@ -23,21 +23,21 @@ import {BadgeColor} from "~/enums/badge";
 const props = defineProps({
     content: {
         type: [Number, String],
-        required: true
+        required: true,
     },
 
     show: {
         type: Boolean,
         required: false,
-        default: true
+        default: true,
     },
 
     color: {
         type: String as PropType<BadgeColor>,
         required: false,
         default: BadgeColor.SLATE_600,
-        validator: (color: BadgeColor) => Object.values(BadgeColor).includes(color)
-    }
+        validator: (color: BadgeColor) => Object.values(BadgeColor).includes(color),
+    },
 });
 
 const badgeClasses = computed(() => `bg-${props.color}`);

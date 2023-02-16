@@ -19,16 +19,16 @@
 </template>
 
 <script lang="ts" setup>
-import type {ComponentPublicInstance, PropType} from "vue";
-import {vOnClickOutside} from '@vueuse/components'
-import {Modal} from "~/stores/modal-store";
-import {ACTIVE_MODAL} from "~/composables/use-active-modal";
+import type { ComponentPublicInstance, PropType } from 'vue';
+import { vOnClickOutside } from '@vueuse/components';
+import { Modal } from '~/stores/modal-store';
+import { ACTIVE_MODAL } from '~/composables/use-active-modal';
 
 const props = defineProps({
     modal: {
         type: Object as PropType<Modal>,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const device = useDevice();

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import {RideListFilterTrigger} from "#components";
+import { RideListFilterTrigger } from '#components';
 
 const ridesStore = useRidesStore();
 const navigationStore = useNavigationStore();

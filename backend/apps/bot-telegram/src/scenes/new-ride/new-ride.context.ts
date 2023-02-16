@@ -1,6 +1,6 @@
-import type {Message} from "typegram";
-import {Vehicle} from "@app/prisma";
-import {IWizardSceneContext } from "../../base";
+import type { Message } from 'typegram';
+import { Vehicle } from '@app/prisma';
+import { IWizardSceneContext } from '../../base';
 
 export type INewRideContext = IWizardSceneContext & {
     message: Message.TextMessage;
@@ -16,6 +16,6 @@ export type INewRideContext = IWizardSceneContext & {
             datePickerToday: Date;
             departureTime: string;
             vehicle: Vehicle;
-        }
-    }
+        };
+    };
 };

@@ -1,7 +1,7 @@
-import {IsEnum} from "class-validator";
-import {RideStatus} from "@app/prisma";
+import { IsEnum } from 'class-validator';
+import { RideStatus } from '@app/prisma';
 
 export class UpdateStatusRequest {
     @IsEnum(RideStatus)
-    status: RideStatus;
+    public status: RideStatus;
 }

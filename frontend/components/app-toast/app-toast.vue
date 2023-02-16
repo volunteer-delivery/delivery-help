@@ -5,15 +5,15 @@
 </template>
 
 <script lang="ts" setup>
-import {PropType} from "vue";
-import {Toast} from "~/stores/toast-store";
+import { PropType } from 'vue';
+import { Toast } from '~/stores/toast-store';
 
 const props = defineProps({
     toast: {
         type: Object as PropType<Toast>,
-        required: true
-    }
-})
+        required: true,
+    },
+});
 
-const close = () => props.toast.close();
+const close = (): void => void props.toast.close();
 </script>

@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import { defineStore } from 'pinia';
 
 export interface ICredentials {
     username: string;
@@ -7,7 +7,7 @@ export interface ICredentials {
 
 export interface User {
     id: string;
-    username: string
+    username: string;
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -15,14 +15,14 @@ export const useAuthStore = defineStore('auth', () => {
     const nuxt = useNuxtApp();
     const currentUser = ref<User | null>(null);
 
-    async function signIn(credentials: ICredentials) {
+    async function signIn(credentials: ICredentials): Promise<void> {
         await http.post<ICredentials>('auth/sign-in', {
             username: credentials.username,
-            password: credentials.password
+            password: credentials.password,
         });
     }
 
-    async function loadCurrentUser() {
+    async function loadCurrentUser(): Promise<void> {
         if (currentUser.value) return;
 
         currentUser.value = await http.get<User>('user/current');

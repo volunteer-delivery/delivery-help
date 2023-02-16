@@ -1,5 +1,5 @@
-import {RideStatus, Vehicle} from "~/enums";
-import {defineStore} from "pinia";
+import { defineStore } from 'pinia';
+import { RideStatus, Vehicle } from '~/enums';
 
 export interface Address {
     country?: string;
@@ -40,7 +40,7 @@ interface RidesFilterValues {
     cities: Set<string>;
 }
 
-const format = (value: number) => value > 100 ? `100+` : value.toString();
+const format = (value: number): string => value > 100 ? '100+' : value.toString();
 
 export const useRidesStore = defineStore('rides', () => {
     const http = useHttpClient();
@@ -51,7 +51,7 @@ export const useRidesStore = defineStore('rides', () => {
 
     const filterValues = reactive<RidesFilterValues>({
         countries: new Set(),
-        cities: new Set()
+        cities: new Set(),
     });
 
     const pendingFilter = reactive<RidesFilter>({
@@ -59,7 +59,7 @@ export const useRidesStore = defineStore('rides', () => {
         fromCity: null,
         destinationCity: null,
         vehicles: [],
-        departureRange: []
+        departureRange: [],
     });
 
     const pending = computed(() => rides.value.filter((ride: Ride) => ride.status === RideStatus.PENDING));
@@ -69,7 +69,7 @@ export const useRidesStore = defineStore('rides', () => {
     const counter = computed(() => ({
         pending: format(pending.value.length),
         active: format(active.value.length),
-        done: format(done.value.length)
+        done: format(done.value.length),
     }));
 
     const pendingFiltered = computed(() => {
@@ -93,14 +93,14 @@ export const useRidesStore = defineStore('rides', () => {
         });
     });
 
-    function patchFilterValues(ride: Ride) {
+    function patchFilterValues(ride: Ride): void {
         for (const point of ride.path) {
             filterValues.countries.add(point.address.country!);
             if (point.address.city) filterValues.cities.add(point.address.city);
         }
     }
 
-    async function load() {
+    async function load(): Promise<void> {
         if (isLoaded.value) return;
 
         const { rides: data } = await http.get<{ rides: Ride[] }>('rides');
@@ -113,29 +113,29 @@ export const useRidesStore = defineStore('rides', () => {
         isLoaded.value = true;
     }
 
-    function add(ride: Ride) {
+    function add(ride: Ride): void {
         patchFilterValues(ride);
         rides.value.push(ride);
     }
 
-    function update(ride: Ride) {
+    function update(ride: Ride): void {
         patchFilterValues(ride);
         const index = rides.value.findIndex((d: Ride) => d.id === ride.id);
         rides.value[index] = ride;
     }
 
-    function loadRidesByDriver(driver: Driver) {
+    function loadRidesByDriver(driver: Driver): Ride[] {
         return rides.value.filter((ride: Ride) => ride.driver.id === driver.id);
     }
 
-    async function changeStatus(ride: Ride, status: RideStatus) {
+    async function changeStatus(ride: Ride, status: RideStatus): Promise<void> {
         if (!confirm('Ви впевнені що хочете змінити статус заявки?')) return;
 
         await http.patch(`rides/${ride.id}/status`, { status });
         toastStore.open('Статус змінено').closeAfter(3000);
     }
 
-    function applyPendingFilter(filter: RidesFilter) {
+    function applyPendingFilter(filter: RidesFilter): void {
         Object.assign(pendingFilter, filter);
     }
 
@@ -153,6 +153,6 @@ export const useRidesStore = defineStore('rides', () => {
         update,
         loadRidesByDriver,
         changeStatus,
-        applyPendingFilter
+        applyPendingFilter,
     };
 });

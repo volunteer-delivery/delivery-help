@@ -1,11 +1,11 @@
-import {Module} from '@nestjs/common';
-import {PrismaModule} from "@app/prisma";
-import {ErrorTrackerModule} from "@app/core/error-tracker";
-import {AuthModule} from "./modules/auth";
-import {UserModule} from "./modules/user";
-import {RideModule} from "./modules/ride";
-import {EnvironmentModule} from "@app/core/environment";
-import {MicroservicesModule} from "./main.mircoservices";
+import { Module } from '@nestjs/common';
+import { PrismaModule } from '@app/prisma';
+import { ErrorTrackerModule } from '@app/core/error-tracker';
+import { EnvironmentModule } from '@app/core/environment';
+import { AuthModule } from './modules/auth';
+import { UserModule } from './modules/user';
+import { RideModule } from './modules/ride';
+import { MicroservicesModule } from './main.mircoservices';
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import {MicroservicesModule} from "./main.mircoservices";
         UserModule,
         RideModule,
         ErrorTrackerModule,
-        MicroservicesModule
-    ]
+        MicroservicesModule,
+    ],
 })
 export class MainModule {}

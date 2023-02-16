@@ -10,7 +10,7 @@
                 {{ label }}
             </span>
 
-            <slot/>
+            <slot />
 
             <span
                 class="block border-b-2 w-full scale-x-0 transition-font-field absolute left-0 -bottom-px"
@@ -29,9 +29,9 @@
 </template>
 
 <script lang="ts" setup>
-import {onClickOutside} from '@vueuse/core'
-import {IFormModel, IFormFieldModel} from "~/composables/use-form";
-import {InjectionToken} from "~/enums";
+import { onClickOutside } from '@vueuse/core';
+import { IFormModel, IFormFieldModel } from '~/composables/use-form';
+import { InjectionToken } from '~/enums';
 
 // Dynamic Classes
 // text-red-600 border-b-red-600
@@ -42,35 +42,35 @@ import {InjectionToken} from "~/enums";
 const props = defineProps({
     id: {
         type: String,
-        required: true
+        required: true,
     },
 
     label: {
         type: String,
-        required: true
+        required: true,
     },
 
     disabled: {
         type: Boolean,
         required: false,
-        default: false
-    }
+        default: false,
+    },
 });
 
-const formModel = inject<IFormModel<any>>(InjectionToken.FORM)!;
+const formModel = inject<IFormModel<Record<string, unknown>>>(InjectionToken.FORM)!;
 const fieldModel = formModel.field(props.id);
 
 const fieldRef = ref(null);
 
 const isFocused = ref(false);
-const focus = () => isFocused.value = true;
+const focus = (): void => void (isFocused.value = true);
 
-const unfocus = () => {
+function unfocus(): void {
     fieldModel.validate();
     isFocused.value = false;
-};
+}
 
-const isActive = computed(() => isFocused.value || fieldModel.isEntered)
+const isActive = computed(() => isFocused.value || fieldModel.isEntered);
 
 const stateColor = computed(() => {
     if (fieldModel.isDisabled) {
@@ -88,19 +88,19 @@ const stateColor = computed(() => {
 const labelClasses = computed(() => [
     {
         '-translate-y-full scale-75': isActive.value,
-        'animate-shake': fieldModel.isInvalid
+        'animate-shake': fieldModel.isInvalid,
     },
-    `text-${stateColor.value}`
+    `text-${stateColor.value}`,
 ]);
 
 const underlineColorClass = computed(() => `border-b-${stateColor.value}`);
 
 const underlineClasses = computed(() => [
-    {'scale-x-100': isActive.value},
-    underlineColorClass.value
+    { 'scale-x-100': isActive.value },
+    underlineColorClass.value,
 ]);
 
-provide<IFormFieldModel<any>>(InjectionToken.FORM_FIELD, fieldModel);
+provide<IFormFieldModel<unknown>>(InjectionToken.FORM_FIELD, fieldModel);
 watch(toRef(props, 'disabled'), fieldModel.setDisabled, { immediate: true });
 </script>
 

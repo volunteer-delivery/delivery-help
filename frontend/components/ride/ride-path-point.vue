@@ -11,14 +11,14 @@
 </template>
 
 <script lang="ts" setup>
-import type {PropType} from "vue";
-import type {RidePathPoint} from "~/stores/rides-store";
+import type { PropType } from 'vue';
+import type { RidePathPoint } from '~/stores/rides-store';
 
 const props = defineProps({
     point: {
         type: Object as PropType<RidePathPoint>,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const address = computed(() => props.point.address);

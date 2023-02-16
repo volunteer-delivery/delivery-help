@@ -15,7 +15,7 @@ const modalStore = useModalStore();
 const lockScroll = useScrollLock(document.body);
 
 watch(toRef(modalStore, 'list'), (modals) => {
-    lockScroll.value = !!modals.length
+    lockScroll.value = !!modals.length;
 }, { deep: true });
 </script>
 

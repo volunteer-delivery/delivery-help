@@ -1,15 +1,15 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {Address, Driver, PrismaService, Ride, RideStatus, Vehicle} from "@app/prisma";
-import {WebsocketMicroserviceApi} from "@app/websocket/websocket.microservice-api";
-import {RideResponse} from "@app/main/modules/ride/dto";
-import {BaseComposer, OnAction} from "../../base";
-import {BotMenuHandler} from "../../bot-menu.handler";
-import {INewRideContext} from "./new-ride.context";
+import { Inject, Injectable } from '@nestjs/common';
+import { Address, Driver, PrismaService, Ride, RideStatus, Vehicle } from '@app/prisma';
+import { WebsocketMicroserviceApi } from '@app/websocket/websocket.microservice-api';
+import { RideResponse } from '@app/main/modules/ride/dto';
+import { BaseComposer, OnAction } from '../../base';
+import { BotMenuHandler } from '../../bot-menu.handler';
+import { INewRideContext } from './new-ride.context';
 
 const CHOOSED_VEHICLE: Record<Vehicle, string> = {
     [Vehicle.CAR]: 'легковий автомобіль',
     [Vehicle.VAN]: 'вантажний автомобіль',
-    [Vehicle.TRUCK]: 'фуру'
+    [Vehicle.TRUCK]: 'фуру',
 };
 
 @Injectable()
@@ -61,26 +61,26 @@ export class NewRideVehicleComposer extends BaseComposer {
                 vehicle: context.scene.state.vehicle,
                 status: RideStatus.PENDING,
                 driver: {
-                    connect: { id: context.state.driver.id }
+                    connect: { id: context.state.driver.id },
                 },
                 from: {
                     create: {
                         country: context.scene.state.fromCountry,
-                        city: context.scene.state.fromCity
-                    }
+                        city: context.scene.state.fromCity,
+                    },
                 },
                 destination: {
                     create: {
                         country: 'Україна',
-                        city: context.scene.state.destinationCity
-                    }
-                }
+                        city: context.scene.state.destinationCity,
+                    },
+                },
             },
             include: {
                 driver: true,
                 from: true,
-                destination: true
-            }
+                destination: true,
+            },
         });
 
         context.state.rides.push(ride);
@@ -88,7 +88,7 @@ export class NewRideVehicleComposer extends BaseComposer {
         this.broadcastNewRide(ride);
     }
 
-    broadcastNewRide(ride: Ride & { driver: Driver, from: Address, destination: Address }): void {
+    private broadcastNewRide(ride: Ride & { driver: Driver, from: Address, destination: Address }): void {
         this.websocketMicroservice.broadcast('rides/new', new RideResponse(ride));
     }
 }

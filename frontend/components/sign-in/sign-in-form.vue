@@ -23,18 +23,18 @@
 </template>
 
 <script lang="ts" setup>
-import {string as requireString} from "yup";
-import {ICredentials} from "~/stores/auth-store";
+import { string as requireString } from 'yup';
+import { ICredentials } from '~/stores/auth-store';
 
 const form = useForm<ICredentials>({
     username: {
         initial: '',
-        validation: requireString().required()
+        validation: requireString().required(),
     },
     password: {
         initial: '',
-        validation: requireString().required()
-    }
+        validation: requireString().required(),
+    },
 });
 
 const toastStore = useToastStore();
@@ -48,7 +48,7 @@ async function signIn(): Promise<void> {
 
     try {
         isSubmitting.value = true;
-        await authStore.signIn(form.data)
+        await authStore.signIn(form.data);
         await navigateTo('/');
         isSubmitting.value = false;
     } catch (error) {

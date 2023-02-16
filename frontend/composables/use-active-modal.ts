@@ -1,4 +1,4 @@
-import {Modal} from "~/stores/modal-store";
+import { Modal } from '~/stores/modal-store';
 
 export const ACTIVE_MODAL = Symbol('activeModal');
 

@@ -1,6 +1,6 @@
-import {Address, Driver, Ride, RideStatus, Vehicle} from "@app/prisma";
-import {Exclude, Expose} from "class-transformer";
-import {DriverResponse} from "../../driver";
+import { Address, Driver, Ride, RideStatus, Vehicle } from '@app/prisma';
+import { Exclude, Expose } from 'class-transformer';
+import { DriverResponse } from '../../driver';
 
 export interface RideResponseAttrs extends Ride {
     driver: Driver;
@@ -14,41 +14,44 @@ export interface RidePathPoint {
 }
 
 export class RideResponse implements RideResponseAttrs {
-    id: string;
-    departureTime: Date;
-    status: RideStatus;
-    vehicle: Vehicle;
+    public id: string;
+    public departureTime: Date;
+    public status: RideStatus;
+    public vehicle: Vehicle;
 
     @Exclude()
-    driverId: string;
-    driver: Driver;
+    public driverId: string;
+
+    public driver: Driver;
 
     @Exclude()
-    fromId: string;
-    from: Address;
+    public fromId: string;
+
+    public from: Address;
 
     @Exclude()
-    destinationId: string;
-    destination: Address;
+    public destinationId: string;
+
+    public destination: Address;
 
     @Exclude()
-    volunteerId: string | null;
+    public volunteerId: string | null;
 
     constructor(ride: RideResponseAttrs) {
         Object.assign(this, ride);
-        this.driver = new DriverResponse(ride.driver)
+        this.driver = new DriverResponse(ride.driver);
     }
 
     @Expose()
-    get path(): RidePathPoint[] {
+    public get path(): RidePathPoint[] {
         return [
             {
                 address: this.from,
-                departureTime: this.departureTime
+                departureTime: this.departureTime,
             },
             {
-                address: this.destination
-            }
+                address: this.destination,
+            },
         ];
     }
 }

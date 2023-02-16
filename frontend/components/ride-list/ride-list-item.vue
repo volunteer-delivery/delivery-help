@@ -29,24 +29,24 @@
 </template>
 
 <script lang="ts" setup>
-import type {PropType} from "vue";
-import {Icon} from "@vicons/utils";
-import {AccountBoxRound, DirectionsCarRound} from '@vicons/material';
-import {Ride} from "~/stores/rides-store";
-import {DriverDetailsModal} from "#components";
+import type { PropType } from 'vue';
+import { Icon } from '@vicons/utils';
+import { AccountBoxRound, DirectionsCarRound } from '@vicons/material';
+import { Ride } from '~/stores/rides-store';
+import { DriverDetailsModal } from '#components';
 
 const props = defineProps({
     ride: {
         type: Object as PropType<Ride>,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const modalStore = useModalStore();
 
 const vehicleDetails = computed(() => formatVehicleDetails(props.ride.vehicle));
 
-const openDriverDetails = () => modalStore.open(DriverDetailsModal, {
-    props: { driver: props.ride.driver }
+const openDriverDetails = (): void => void modalStore.open(DriverDetailsModal, {
+    props: { driver: props.ride.driver },
 });
 </script>
