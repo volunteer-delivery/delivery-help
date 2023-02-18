@@ -1,7 +1,7 @@
 <template>
     <div class="font-medium">
         <template v-for="(point, index) of path" :key="point.address.id">
-            <RidePathPoint :point="point" />
+            <RidePathPoint :point="point" :first="index === 0" />
             <RidePathLine v-if="index + 1 !== path.length" />
         </template>
     </div>

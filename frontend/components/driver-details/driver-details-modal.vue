@@ -1,6 +1,6 @@
 <template>
     <AppModal :title="driver.name">
-        <a class="inline-flex items-center text-gray-600 mt-2 hover:underline" :href="phoneLink">
+        <a class="inline-flex items-center text-gray-600 mt-2 mb-10 hover:underline" :href="phoneLink">
             <Icon size="24">
                 <LocalPhoneRound />
             </Icon>
@@ -9,6 +9,12 @@
                 {{ driver.phone }}
             </span>
         </a>
+
+        <h2 class="mt-0 mb-3 text-lg text-gray-700 font-medium">
+            Історія Поїздок
+        </h2>
+
+        <DriverDetailsHistory :driver="driver" />
     </AppModal>
 </template>
 
@@ -26,9 +32,6 @@ const props = defineProps({
 });
 
 const modal = useActiveModal();
-const ridesStore = useRidesStore();
-
-const rides = ridesStore.loadRidesByDriver(props.driver);
 
 const phoneLink = computed(() => `tel:${props.driver.phone}`);
 </script>

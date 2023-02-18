@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-end relative pl-6 leading-none text-xl text-gray-700 path__point">
+    <div class="flex items-end relative pl-6 leading-none text-xl text-gray-700 path__point" :class="pointClasses">
         <p class="ma-0">
             {{ location }}
         </p>
@@ -19,6 +19,10 @@ const props = defineProps({
         type: Object as PropType<RidePathPoint>,
         required: true,
     },
+    first: {
+        type: Boolean,
+        required: true,
+    },
 });
 
 const address = computed(() => props.point.address);
@@ -26,23 +30,13 @@ const isUkraine = computed(() => address.value.country === 'Україна');
 const location = computed(() => isUkraine.value ? address.value.city : address.value.country);
 
 const departureTime = computed(() => props.point.departureTime && formatDate(props.point.departureTime));
+
+const pointClasses = computed(() => ({ 'before:bg-blue-800': props.first }));
 </script>
 
 <style scoped>
 .path__point::before {
-    position: absolute;
     content: "";
-    display: block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    transform: translateY(-50%);
-    top: 50%;
-    left: 4px;
-    border: 2px solid #3F51B5;
-}
-
-.path__point:first-child::before {
-    background-color: #3F51B5;
+    @apply absolute block w-2.5 h-2.5 rounded-full -translate-y-1/2 top-1/2 left-1 border-2 border-blue-800
 }
 </style>

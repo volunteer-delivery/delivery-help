@@ -2,7 +2,7 @@
     <component
         :is="modal.content"
         v-bind="modal.props"
-        class="modal-content absolute left-0 bottom-0 w-full"
+        class="modal-content w-full mt-auto"
         ref="modalRef"
         :style="modalStyles"
         v-on-click-outside="modal.close"
@@ -12,7 +12,7 @@
     <component
         :is="modal.content"
         v-bind="modal.props"
-        class="modal-content absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
+        class="modal-content m-auto md:max-w-[500px]"
         v-on-click-outside="modal.close"
         v-else
     />

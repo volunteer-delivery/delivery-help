@@ -9,7 +9,8 @@ interface ISwipeModal {
 }
 
 export function useSwipeModal(modalRef: Ref<ComponentPublicInstance | null>, options: ISwipeModalOptions): ISwipeModal {
-    const SAFE_ZONE = 100;
+    const windowSize = useWindowSize();
+    const safeZone = computed(() => windowSize.height.value / 4);
     const headerEl = computed<HTMLElement | null>(() => {
         return modalRef.value?.$el.querySelector('[data-modal-header]');
     });
@@ -21,13 +22,13 @@ export function useSwipeModal(modalRef: Ref<ComponentPublicInstance | null>, opt
         onSwipe: () => {
             offsetY.value = Math.max(-swipe.lengthY.value, 0);
 
-            if (offsetY.value >= SAFE_ZONE) {
+            if (offsetY.value >= safeZone.value) {
                 options.onClose();
             }
         },
 
         onSwipeEnd: () => {
-            if (offsetY.value < SAFE_ZONE) {
+            if (offsetY.value < safeZone.value) {
                 offsetY.value = 0;
             }
         },

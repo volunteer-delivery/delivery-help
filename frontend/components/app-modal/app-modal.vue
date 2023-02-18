@@ -1,5 +1,5 @@
 <template>
-    <section class="bg-white rounded-t-2xl md:rounded min-h-[33%] md:min-h-0 md:max-w-[500px] w-full">
+    <section class="bg-white rounded-t-2xl md:rounded w-full">
         <header class="border-b border-r-slate-200 flex justify-between items-center py-2 pl-4 pr-2" data-modal-header>
             <h2 class="m-0 text-lg font-semibold tracking-wide">
                 {{ title }}

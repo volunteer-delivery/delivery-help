@@ -2,8 +2,8 @@ import { defineStore } from 'pinia';
 import { RideStatus, Vehicle } from '~/enums';
 
 export interface Address {
-    country?: string;
-    city: string;
+    country: string;
+    city?: string;
 }
 
 export interface Driver {

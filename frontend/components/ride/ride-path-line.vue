@@ -19,9 +19,8 @@
 }
 
 .path-line-arrow {
-    @apply border-t-blue-800 absolute block left-1;
     top: calc(50% - 3px);
     border: 5px solid transparent;
-    border-top-color: #3F51B5;
+    @apply border-t-blue-800 absolute block left-1;
 }
 </style>

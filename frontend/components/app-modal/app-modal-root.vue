@@ -3,7 +3,7 @@
         <div
             v-for="modal of modalStore.list"
             :key="modal.id"
-            class="fixed bottom-0 left-0 w-full h-full z-50 bg-slate-800/75"
+            class="fixed bottom-0 left-0 w-full h-full z-50 bg-slate-800/75 overflow-y-auto flex flex-col pt-8 md:p-8"
         >
             <AppModalContent :modal="modal" />
         </div>
@@ -21,7 +21,7 @@ watch(toRef(modalStore, 'list'), (modals) => {
 
 <style scoped>
 .modal-enter-active {
-    @apply transition-opacity duration-200;
+    @apply transition-opacity duration-200 overflow-y-clip;
 }
 
 .modal-enter-active .modal-content {
@@ -37,7 +37,7 @@ watch(toRef(modalStore, 'list'), (modals) => {
 }
 
 .modal-enter-from .modal-content {
-    @apply translate-y-[5%] md:-translate-y-1/2 md:-translate-x-1/2 md:scale-95;
+    @apply translate-y-[5%] md:translate-y-0 md:scale-95;
 }
 
 .modal-leave-to {
