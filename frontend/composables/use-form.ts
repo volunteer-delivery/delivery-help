@@ -1,6 +1,12 @@
 import type { UnwrapRef } from 'vue';
 import { AnySchema, ValidationError } from 'yup';
 
+export interface IFormAutocompleteOption {
+    id: string | number;
+    value: string;
+    title?: string;
+}
+
 export interface IFormFieldDefinition<V> {
     initial: V;
     validation?: AnySchema;

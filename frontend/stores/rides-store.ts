@@ -27,7 +27,7 @@ export interface Ride {
     path: RidePathPoint[];
 }
 
-interface RidesFilter {
+export interface RidesFilter {
     fromCountry: string | null;
     fromCity: string | null;
     destinationCity: string | null;
@@ -35,7 +35,7 @@ interface RidesFilter {
     departureRange: [string?, string?];
 }
 
-interface RidesFilterValues {
+export interface RidesFilterValues {
     countries: Set<string>;
     cities: Set<string>;
 }
@@ -55,9 +55,9 @@ export const useRidesStore = defineStore('rides', () => {
     });
 
     const pendingFilter = reactive<RidesFilter>({
-        fromCountry: null,
-        fromCity: null,
-        destinationCity: null,
+        fromCountry: '',
+        fromCity: '',
+        destinationCity: '',
         vehicles: [],
         departureRange: [],
     });

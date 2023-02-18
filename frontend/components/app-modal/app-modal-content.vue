@@ -5,7 +5,6 @@
         class="modal-content w-full mt-auto"
         ref="modalRef"
         :style="modalStyles"
-        v-on-click-outside="modal.close"
         v-if="device.isMobileOrTablet"
     />
 
@@ -13,14 +12,13 @@
         :is="modal.content"
         v-bind="modal.props"
         class="modal-content m-auto md:max-w-[500px]"
-        v-on-click-outside="modal.close"
+        ref="modalRef"
         v-else
     />
 </template>
 
 <script lang="ts" setup>
 import type { ComponentPublicInstance, PropType } from 'vue';
-import { vOnClickOutside } from '@vueuse/components';
 import { Modal } from '~/stores/modal-store';
 import { ACTIVE_MODAL } from '~/composables/use-active-modal';
 
@@ -33,15 +31,18 @@ const props = defineProps({
 
 const device = useDevice();
 const modalRef = ref<ComponentPublicInstance | null>(null);
+const modalEl = computed<HTMLElement | null>(() => modalRef.value?.$el || null);
 
 const swipe = device.isMobileOrTablet
-    ? useSwipeModal(modalRef, { onClose: props.modal.close })
+    ? useSwipeModal(modalEl, { onClose: props.modal.close })
     : { offsetY: 0 };
 
 const modalStyles = computed(() => {
     if (!swipe.offsetY) return null;
     return { transform: `translateY(${swipe.offsetY}px)` };
 });
+
+onClickOutside(modalEl, props.modal.close);
 
 provide(ACTIVE_MODAL, props.modal);
 </script>

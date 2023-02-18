@@ -89,7 +89,7 @@ const props = defineProps({
 
 const tagClasses = computed(() => ({
     [BUTTON_SIZES[props.look][props.size!]]: props.size,
-    'transition-colors hover:bg-gray-200 text-gray-600 disabled:text-gray-400 rounded-full flex': props.look === ButtonLook.ICON,
+    'transition-colors hover:bg-gray-200 focus:bg-gray-200 text-gray-600 disabled:text-gray-400 rounded-full flex': props.look === ButtonLook.ICON,
     'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded-full text-white flex shadow-md active:shadow-xl disabled:shadow': props.look === ButtonLook.ICON_PRIMARY,
     'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md active:shadow-xl disabled:shadow': props.look === ButtonLook.PRIMARY,
 }));

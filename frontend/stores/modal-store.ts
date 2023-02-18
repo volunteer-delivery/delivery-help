@@ -1,5 +1,6 @@
 import type { Component } from 'vue';
 import { defineStore } from 'pinia';
+import { nanoid } from 'nanoid';
 
 type ModalCloseById = (id: string) => void;
 type ContentProps = Record<string, unknown>;
@@ -13,8 +14,6 @@ interface IModalOptions extends IModalOpenOptions<ContentProps> {
     closeById: ModalCloseById;
 }
 
-const uniqueId = useUniqueId('modal');
-
 export class Modal {
     public readonly id: string;
     public readonly content: Component;
@@ -22,7 +21,7 @@ export class Modal {
     private readonly closeById: ModalCloseById;
 
     constructor(options: IModalOptions) {
-        this.id = uniqueId.next();
+        this.id = nanoid();
         this.content = options.content;
         this.props = options.props;
         this.closeById = options.closeById;

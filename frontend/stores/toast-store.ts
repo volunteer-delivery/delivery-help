@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { nanoid } from 'nanoid';
 
 type ToastCloseById = (id: string) => void;
 
@@ -7,8 +8,6 @@ interface IToastOptions {
     closeById: ToastCloseById;
 }
 
-const uniqueId = useUniqueId('toast');
-
 export class Toast {
     public readonly id: string;
     public readonly message: string;
@@ -16,7 +15,7 @@ export class Toast {
     private closingTimeout?: NodeJS.Timeout;
 
     constructor(options: IToastOptions) {
-        this.id = uniqueId.next();
+        this.id = nanoid();
         this.message = options.message;
         this.closeById = options.closeById;
     }

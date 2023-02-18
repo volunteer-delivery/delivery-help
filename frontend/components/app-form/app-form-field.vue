@@ -4,7 +4,6 @@
             class="block border-b w-full relative pt-4"
             :class="underlineColorClass"
             ref="fieldRef"
-            @click="onClick"
         >
             <span class="absolute left-0 top-6 transition-font-field origin-top-left" :class="labelClasses">
                 {{ label }}
@@ -29,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onClickOutside } from '@vueuse/core';
+import type { Ref } from 'vue';
 import { IFormModel, IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
 
@@ -101,6 +100,7 @@ const underlineClasses = computed(() => [
 ]);
 
 provide<IFormFieldModel<unknown>>(InjectionToken.FORM_FIELD, fieldModel);
+provide<Ref<HTMLElement | null>>(InjectionToken.FORM_FIELD_REF, fieldRef);
 watch(toRef(props, 'disabled'), fieldModel.setDisabled, { immediate: true });
 </script>
 

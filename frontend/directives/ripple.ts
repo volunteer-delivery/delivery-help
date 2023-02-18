@@ -45,6 +45,9 @@ function computePosition(clientRect: DOMRect, event: MouseEvent): IRipplePositio
 
 function renderRipple(el: HTMLElement, event: MouseEvent): void {
     const state = storage.get(el)!;
+
+    if (!state) return;
+
     const clientRect = el.getBoundingClientRect();
     const position = computePosition(clientRect, event);
     const computedStyles = getComputedStyle(el);
