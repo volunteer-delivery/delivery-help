@@ -1,4 +1,4 @@
-import type { UnwrapRef } from 'vue';
+import type { Ref, UnwrapRef } from 'vue';
 import { AnySchema, ValidationError } from 'yup';
 
 export interface IFormAutocompleteOption {
@@ -115,9 +115,24 @@ function buildFormFields<FD extends object>(definition: IFormFieldDefinitions<FD
     return Object.fromEntries(entries);
 }
 
+function buildFormData<FD extends object>(fields: IFormFields<FD>): FD {
+    const result: Partial<Record<keyof FD, Ref<unknown>>> = {};
+
+    for (const id in fields) {
+        result[id] = computed({
+            get: () => fields[id].data as FD[typeof id],
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            set: (value) => void (fields[id].data = value as any),
+        });
+    }
+
+    return reactive(result) as FD;
+}
+
 export function useForm<FD extends object>(definition: IFormFieldDefinitions<FD>): IFormModel<FD> {
     const fields = buildFormFields(definition);
     const errors = ref<IFormErrors<FD>>({});
+    const data = buildFormData<FD>(fields);
     const isValid = computed(() => !Object.keys(errors.value).length);
     const isInvalid = computed(() => !isValid.value);
 
@@ -143,14 +158,6 @@ export function useForm<FD extends object>(definition: IFormFieldDefinitions<FD>
 
         return field;
     }
-
-    const data = computed<FD>(() => {
-        const result: Partial<FD> = {};
-        for (const id in fields) {
-            result[id] = fields[id].data as FD[typeof id];
-        }
-        return result as FD;
-    });
 
     function setDisabled(toDisabled: boolean): void {
         for (const id in fields) {

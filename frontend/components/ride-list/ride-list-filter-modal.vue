@@ -5,7 +5,7 @@
                 <AppFormAutocompleteInput :options="countryOptions" />
             </AppFormField>
 
-            <AppFormField id="fromCity" label="З Міста" class="mb-3">
+            <AppFormField id="fromCity" label="З Міста" class="mb-3" v-if="isFromUkraine">
                 <AppFormAutocompleteInput :options="cityOptions" />
             </AppFormField>
 
@@ -27,21 +27,23 @@ import { RidesFilter } from '~/stores/rides-store';
 const ridesStore = useRidesStore();
 const modal = useActiveModal();
 
+const initialFormData = clone(ridesStore.pendingFilter);
+
 const form = useForm<RidesFilter>({
     fromCountry: {
-        initial: ridesStore.pendingFilter.fromCountry,
+        initial: initialFormData.fromCountry,
     },
     fromCity: {
-        initial: ridesStore.pendingFilter.fromCity,
+        initial: initialFormData.fromCity,
     },
     departureRange: {
-        initial: ridesStore.pendingFilter.departureRange,
+        initial: initialFormData.departureRange,
     },
     destinationCity: {
-        initial: ridesStore.pendingFilter.destinationCity,
+        initial: initialFormData.destinationCity,
     },
     vehicles: {
-        initial: ridesStore.pendingFilter.vehicles,
+        initial: initialFormData.vehicles,
     },
 });
 
@@ -52,8 +54,12 @@ function formatAddressOptions(addresses: Set<string>): IFormAutocompleteOption[]
 const countryOptions = computed(() => formatAddressOptions(ridesStore.filterValues.countries));
 const cityOptions = computed(() => formatAddressOptions(ridesStore.filterValues.cities));
 
+const isFromUkraine = computed(() => form.data.fromCountry?.toLowerCase() === 'україна');
+
 function apply(): void {
     ridesStore.applyPendingFilter(form.data);
     modal.close();
 }
+
+watch(toRef(form.data, 'fromCountry'), () => form.data.fromCity = '');
 </script>
