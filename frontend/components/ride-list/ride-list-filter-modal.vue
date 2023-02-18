@@ -1,8 +1,16 @@
 <template>
     <AppModal title="Фільтрувати Поїздки" :initial-focus="false">
         <AppForm :model="form" @submit="apply">
-            <AppFormField id="fromCountry" label="З Країни" class="mb-2">
+            <AppFormField id="fromCountry" label="З Країни" class="mb-3">
                 <AppFormAutocompleteInput :options="countryOptions" />
+            </AppFormField>
+
+            <AppFormField id="fromCity" label="З Міста" class="mb-3">
+                <AppFormAutocompleteInput :options="cityOptions" />
+            </AppFormField>
+
+            <AppFormField id="destinationCity" label="До Міста" class="mb-6">
+                <AppFormAutocompleteInput :options="cityOptions" />
             </AppFormField>
 
             <AppButton look="primary" type="submit" size="lg" class="w-full">
