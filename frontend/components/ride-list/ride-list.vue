@@ -1,14 +1,13 @@
 <template>
     <RideListEmpty v-if="isEmpty" />
 
-    <template v-else>
+    <div class="grid gap-4 md:grid-cols-[repeat(auto-fit,_minmax(448px,1fr))] md:max-w-[912px]" v-else>
         <RideListItem
-            class="mb-sm-4"
             v-for="ride of rides"
             :key="ride.id"
             :ride="ride"
         />
-    </template>
+    </div>
 </template>
 
 <script lang="ts" setup>
