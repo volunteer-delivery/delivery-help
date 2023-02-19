@@ -1,18 +1,17 @@
 <template>
     <AppFormTextInput
-        ref="inputRef"
-        @focusin="showDropdown"
-        @focusout="hideDropdown"
+        @focusin="dropdown.open"
+        @focusout="dropdown.close"
     />
 
     <Transition name="autocomplete" :duration="{ enter: 200, leave: 150 }">
         <ul
-            class="m-0 p-0 bg-white shadow rounded-sm z-[100]"
-            :style="dropdownStyles"
+            class="m-0 p-0 pt-2 bg-white shadow rounded-sm z-[100]"
+            :style="dropdown.styles"
             ref="dropdownRef"
-            v-if="dropdownDisplaying"
+            v-if="dropdown.isDisplaying"
         >
-            <li v-for="option of availableOptions" :key="option.id">
+            <li v-for="option of availableOptions" :key="option.id || option.value">
                 <AppButton
                     class="text-left w-full px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 transition-colors"
                     :ripple="RippleColor.BLUE_800"
@@ -26,7 +25,7 @@
             </li>
 
             <li class="border-t border-t-gray-100">
-                <AppButton class="w-full py-2" @click="hideDropdown">
+                <AppButton class="w-full py-2" @click="dropdown.close">
                     Закрити
                 </AppButton>
             </li>
@@ -35,9 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CSSProperties, PropType, Ref } from 'vue';
-import { useFloating, size, autoPlacement } from '@floating-ui/vue';
-import type { MiddlewareState } from '@floating-ui/vue';
+import type { PropType, Ref } from 'vue';
 import { IFormAutocompleteOption, IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
 
@@ -52,36 +49,12 @@ const model = inject<IFormFieldModel<string>>(InjectionToken.FORM_FIELD)!;
 
 const inputRef = inject<Ref<HTMLElement | null>>(InjectionToken.FORM_FIELD_REF)!;
 const dropdownRef = ref(null);
-const dropdownWidth = ref(0);
 
-const dropdownDisplaying = ref(false);
-const showDropdown = (): void => void (dropdownDisplaying.value = true);
-const hideDropdown = (): void => void (dropdownDisplaying.value = false);
+const dropdown = useDropdown(inputRef, dropdownRef);
 
 function apply(option: IFormAutocompleteOption): void {
     model.data = option.value;
 }
-
-const floating = reactive(useFloating(inputRef, dropdownRef, {
-    middleware: [
-        size({
-            apply(args: MiddlewareState): void {
-                dropdownWidth.value = args.rects.reference.width;
-            },
-        }),
-        autoPlacement({
-            allowedPlacements: ['top', 'bottom'],
-        }),
-    ],
-}));
-
-const dropdownStyles = computed<CSSProperties>(() => ({
-    position: floating.strategy,
-    top: `${floating.y ?? 0}px`,
-    left: `${floating.x ?? 0}px`,
-    width: `${dropdownWidth.value}px`,
-    transformOrigin: floating.placement === 'top' ? 'bottom left' : 'top left',
-}));
 
 const availableOptions = computed<IFormAutocompleteOption[]>(() => {
     const options = props.options.filter((option) => option.value.toLowerCase().includes(model.data.toLowerCase()));
@@ -89,7 +62,7 @@ const availableOptions = computed<IFormAutocompleteOption[]>(() => {
 });
 
 const availableOptionsCount = computed(() => availableOptions.value.length);
-watch(availableOptionsCount, () => floating.update());
+watch(availableOptionsCount, () => dropdown.updatePosition());
 </script>
 
 <style scoped>

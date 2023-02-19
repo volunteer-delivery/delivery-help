@@ -9,8 +9,12 @@
                 <AppFormAutocompleteInput :options="cityOptions" />
             </AppFormField>
 
-            <AppFormField id="destinationCity" label="До Міста" class="mb-6">
+            <AppFormField id="destinationCity" label="До Міста" class="mb-3">
                 <AppFormAutocompleteInput :options="cityOptions" />
+            </AppFormField>
+
+            <AppFormField id="vehicles" label="Тип авто" class="mb-6">
+                <AppFormSelect :options="vehicleOptions" />
             </AppFormField>
 
             <AppButton look="primary" type="submit" size="lg" class="w-full">
@@ -21,8 +25,9 @@
 </template>
 
 <script lang="ts" setup>
-import { IFormAutocompleteOption } from '~/composables/use-form';
+import { IFormAutocompleteOption, IFormSelectOption } from '~/composables/use-form';
 import { RidesFilter } from '~/stores/rides-store';
+import { Vehicle } from '~/enums';
 
 const ridesStore = useRidesStore();
 const modal = useActiveModal();
@@ -53,6 +58,11 @@ function formatAddressOptions(addresses: Set<string>): IFormAutocompleteOption[]
 
 const countryOptions = computed(() => formatAddressOptions(ridesStore.filterValues.countries));
 const cityOptions = computed(() => formatAddressOptions(ridesStore.filterValues.cities));
+
+const vehicleOptions: IFormSelectOption<Vehicle>[] = Object.values(Vehicle).map((vehicle) => ({
+    value: vehicle,
+    title: formatVehicle(vehicle),
+}));
 
 const isFromUkraine = computed(() => form.data.fromCountry?.toLowerCase() === 'україна');
 

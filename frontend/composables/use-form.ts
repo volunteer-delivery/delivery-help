@@ -2,8 +2,14 @@ import type { Ref, UnwrapRef } from 'vue';
 import { AnySchema, ValidationError } from 'yup';
 
 export interface IFormAutocompleteOption {
-    id: string | number;
     value: string;
+    id?: string | number;
+    title?: string;
+}
+
+export interface IFormSelectOption<V = unknown> {
+    value: V;
+    id?: string | number;
     title?: string;
 }
 

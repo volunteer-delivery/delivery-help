@@ -9,7 +9,9 @@
                 {{ label }}
             </span>
 
-            <slot />
+            <span class="block min-h-[36px] w-full">
+                <slot />
+            </span>
 
             <span
                 class="block border-b-2 w-full scale-x-0 transition-font-field absolute left-0 -bottom-px"
