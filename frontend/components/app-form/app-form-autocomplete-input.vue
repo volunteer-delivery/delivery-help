@@ -7,7 +7,7 @@
 
     <Transition name="autocomplete" :duration="{ enter: 200, leave: 150 }">
         <ul
-            class="m-0 p-0 bg-white shadow rounded-sm"
+            class="m-0 p-0 bg-white shadow rounded-sm z-[100]"
             :style="dropdownStyles"
             ref="dropdownRef"
             v-if="dropdownDisplaying"
@@ -22,6 +22,12 @@
                         :text="option.title || option.value"
                         :highlight="model.data"
                     />
+                </AppButton>
+            </li>
+
+            <li class="border-t border-t-gray-100">
+                <AppButton class="w-full py-2" @click="hideDropdown">
+                    Закрити
                 </AppButton>
             </li>
         </ul>

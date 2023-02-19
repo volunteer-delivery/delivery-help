@@ -9,9 +9,13 @@ interface ISwipeModal {
 }
 
 export function useSwipeModal(modalRef: Ref<HTMLElement | null>, options: ISwipeModalOptions): ISwipeModal {
-    const windowSize = useWindowSize();
-    const safeZone = computed(() => windowSize.height.value / 4);
     const headerEl = computed<HTMLElement | null>(() => modalRef.value?.querySelector('[data-modal-header]') || null);
+
+    const safeZone = computed<number>(() => {
+        const modalHeight = modalRef.value?.offsetHeight || 0;
+        return Math.max(50, modalHeight / 3);
+    });
+
     const offsetY = ref(0);
 
     const swipe = useSwipe(headerEl, {

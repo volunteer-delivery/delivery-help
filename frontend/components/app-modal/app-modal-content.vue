@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { ComponentPublicInstance, PropType } from 'vue';
+import type { ComponentPublicInstance, CSSProperties, PropType } from 'vue';
 import { Modal } from '~/stores/modal-store';
 import { ACTIVE_MODAL } from '~/composables/use-active-modal';
 
@@ -37,7 +37,7 @@ const swipe = device.isMobileOrTablet
     ? useSwipeModal(modalEl, { onClose: props.modal.close })
     : { offsetY: 0 };
 
-const modalStyles = computed(() => {
+const modalStyles = computed<CSSProperties | null>(() => {
     if (!swipe.offsetY) return null;
     return { transform: `translateY(${swipe.offsetY}px)` };
 });
