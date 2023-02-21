@@ -9,7 +9,7 @@
                 {{ label }}
             </span>
 
-            <span class="block min-h-[36px] w-full">
+            <span class="flex min-h-[36px] w-full">
                 <slot />
             </span>
 

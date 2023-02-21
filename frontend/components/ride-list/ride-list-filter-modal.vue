@@ -13,8 +13,12 @@
                 <AppFormAutocompleteInput :options="cityOptions" />
             </AppFormField>
 
-            <AppFormField id="vehicles" label="Тип авто" class="mb-6">
+            <AppFormField id="vehicles" label="Тип авто" class="mb-3">
                 <AppFormSelect :options="vehicleOptions" />
+            </AppFormField>
+
+            <AppFormField id="departureRange" label="Дата поїздки" class="mb-6">
+                <AppFormDatepicker :min="new Date()" />
             </AppFormField>
 
             <AppButton look="primary" type="submit" size="lg" class="w-full">
@@ -25,16 +29,17 @@
 </template>
 
 <script lang="ts" setup>
+import { cloneDeep } from 'lodash-es';
 import { IFormAutocompleteOption, IFormSelectOption } from '~/composables/use-form';
-import { RidesFilter } from '~/stores/rides-store';
+import { IRidesFilter } from '~/stores/rides-store';
 import { Vehicle } from '~/enums';
 
 const ridesStore = useRidesStore();
 const modal = useActiveModal();
 
-const initialFormData = clone(ridesStore.pendingFilter);
+const initialFormData = cloneDeep(ridesStore.pendingFilter);
 
-const form = useForm<RidesFilter>({
+const form = useForm<IRidesFilter>({
     fromCountry: {
         initial: initialFormData.fromCountry,
     },

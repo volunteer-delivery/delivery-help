@@ -1,20 +1,25 @@
-export function formatDate(dateString: string): string {
-    const date = new Date(dateString);
+export const MONTHS = [
+    'Січня',
+    'Лютого',
+    'Березня',
+    'Квітня',
+    'Травня',
+    'Червня',
+    'Липня',
+    'Серпня',
+    'Вересня',
+    'Жовтня',
+    'Листопада',
+    'Грудня',
+];
 
-    const month = [
-        'Січня',
-        'Лютого',
-        'Березня',
-        'Квітня',
-        'Травня',
-        'Червня',
-        'Липня',
-        'Серпня',
-        'Вересня',
-        'Жовтня',
-        'Листопада',
-        'Грудня',
-    ][date.getMonth()];
-
-    return `${date.getDate()} ${month}`;
+export function formatDate(dateString: string): string;
+export function formatDate(date: Date): string;
+export function formatDate(dateOrString: string | Date): string {
+    const date = dateOrString instanceof Date ? dateOrString : new Date(dateOrString);
+    const formatter = new Intl.DateTimeFormat('uk-UA', {
+        day: 'numeric',
+        month: 'long',
+    });
+    return formatter.format(date);
 }

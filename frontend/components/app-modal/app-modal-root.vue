@@ -37,7 +37,7 @@ watch(toRef(modalStore, 'list'), (modals) => {
 }
 
 .modal-enter-from .modal-content {
-    @apply translate-y-[5%] md:translate-y-0 md:scale-95;
+    @apply translate-y-10 md:translate-y-0 md:scale-95;
 }
 
 .modal-leave-to {

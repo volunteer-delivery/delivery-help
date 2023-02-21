@@ -1,4 +1,5 @@
 @import "ripple.css";
+@import "dropdown.css";
 
 @tailwind base;
 @tailwind components;

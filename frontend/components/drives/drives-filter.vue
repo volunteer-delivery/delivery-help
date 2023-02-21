@@ -1,14 +1,5 @@
 <template>
     <v-card-text>
-        <v-select
-            label="Тип авто"
-            item-text="title"
-            item-value="value"
-            multiple
-            :items="vehicles"
-            v-model="filter.vehicles"
-        />
-
         <v-menu
             ref="menuRef"
             v-model="isSelectingDepartureTime"
@@ -43,18 +34,13 @@
 <script setup>
 /* eslint-disable */
 import { mdiCalendar } from '@mdi/js';
-import { Vehicle } from '~/enums';
-
-const vehicles = [Vehicle.CAR, Vehicle.VAN, Vehicle.TRUCK].map((type) => ({
-    value: type,
-    title: formatVehicle(type),
-}));
+import {cloneDeep} from "lodash-es";
 
 const ridesStore = useRidesStore();
 
 const menuRef = ref(null);
 
-const filter = reactive(clone(ridesStore.pendingFilter));
+const filter = reactive(cloneDeep(ridesStore.pendingFilter));
 const { departureRange } = toRefs(filter);
 const isSelectingDepartureTime = ref(false);
 

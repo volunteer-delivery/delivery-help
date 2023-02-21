@@ -1,5 +1,5 @@
 import type { CSSProperties, Ref } from 'vue';
-import { autoPlacement, size, useFloating } from '@floating-ui/vue';
+import { autoPlacement, size, useFloating  } from '@floating-ui/vue';
 import type { MiddlewareState } from '@floating-ui/vue';
 
 type ElementRef = Ref<HTMLElement | null>;
@@ -13,32 +13,46 @@ export interface IDropdown {
 }
 
 export function useDropdown(relative: ElementRef, dropdown: ElementRef): IDropdown {
+    const device = useDevice();
     const dropdownWidth = ref(0);
 
     const isDisplaying = ref(false);
     const open = (): void => void (isDisplaying.value = true);
     const close = (): void => void (isDisplaying.value = false);
 
+    const middlewares = [
+        autoPlacement({
+            allowedPlacements: ['bottom-start', 'top-start'],
+        }),
+    ];
+
+    if (device.isMobileOrTablet) {
+        middlewares.push(size({
+            apply(args: MiddlewareState): void {
+                dropdownWidth.value = args.rects.reference.width;
+            },
+        }));
+    }
+
     const { x, y, strategy, placement, update } = useFloating(relative, dropdown, {
-        middleware: [
-            size({
-                apply(args: MiddlewareState): void {
-                    dropdownWidth.value = args.rects.reference.width;
-                },
-            }),
-            autoPlacement({
-                allowedPlacements: ['top', 'bottom'],
-            }),
-        ],
+        placement: 'bottom',
+        middleware: middlewares,
     });
 
     const styles = computed<CSSProperties>(() => ({
         position: strategy.value,
         top: `${y.value ?? 0}px`,
         left: `${x.value ?? 0}px`,
-        width: `${dropdownWidth.value}px`,
-        transformOrigin: placement.value === 'top' ? 'bottom left' : 'top left',
+        width: device.isMobileOrTablet ? `${dropdownWidth.value}px` : undefined,
+        transformOrigin: placement.value === 'top-start' ? 'bottom left' : 'top left',
     }));
+
+    onClickOutside(dropdown, (event: PointerEvent) => {
+        if (event.composedPath().includes(relative.value!)) {
+            return;
+        }
+        close();
+    });
 
     return reactive({
         open,

@@ -1,20 +1,16 @@
 <template>
-    <AppFormTextInput
-        @focusin="dropdown.open"
-        @focusout="dropdown.close"
-    />
+    <AppFormTextInput @focusin="dropdown.open" @focusout="dropdown.close" />
 
-    <Transition name="autocomplete" :duration="{ enter: 200, leave: 150 }">
+    <Transition name="dropdown" :duration="{ enter: 200, leave: 150 }">
         <ul
-            class="m-0 p-0 pt-2 bg-white shadow rounded-sm z-[100]"
+            class="m-0 p-0 pt-2 bg-white shadow rounded-sm z-[100] min-w-[150px]"
             :style="dropdown.styles"
             ref="dropdownRef"
-            v-if="dropdown.isDisplaying"
+            v-if="isAutocompleteDisplaying"
         >
             <li v-for="option of availableOptions" :key="option.id || option.value">
                 <AppButton
                     class="text-left w-full px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 transition-colors"
-                    :ripple="RippleColor.BLUE_800"
                     @click="apply(option)"
                 >
                     <AppHighlightText
@@ -24,7 +20,7 @@
                 </AppButton>
             </li>
 
-            <li class="border-t border-t-gray-100">
+            <li class="border-t border-t-gray-100 hover:bg-gray-100 transition-colors">
                 <AppButton class="w-full py-2" @click="dropdown.close">
                     Закрити
                 </AppButton>
@@ -61,24 +57,10 @@ const availableOptions = computed<IFormAutocompleteOption[]>(() => {
     return options.slice(0, 10);
 });
 
+const isAutocompleteDisplaying = computed(() => {
+    return dropdown.isDisplaying && availableOptions.value.length;
+});
+
 const availableOptionsCount = computed(() => availableOptions.value.length);
 watch(availableOptionsCount, () => dropdown.updatePosition());
 </script>
-
-<style scoped>
-.autocomplete-enter-active {
-    @apply transition-dropdown duration-200;
-}
-
-.autocomplete-enter-from {
-    @apply scale-75 opacity-0;
-}
-
-.autocomplete-leave-active {
-    @apply transition-opacity duration-150;
-}
-
-.autocomplete-leave-to {
-    opacity: 0;
-}
-</style>

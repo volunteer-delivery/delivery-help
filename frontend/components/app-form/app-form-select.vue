@@ -1,13 +1,13 @@
 <template>
-    <AppButton class="w-full text-left" @click="dropdown.open">
+    <AppButton class="w-full text-left self-center" @click="dropdown.open">
         <slot name="preview" :selected="selectedOptions">
             {{ selectedOptionsPreview }}
         </slot>
     </AppButton>
 
-    <Transition name="select-dropdown" :duration="{ enter: 200, leave: 150 }">
+    <Transition name="dropdown" :duration="{ enter: 200, leave: 150 }">
         <ul
-            class="m-0 p-0 pt-2 bg-white shadow rounded-sm z-[100]"
+            class="m-0 p-0 pt-2 bg-white shadow rounded-sm z-[100] min-w-[150px]"
             :style="dropdown.styles"
             ref="dropdownRef"
             v-if="dropdown.isDisplaying"
@@ -15,7 +15,6 @@
             <li v-for="option of options" :key="option.id || option.value">
                 <AppButton
                     class="w-full px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 transition-colors flex"
-                    :ripple="RippleColor.BLUE_800"
                     @click="apply(option)"
                 >
                     <AppCheckbox
@@ -27,7 +26,7 @@
                 </AppButton>
             </li>
 
-            <li class="border-t border-t-gray-100">
+            <li class="border-t border-t-gray-100 hover:bg-gray-100 transition-colors">
                 <AppButton class="w-full py-2" @click="dropdown.close">
                     Закрити
                 </AppButton>
@@ -37,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FunctionalComponent, PropType, Ref } from 'vue';
+import type { PropType, Ref } from 'vue';
 import type { IFormFieldModel, IFormSelectOption } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
 
@@ -80,21 +79,3 @@ function apply(option: IFormSelectOption): void {
     model.data = model.data.concat(option.value);
 }
 </script>
-
-<style scoped>
-.select-dropdown-enter-active {
-    @apply transition-dropdown duration-200;
-}
-
-.select-dropdown-enter-from {
-    @apply scale-75 opacity-0;
-}
-
-.select-dropdown-leave-active {
-    @apply transition-opacity duration-150;
-}
-
-.select-dropdown-leave-to {
-    opacity: 0;
-}
-</style>

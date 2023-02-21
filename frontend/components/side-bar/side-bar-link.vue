@@ -4,7 +4,7 @@
         :to="to"
         :ripple="RippleColor.BLUE_800"
     >
-        <div class="flex h-full flex items-center h-10 px-2">
+        <div class="flex flex items-center h-10 px-2">
             <Icon size="24">
                 <component :is="icon" />
             </Icon>

@@ -27,12 +27,12 @@ export interface Ride {
     path: RidePathPoint[];
 }
 
-export interface RidesFilter {
+export interface IRidesFilter {
     fromCountry: string | null;
     fromCity: string | null;
     destinationCity: string | null;
     vehicles: Vehicle[];
-    departureRange: [string?, string?];
+    departureRange: [Date?, Date?];
 }
 
 export interface RidesFilterValues {
@@ -54,7 +54,7 @@ export const useRidesStore = defineStore('rides', () => {
         cities: new Set(),
     });
 
-    const pendingFilter = reactive<RidesFilter>({
+    const pendingFilter = reactive<IRidesFilter>({
         fromCountry: '',
         fromCity: '',
         destinationCity: '',
@@ -73,24 +73,13 @@ export const useRidesStore = defineStore('rides', () => {
     }));
 
     const pendingFiltered = computed(() => {
-        return pending.value.filter((ride: Ride) => {
-            const [from, destination] = ride.path;
-
-            if (pendingFilter.fromCountry && pendingFilter.fromCountry !== from.address.country) return false;
-            if (pendingFilter.fromCity && pendingFilter.fromCity !== from.address.city) return false;
-            if (pendingFilter.destinationCity && pendingFilter.destinationCity !== destination.address.city) return false;
-            if (pendingFilter.vehicles.length && !pendingFilter.vehicles.includes(ride.vehicle)) return false;
-
-            if (pendingFilter.departureRange.length) {
-                const departureTime = Number(new Date(from.departureTime!));
-                const [fromDate, toDate] = pendingFilter.departureRange;
-
-                if (departureTime < Number(new Date(fromDate!))) return false;
-                if (departureTime > Number(new Date(toDate!))) return false;
-            }
-
-            return true;
-        });
+        return RidesFilter.create(pending.value)
+            .byFromCountry(pendingFilter.fromCountry)
+            .byFromCity(pendingFilter.fromCity)
+            .byDestinationCity(pendingFilter.destinationCity)
+            .byVehicles(pendingFilter.vehicles)
+            .byDepartureRange(pendingFilter.departureRange)
+            .apply();
     });
 
     function patchFilterValues(ride: Ride): void {
@@ -135,7 +124,7 @@ export const useRidesStore = defineStore('rides', () => {
         toastStore.open('Статус змінено').closeAfter(3000);
     }
 
-    function applyPendingFilter(filter: RidesFilter): void {
+    function applyPendingFilter(filter: IRidesFilter): void {
         Object.assign(pendingFilter, filter);
     }
 
