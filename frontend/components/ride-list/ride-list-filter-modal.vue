@@ -30,8 +30,8 @@
 
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash-es';
-import { IFormAutocompleteOption, IFormSelectOption } from '~/composables/use-form';
-import { IRidesFilter } from '~/stores/rides-store';
+import type { IFormAutocompleteOption, IFormSelectOption } from '~/composables/use-form';
+import type { IRidesFilter } from '~/stores/rides-store';
 import { Vehicle } from '~/enums';
 
 const ridesStore = useRidesStore();

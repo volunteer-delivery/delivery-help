@@ -1,32 +1,6 @@
 <template>
     <section class="border-b border-b-slate-300 flex">
-        <div class="flex flex-col items-start grow py-4 pl-4">
-            <RidePath class="mb-3" :path="ride.path" />
-
-            <AppButton
-                class="p-1 -ml-1 mb-2 flex font-medium text-gray-500"
-                :ripple="RippleColor.BLUE_800"
-                @click="openDriverDetails"
-            >
-                <Icon size="24">
-                    <AccountBoxRound />
-                </Icon>
-
-                <span class="ml-1">
-                    {{ ride.driver.name }}
-                </span>
-            </AppButton>
-
-            <p class="flex m-0 items-center font-medium text-gray-500">
-                <Icon size="24">
-                    <DirectionsCarRound />
-                </Icon>
-
-                <span class="ml-1">
-                    {{ vehicleDetails }}
-                </span>
-            </p>
-        </div>
+        <RideInfo class="flex flex-col items-start grow py-4 pl-4" :ride="ride" />
 
         <div class="self-end ml-2 pr-2 pb-2">
             <AppButton class="mb-2" look="icon" size="md" :to="phoneLink">
@@ -70,13 +44,10 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import { Icon } from '@vicons/utils';
-import AccountBoxRound from '@vicons/material/AccountBoxRound';
-import DirectionsCarRound from '@vicons/material/DirectionsCarRound';
 import LocalPhoneRound from '@vicons/material/LocalPhoneRound';
 import MoreHorizRound from '@vicons/material/MoreHorizRound';
-import type { Ride } from '~/stores/rides-store';
+import type { Ride } from '~/stores/ride-details-store';
 import { RideStatus } from '~/enums';
-import { DriverDetailsModal } from '#components';
 
 const props = defineProps({
     ride: {
@@ -85,16 +56,10 @@ const props = defineProps({
     },
 });
 
-const modalStore = useModalStore();
 const toastStore = useToastStore();
 const ridesStore = useRidesStore();
 
-const vehicleDetails = computed(() => formatVehicleDetails(props.ride.vehicle));
 const phoneLink = computed(() => `tel:${props.ride.driver.phone}`);
-
-const openDriverDetails = (): void => void modalStore.open(DriverDetailsModal, {
-    props: { driver: props.ride.driver },
-});
 
 const isPending = computed(() => props.ride.status === RideStatus.PENDING);
 const isDone = computed(() => props.ride.status === RideStatus.FINISHED);

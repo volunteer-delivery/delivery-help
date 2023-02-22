@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { Driver } from '~/stores/rides-store';
+import type { Driver } from '~/stores/ride-details-store';
 
 const props = defineProps({
     driver: {

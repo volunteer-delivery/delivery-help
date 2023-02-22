@@ -1,5 +1,5 @@
 import { Vehicle } from '~/enums';
-import type { Ride } from '~/stores/rides-store';
+import type { Ride } from '~/stores/ride-details-store';
 import { Filter } from './filter';
 
 export class RidesFilter extends Filter<Ride> {

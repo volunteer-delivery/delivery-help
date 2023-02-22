@@ -22,7 +22,7 @@
 import type { PropType } from 'vue';
 import { Icon } from '@vicons/utils';
 import LocalPhoneRound from '@vicons/material/LocalPhoneRound';
-import type { Driver } from '~/stores/rides-store';
+import type { Driver } from '~/stores/ride-details-store';
 
 const props = defineProps({
     driver: {

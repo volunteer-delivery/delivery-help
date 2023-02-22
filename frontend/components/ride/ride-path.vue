@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import type { RidePath, RidePathPoint } from '~/stores/rides-store';
+import type { RidePath, RidePathPoint } from '~/stores/ride-details-store';
 
 const props = defineProps({
     path: {

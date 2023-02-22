@@ -1,31 +1,6 @@
 import { defineStore } from 'pinia';
 import { RideStatus, Vehicle } from '~/enums';
-
-export interface Address {
-    country: string;
-    city?: string;
-}
-
-export interface Driver {
-    id: string;
-    phone: string;
-}
-
-export interface RidePathPoint {
-    address: Address;
-    departureTime?: string;
-}
-
-export type RidePath = RidePathPoint[];
-
-export interface Ride {
-    id: string;
-    status: RideStatus;
-    destination: Address;
-    vehicle: Vehicle;
-    driver: Driver;
-    path: RidePathPoint[];
-}
+import type { Driver, Ride } from './ride-details-store';
 
 export interface IRidesFilter {
     fromCountry: string | null;

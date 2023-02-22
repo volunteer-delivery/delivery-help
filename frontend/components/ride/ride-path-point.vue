@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import type { RidePathPoint } from '~/stores/rides-store';
+import type { RidePathPoint } from '~/stores/ride-details-store';
 
 const props = defineProps({
     point: {

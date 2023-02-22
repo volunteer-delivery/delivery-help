@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { Ride, RidePathPoint } from '~/stores/rides-store';
+import type { Ride, RidePathPoint } from '~/stores/ride-details-store';
 
 const props = defineProps({
     ride: {
