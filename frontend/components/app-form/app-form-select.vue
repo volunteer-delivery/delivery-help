@@ -14,7 +14,9 @@
         >
             <li v-for="option of options" :key="option.id || option.value">
                 <AppButton
-                    class="w-full px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 transition-colors flex"
+                    class="text-left w-full flex"
+                    look="link"
+                    size="lg"
                     @click="apply(option)"
                 >
                     <AppCheckbox
@@ -26,8 +28,13 @@
                 </AppButton>
             </li>
 
-            <li class="border-t border-t-gray-100 hover:bg-gray-100 transition-colors">
-                <AppButton class="w-full py-2" @click="dropdown.close">
+            <li class="border-t border-t-gray-100">
+                <AppButton
+                    class="text-left w-full"
+                    look="link"
+                    size="lg"
+                    @click="dropdown.close"
+                >
                     Закрити
                 </AppButton>
             </li>
@@ -39,6 +46,7 @@
 import type { PropType, Ref } from 'vue';
 import type { IFormFieldModel, IFormSelectOption } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
+import type { ElementRef } from '~/composables/use-element-ref';
 
 const props = defineProps({
     options: {
@@ -62,7 +70,7 @@ const selectedOptionsPreview = computed(() => {
     return selectedOptions.value.map((option) => option.title || option.value).join(', ');
 });
 
-const inputRef = inject<Ref<HTMLElement | null>>(InjectionToken.FORM_FIELD_REF)!;
+const inputRef = inject<ElementRef>(InjectionToken.FORM_FIELD_REF)!;
 const dropdownRef = ref(null);
 
 const dropdown = useDropdown(inputRef, dropdownRef);

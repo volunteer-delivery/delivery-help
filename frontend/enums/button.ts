@@ -2,6 +2,7 @@ export enum ButtonLook {
     ICON = 'icon',
     ICON_PRIMARY = 'icon-primary',
     PRIMARY = 'primary',
+    LINK = 'link',
     RAW = 'raw',
 }
 

@@ -10,7 +10,9 @@
         >
             <li v-for="option of availableOptions" :key="option.id || option.value">
                 <AppButton
-                    class="text-left w-full px-4 py-2 hover:bg-gray-100 focus:bg-gray-100 transition-colors"
+                    class="text-left w-full"
+                    look="link"
+                    size="lg"
                     @click="apply(option)"
                 >
                     <AppHighlightText
@@ -20,8 +22,13 @@
                 </AppButton>
             </li>
 
-            <li class="border-t border-t-gray-100 hover:bg-gray-100 transition-colors">
-                <AppButton class="w-full py-2" @click="dropdown.close">
+            <li class="border-t border-t-gray-100">
+                <AppButton
+                    class="text-left w-full"
+                    look="link"
+                    size="lg"
+                    @click="dropdown.close"
+                >
                     Закрити
                 </AppButton>
             </li>
@@ -33,6 +40,7 @@
 import type { PropType, Ref } from 'vue';
 import { IFormAutocompleteOption, IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
+import type { ElementRef } from '~/composables/use-element-ref';
 
 const props = defineProps({
     options: {
@@ -43,7 +51,7 @@ const props = defineProps({
 
 const model = inject<IFormFieldModel<string>>(InjectionToken.FORM_FIELD)!;
 
-const inputRef = inject<Ref<HTMLElement | null>>(InjectionToken.FORM_FIELD_REF)!;
+const inputRef = inject<ElementRef>(InjectionToken.FORM_FIELD_REF)!;
 const dropdownRef = ref(null);
 
 const dropdown = useDropdown(inputRef, dropdownRef);

@@ -1,8 +1,7 @@
-import type { CSSProperties, Ref } from 'vue';
+import type { CSSProperties } from 'vue';
 import { autoPlacement, size, useFloating  } from '@floating-ui/vue';
 import type { MiddlewareState } from '@floating-ui/vue';
-
-type ElementRef = Ref<HTMLElement | null>;
+import type { ElementRef } from '~/composables/use-element-ref';
 
 export interface IDropdownOptions {
     fullSize?: boolean;
@@ -25,10 +24,17 @@ export function useDropdown(relative: ElementRef, dropdown: ElementRef, options:
     const close = (): void => void (isDisplaying.value = false);
 
     const { x, y, strategy, placement, update } = useFloating(relative, dropdown, {
-        placement: 'bottom',
+        placement: 'top',
         middleware: [
             autoPlacement({
-                allowedPlacements: ['bottom', 'top'],
+                allowedPlacements: [
+                    'top-start',
+                    'top',
+                    'top-end',
+                    'bottom-start',
+                    'bottom',
+                    'bottom-end',
+                ],
             }),
             size({
                 apply(args: MiddlewareState): void {
@@ -44,11 +50,18 @@ export function useDropdown(relative: ElementRef, dropdown: ElementRef, options:
         return isFullSize ? { width } : { maxWidth: width };
     });
 
+    const transformOrigin = computed(() => {
+        const [y, x = 'start'] = placement.value.split('-');
+        const originY = y === 'top' ? 'bottom' : 'top';
+        const originX = x === 'start' ? 'left' : 'right';
+        return [originY, originX].join(' ');
+    });
+
     const styles = computed<CSSProperties>(() => ({
         position: strategy.value,
         top: `${y.value ?? 0}px`,
         left: `${x.value ?? 0}px`,
-        transformOrigin: placement.value === 'top' ? 'bottom left' : 'top left',
+        transformOrigin: transformOrigin.value,
         ...sizeStyles.value,
     }));
 

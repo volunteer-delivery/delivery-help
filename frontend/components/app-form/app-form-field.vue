@@ -30,9 +30,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ref } from 'vue';
-import { IFormModel, IFormFieldModel } from '~/composables/use-form';
+import type { IFormModel, IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
+import type { ElementRef, ElementRefValue } from '~/composables/use-element-ref';
 
 // Dynamic Classes
 // text-red-600 border-b-red-600
@@ -61,7 +61,7 @@ const props = defineProps({
 const formModel = inject<IFormModel<Record<string, unknown>>>(InjectionToken.FORM)!;
 const fieldModel = formModel.field(props.id);
 
-const fieldRef = ref(null);
+const fieldRef = ref<ElementRefValue>(null);
 
 const isFocused = ref(false);
 const focus = (): void => void (isFocused.value = true);
@@ -102,7 +102,7 @@ const underlineClasses = computed(() => [
 ]);
 
 provide<IFormFieldModel<unknown>>(InjectionToken.FORM_FIELD, fieldModel);
-provide<Ref<HTMLElement | null>>(InjectionToken.FORM_FIELD_REF, fieldRef);
+provide<ElementRef>(InjectionToken.FORM_FIELD_REF, fieldRef);
 watch(toRef(props, 'disabled'), fieldModel.setDisabled, { immediate: true });
 </script>
 

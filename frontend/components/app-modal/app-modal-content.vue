@@ -21,6 +21,7 @@
 import type { ComponentPublicInstance, CSSProperties, PropType } from 'vue';
 import { Modal } from '~/stores/modal-store';
 import { ACTIVE_MODAL } from '~/composables/use-active-modal';
+import type { ElementRefValue } from '~/composables/use-element-ref';
 
 const props = defineProps({
     modal: {
@@ -31,7 +32,7 @@ const props = defineProps({
 
 const device = useDevice();
 const modalRef = ref<ComponentPublicInstance | null>(null);
-const modalEl = computed<HTMLElement | null>(() => modalRef.value?.$el || null);
+const modalEl = computed<ElementRefValue>(() => modalRef.value?.$el || null);
 
 const swipe = device.isMobileOrTablet
     ? useSwipeModal(modalEl, { onClose: props.modal.close })

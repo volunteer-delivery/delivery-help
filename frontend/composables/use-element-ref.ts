@@ -1,12 +1,15 @@
-import { ComponentPublicInstance, Ref } from 'vue';
+import type { ComponentPublicInstance, Ref } from 'vue';
 
-type MaybeElementRef = Ref<ComponentPublicInstance | HTMLElement | null>;
+export type ElementRefValue = HTMLElement | null;
+export type MaybeElementRefValue = ComponentPublicInstance | ElementRefValue;
+export type MaybeElementRef = Ref<MaybeElementRefValue>;
+export type ElementRef = Ref<ElementRefValue>;
 
 function isComponent(ref: MaybeElementRef): ref is Ref<ComponentPublicInstance | null> {
     return !!(ref.value as ComponentPublicInstance)?.$el;
 }
 
-export function useElementRef(ref: MaybeElementRef): Ref<HTMLElement | null> {
+export function useElementRef(ref: MaybeElementRef): ElementRef {
     return computed(() => {
         if (!ref.value) return null;
         if (isComponent(ref)) {

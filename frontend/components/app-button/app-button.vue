@@ -17,8 +17,8 @@ import type { FunctionalComponent, PropType } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { ButtonLook, ButtonSize } from '~/enums';
 import { RippleColor } from '~/directives/ripple';
-import { vVisible } from '#imports';
 import { NuxtLink } from '#components';
+import { vVisible } from '#imports';
 
 type ButtonSizeConfig = Record<ButtonSize, string>;
 type ButtonRippledLook = ButtonLook.PRIMARY | ButtonLook.ICON_PRIMARY;
@@ -40,6 +40,11 @@ const BUTTON_SIZES: Record<ButtonLook, ButtonSizeConfig> = {
         lg: 'p-4',
     },
     [ButtonLook.PRIMARY]: {
+        sm: 'py-1 px-1.5 text-sm',
+        md: 'py-2 px-2.5 text-sm',
+        lg: 'py-3 px-4 text-md',
+    },
+    [ButtonLook.LINK]: {
         sm: 'py-1 px-1.5 text-sm',
         md: 'py-2 px-2.5 text-sm',
         lg: 'py-3 px-4 text-md',
@@ -92,6 +97,7 @@ const tagClasses = computed(() => ({
     'transition-colors hover:bg-gray-200 focus:bg-gray-200 text-gray-600 disabled:text-gray-400 rounded-full flex': props.look === ButtonLook.ICON,
     'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded-full text-white flex shadow-md active:shadow-xl disabled:shadow': props.look === ButtonLook.ICON_PRIMARY,
     'transition-button-primary bg-blue-800 focus:bg-blue-700 rounded text-white block tracking-wider shadow-md active:shadow-xl disabled:shadow': props.look === ButtonLook.PRIMARY,
+    'transition-colors hover:bg-gray-100 focus:bg-gray-100 rounded text-gray-600 disabled:text-gray-400': props.look === ButtonLook.LINK,
 }));
 
 interface IButtonRootAttrs {

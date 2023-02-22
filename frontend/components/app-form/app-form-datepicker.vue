@@ -30,7 +30,12 @@
                 inline
             >
                 <template #action-row="{ internalModelValue }">
-                    <AppButton class="w-full py-2 hover:bg-gray-100 transition-colors" @click="apply(internalModelValue)">
+                    <AppButton
+                        class="w-full"
+                        look="link"
+                        size="lg"
+                        @click="apply(internalModelValue)"
+                    >
                         Закрити
                     </AppButton>
                 </template>
@@ -48,6 +53,7 @@ import CloseRound from '@vicons/material/CloseRound';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import type { IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
+import type { ElementRef } from '~/composables/use-element-ref';
 
 defineProps({
     min: {
@@ -73,7 +79,7 @@ const datePreview = computed<string | null>(() => {
 
 model.registerEnteredCheck((value) => checkIsRange(value) ? !!value.length : !!value);
 
-const inputRef = inject<Ref<HTMLElement | null>>(InjectionToken.FORM_FIELD_REF)!;
+const inputRef = inject<ElementRef>(InjectionToken.FORM_FIELD_REF)!;
 const dropdownRef = ref(null);
 
 const dropdown = useDropdown(inputRef, dropdownRef, { fullSize: false });

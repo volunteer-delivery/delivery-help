@@ -1,6 +1,6 @@
 <template>
-    <section class="p-4 pr-2 border-b border-b-slate-300 flex">
-        <div class="flex flex-col items-start grow">
+    <section class="border-b border-b-slate-300 flex">
+        <div class="flex flex-col items-start grow py-4 pl-4">
             <RidePath class="mb-3" :path="ride.path" />
 
             <AppButton
@@ -28,12 +28,38 @@
             </p>
         </div>
 
-        <div class="self-end ml-2">
-            <AppButton look="icon" size="md" :to="phoneLink">
+        <div class="self-end ml-2 pr-2 pb-2">
+            <AppButton class="mb-2" look="icon" size="md" :to="phoneLink">
                 <Icon class="text-blue-800" size="24">
                     <LocalPhoneRound />
                 </Icon>
             </AppButton>
+
+            <AppMenu>
+                <template #activator="{ activatorRef, open }">
+                    <AppButton look="icon" size="md" :ref="activatorRef" @click="open">
+                        <Icon class="text-blue-800" size="24">
+                            <MoreHorizRound />
+                        </Icon>
+                    </AppButton>
+                </template>
+
+                <AppButton
+                    class="text-left w-full"
+                    look="link"
+                    size="lg"
+                >
+                    В Активні
+                </AppButton>
+
+                <AppButton
+                    class="text-left w-full"
+                    look="link"
+                    size="lg"
+                >
+                    Деталі
+                </AppButton>
+            </AppMenu>
         </div>
     </section>
 </template>
@@ -44,6 +70,7 @@ import { Icon } from '@vicons/utils';
 import AccountBoxRound from '@vicons/material/AccountBoxRound';
 import DirectionsCarRound from '@vicons/material/DirectionsCarRound';
 import LocalPhoneRound from '@vicons/material/LocalPhoneRound';
+import MoreHorizRound from '@vicons/material/MoreHorizRound';
 import { Ride } from '~/stores/rides-store';
 import { DriverDetailsModal } from '#components';
 

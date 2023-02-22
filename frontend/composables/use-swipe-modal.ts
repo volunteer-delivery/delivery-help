@@ -1,4 +1,4 @@
-import type { Ref } from 'vue';
+import type { ElementRef, ElementRefValue } from '~/composables/use-element-ref';
 
 interface ISwipeModalOptions {
     onClose(): void;
@@ -8,8 +8,8 @@ interface ISwipeModal {
     offsetY: number;
 }
 
-export function useSwipeModal(modalRef: Ref<HTMLElement | null>, options: ISwipeModalOptions): ISwipeModal {
-    const headerEl = computed<HTMLElement | null>(() => modalRef.value?.querySelector('[data-modal-header]') || null);
+export function useSwipeModal(modalRef: ElementRef, options: ISwipeModalOptions): ISwipeModal {
+    const headerEl = computed<ElementRefValue>(() => modalRef.value?.querySelector('[data-modal-header]') || null);
 
     const safeZone = computed<number>(() => {
         const modalHeight = modalRef.value?.offsetHeight || 0;
