@@ -1,5 +1,6 @@
 import type { $Fetch } from 'nitropack';
 import type { FetchContext, FetchResponse } from 'ofetch';
+import { useNProgress, UseNProgressReturn } from '@vueuse/integrations/useNProgress';
 
 type $FetchErrorContext = FetchContext & { response: FetchResponse<ResponseType> };
 
@@ -8,15 +9,22 @@ export class HttpError extends Error {}
 export class HttpClient {
     private readonly fetch: $Fetch;
 
-    constructor(baseURL: string) {
+    constructor(
+        baseURL: string,
+        private readonly nprogress: UseNProgressReturn,
+    ) {
         this.fetch = $fetch.create({
             credentials: 'same-origin',
             baseURL,
             onResponseError: this.onError.bind(this),
+            onRequest: () => this.nprogress.start(),
+            onResponse: () => this.nprogress.done(),
         });
     }
 
     private onError(error: $FetchErrorContext): void {
+        this.nprogress.done();
+
         if (!error.response) {
             throw error;
         }
@@ -42,9 +50,11 @@ export class HttpClient {
 
 export default defineNuxtPlugin((nuxt) => {
     const { apiUrl } = useRuntimeConfig().public;
+    const nprogress = useNProgress(null, { showSpinner: false });
+
     return {
         provide: {
-            http: new HttpClient(`${apiUrl}/v1`),
+            http: new HttpClient(`${apiUrl}/v1`, nprogress),
         },
     };
 });

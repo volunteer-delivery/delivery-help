@@ -28,6 +28,7 @@
         "gzip-cli": "^1.2.0",
         "lodash-es": "^4.17.21",
         "nanoid": "^4.0.1",
+        "nprogress": "^0.2.0",
         "nuxt": "^3.2.2",
         "pinia": "^2.0.31",
         "postcss": "^8.4.21",

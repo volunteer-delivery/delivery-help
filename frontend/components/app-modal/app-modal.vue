@@ -47,6 +47,7 @@ const rootRef = ref(null);
 
 useFocusTrap(rootRef, {
     immediate: props.initialFocus,
+    allowOutsideClick: true,
     initialFocus: ':where(button, a, input, select):not(:disabled, [data-no-initial-focus])',
 });
 </script>

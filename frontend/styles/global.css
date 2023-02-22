@@ -1,12 +1,13 @@
 @import "ripple.css";
 @import "dropdown.css";
+@import "ngrogress.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html, body, #__nuxt {
-    @apply h-full
+    @apply h-full;
 }
 
 html {
