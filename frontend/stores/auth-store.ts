@@ -25,8 +25,10 @@ export const useAuthStore = defineStore('auth', () => {
     async function loadCurrentUser(): Promise<void> {
         if (currentUser.value) return;
 
-        currentUser.value = await http.get<User>('user/current');
-        nuxt.$errorTracker.setUser(currentUser.value);
+        const { user } = await http.get<{ user: User }>('user/current');
+
+        currentUser.value = user;
+        nuxt.$errorTracker.setUser(user);
     }
 
     return { currentUser, signIn, loadCurrentUser };

@@ -81,13 +81,13 @@ const navigationStore = useNavigationStore();
 function useNavItem(item: INavOptions): INavItem {
     const count = ridesStore.counter[item.id];
     const active = item.url === route.path;
-    return ({
+    return {
         ...item,
         active,
         count,
         hasCount: !!parseInt(count),
         badgeColor: active ? BadgeColor.BLUE_800 : BadgeColor.SLATE_600,
-    });
+    };
 }
 
 const navItems = computed((): INavItem[] => [

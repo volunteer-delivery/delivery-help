@@ -44,7 +44,6 @@ const format = (value: number): string => value > 100 ? '100+' : value.toString(
 
 export const useRidesStore = defineStore('rides', () => {
     const http = useHttpClient();
-    const toastStore = useToastStore();
 
     const rides = ref<Ride[]>([]);
     const isLoaded = ref(false);
@@ -118,10 +117,7 @@ export const useRidesStore = defineStore('rides', () => {
     }
 
     async function changeStatus(ride: Ride, status: RideStatus): Promise<void> {
-        if (!confirm('Ви впевнені що хочете змінити статус заявки?')) return;
-
         await http.patch(`rides/${ride.id}/status`, { status });
-        toastStore.open('Статус змінено').closeAfter(3000);
     }
 
     function applyPendingFilter(filter: IRidesFilter): void {

@@ -1,10 +1,15 @@
 <template>
-    <TransitionGroup class="fixed top-0 left-0 w-full" duration="150" name="toast" tag="div">
+    <TransitionGroup
+        class="fixed top-0 left-0 w-full z-[150]"
+        duration="150"
+        name="toast"
+        tag="div"
+    >
         <AppToast
             v-for="toast of toastStore.list"
             :toast="toast"
             :key="toast.id"
-            class="w-full relative z-50 "
+            class="w-full relative"
         />
     </TransitionGroup>
 </template>

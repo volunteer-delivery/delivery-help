@@ -48,8 +48,10 @@
                     class="text-left w-full"
                     look="link"
                     size="lg"
+                    v-if="canChangeStatus"
+                    @click="changeStatus"
                 >
-                    В Активні
+                    {{ changeStatusText }}
                 </AppButton>
 
                 <AppButton
@@ -71,7 +73,8 @@ import AccountBoxRound from '@vicons/material/AccountBoxRound';
 import DirectionsCarRound from '@vicons/material/DirectionsCarRound';
 import LocalPhoneRound from '@vicons/material/LocalPhoneRound';
 import MoreHorizRound from '@vicons/material/MoreHorizRound';
-import { Ride } from '~/stores/rides-store';
+import type { Ride } from '~/stores/rides-store';
+import { RideStatus } from '~/enums';
 import { DriverDetailsModal } from '#components';
 
 const props = defineProps({
@@ -82,6 +85,8 @@ const props = defineProps({
 });
 
 const modalStore = useModalStore();
+const toastStore = useToastStore();
+const ridesStore = useRidesStore();
 
 const vehicleDetails = computed(() => formatVehicleDetails(props.ride.vehicle));
 const phoneLink = computed(() => `tel:${props.ride.driver.phone}`);
@@ -89,4 +94,18 @@ const phoneLink = computed(() => `tel:${props.ride.driver.phone}`);
 const openDriverDetails = (): void => void modalStore.open(DriverDetailsModal, {
     props: { driver: props.ride.driver },
 });
+
+const isPending = computed(() => props.ride.status === RideStatus.PENDING);
+const isDone = computed(() => props.ride.status === RideStatus.FINISHED);
+const canChangeStatus = computed(() => !isDone.value);
+const changeStatusText = computed(() => isPending.value ? 'В активні' : 'Завершити');
+
+async function changeStatus(): Promise<void> {
+    if (!confirm('Ви впевнені що хочете змінити статус заявки?')) return;
+
+    const status = isPending.value ? RideStatus.ACTIVE : RideStatus.FINISHED;
+    await ridesStore.changeStatus(props.ride, status);
+
+    toastStore.open('Статус змінено').closeAfter(3000);
+}
 </script>
