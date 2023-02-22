@@ -3,7 +3,7 @@
 
     <Transition name="dropdown" :duration="{ enter: 200, leave: 150 }">
         <ul
-            class="m-0 p-0 pt-2 bg-white shadow rounded-sm z-[100] min-w-[150px]"
+            class="m-0 p-0 pt-2 bg-white shadow z-[100] min-w-[150px]"
             :style="dropdown.styles"
             ref="dropdownRef"
             v-if="isAutocompleteDisplaying"

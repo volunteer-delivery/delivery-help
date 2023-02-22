@@ -4,6 +4,10 @@ import type { MiddlewareState } from '@floating-ui/vue';
 
 type ElementRef = Ref<HTMLElement | null>;
 
+export interface IDropdownOptions {
+    fullSize?: boolean;
+}
+
 export interface IDropdown {
     open(): void;
     close(): void;
@@ -12,7 +16,7 @@ export interface IDropdown {
     isDisplaying: boolean;
 }
 
-export function useDropdown(relative: ElementRef, dropdown: ElementRef): IDropdown {
+export function useDropdown(relative: ElementRef, dropdown: ElementRef, options: IDropdownOptions = {}): IDropdown {
     const device = useDevice();
     const dropdownWidth = ref(0);
 
@@ -20,31 +24,32 @@ export function useDropdown(relative: ElementRef, dropdown: ElementRef): IDropdo
     const open = (): void => void (isDisplaying.value = true);
     const close = (): void => void (isDisplaying.value = false);
 
-    const middlewares = [
-        autoPlacement({
-            allowedPlacements: ['bottom-start', 'top-start'],
-        }),
-    ];
-
-    if (device.isMobileOrTablet) {
-        middlewares.push(size({
-            apply(args: MiddlewareState): void {
-                dropdownWidth.value = args.rects.reference.width;
-            },
-        }));
-    }
-
     const { x, y, strategy, placement, update } = useFloating(relative, dropdown, {
         placement: 'bottom',
-        middleware: middlewares,
+        middleware: [
+            autoPlacement({
+                allowedPlacements: ['bottom', 'top'],
+            }),
+            size({
+                apply(args: MiddlewareState): void {
+                    dropdownWidth.value = args.rects.reference.width;
+                },
+            }),
+        ],
+    });
+
+    const sizeStyles = computed(() => {
+        const isFullSize = device.isMobileOrTablet && options.fullSize !== false;
+        const width = `${dropdownWidth.value}px`;
+        return isFullSize ? { width } : { maxWidth: width };
     });
 
     const styles = computed<CSSProperties>(() => ({
         position: strategy.value,
         top: `${y.value ?? 0}px`,
         left: `${x.value ?? 0}px`,
-        width: device.isMobileOrTablet ? `${dropdownWidth.value}px` : undefined,
-        transformOrigin: placement.value === 'top-start' ? 'bottom left' : 'top left',
+        transformOrigin: placement.value === 'top' ? 'bottom left' : 'top left',
+        ...sizeStyles.value,
     }));
 
     onClickOutside(dropdown, (event: PointerEvent) => {

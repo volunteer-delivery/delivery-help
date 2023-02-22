@@ -15,7 +15,7 @@
 
     <Transition name="dropdown" :duration="{ enter: 200, leave: 150 }">
         <div
-            class="bg-white shadow rounded-sm z-[100]"
+            class="bg-white shadow rounded z-[100]"
             :style="dropdown.styles"
             ref="dropdownRef"
             v-if="dropdown.isDisplaying"
@@ -76,7 +76,7 @@ model.registerEnteredCheck((value) => checkIsRange(value) ? !!value.length : !!v
 const inputRef = inject<Ref<HTMLElement | null>>(InjectionToken.FORM_FIELD_REF)!;
 const dropdownRef = ref(null);
 
-const dropdown = useDropdown(inputRef, dropdownRef);
+const dropdown = useDropdown(inputRef, dropdownRef, { fullSize: false });
 
 function apply(date: DataType): void {
     if (date) model.data = date;
