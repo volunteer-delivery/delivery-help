@@ -58,6 +58,7 @@
                     class="text-left w-full"
                     look="link"
                     size="lg"
+                    :to="rideDetailsLink"
                 >
                     Деталі
                 </AppButton>
@@ -99,6 +100,8 @@ const isPending = computed(() => props.ride.status === RideStatus.PENDING);
 const isDone = computed(() => props.ride.status === RideStatus.FINISHED);
 const canChangeStatus = computed(() => !isDone.value);
 const changeStatusText = computed(() => isPending.value ? 'В активні' : 'Завершити');
+
+const rideDetailsLink = computed(() => `/rides/${props.ride.id}`);
 
 async function changeStatus(): Promise<void> {
     if (!confirm('Ви впевнені що хочете змінити статус заявки?')) return;
