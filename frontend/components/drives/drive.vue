@@ -7,14 +7,14 @@
 
                     <v-btn color="primary" icon text :href="driverPhoneLink">
                         <v-icon class="drive__phone-icon" dense>
-                            {{ mdiPhone }}
+                            mdiPhone
                         </v-icon>
                     </v-btn>
 
                     <v-menu offset-y>
                         <template #activator="{ on, attrs }">
                             <v-btn class="ml-2" v-on="on" v-bind="attrs" color="primary" icon text>
-                                <v-icon>{{ mdiDotsHorizontal }}</v-icon>
+                                mdiDotsHorizontal
                             </v-btn>
                         </template>
 
@@ -22,7 +22,7 @@
                             <v-list-item>
                                 <v-btn class="w-100" color="primary" text tile elevation="0" @click="changeStatus" v-if="canChangeStatus">
                                     <v-icon class="mr-3">
-                                        {{ isPending ? mdiPlay : mdiCheck }}
+                                        isPending ? mdiPlay : mdiCheck
                                     </v-icon>
                                     {{ isPending ? 'В активні' : 'Завершити' }}
                                 </v-btn>
@@ -31,7 +31,7 @@
                             <v-list-item>
                                 <v-btn class="w-100" color="primary" text tile elevation="0" :to="`/drives/${drive.id}`">
                                     <v-icon class="mr-3">
-                                        {{ mdiChartTree }}
+                                        mdiChartTree
                                     </v-icon>
                                     Деталі
                                 </v-btn>
@@ -46,7 +46,6 @@
 
 <script setup>
 /* eslint-disable */
-import { mdiPhone, mdiDotsHorizontal, mdiCheck, mdiPlay, mdiChartTree } from '@mdi/js';
 import { RideStatus } from '~/enums';
 
 const props = defineProps({

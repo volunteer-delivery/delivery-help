@@ -9,7 +9,7 @@
 
         <v-btn class="ml-2 mb-6" color="primary" type="submit" icon text>
             <v-icon class="comment-form__send-icon">
-                {{ mdiSend }}
+                mdiSend
             </v-icon>
         </v-btn>
     </v-form>
@@ -26,7 +26,6 @@
 
 <script setup>
 /* eslint-disable */
-import { mdiSend } from '@mdi/js';
 import Comment from './comment';
 
 const props = defineProps({

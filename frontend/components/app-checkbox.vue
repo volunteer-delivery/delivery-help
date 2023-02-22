@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import { Icon } from '@vicons/utils';
-import { CheckRound } from '@vicons/material';
+import CheckRound from '@vicons/material/CheckRound';
 
 const props = defineProps({
     modelValue: {

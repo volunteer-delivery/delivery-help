@@ -44,7 +44,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 
 import type { Ref } from 'vue';
 import { Icon } from '@vicons/utils';
-import { CloseRound } from '@vicons/material';
+import CloseRound from '@vicons/material/CloseRound';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import type { IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';

@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
 import { Icon } from '@vicons/utils';
-import { CloseRound } from '@vicons/material';
+import CloseRound from '@vicons/material/CloseRound';
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap';
 
 const props = defineProps({

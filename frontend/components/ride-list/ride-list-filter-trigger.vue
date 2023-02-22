@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { Icon } from '@vicons/utils';
-import { FilterAltFilled } from '@vicons/material';
+import FilterAltFilled from '@vicons/material/FilterAltFilled';
 import { RideListFilterModal } from '#components';
 
 const device = useDevice();

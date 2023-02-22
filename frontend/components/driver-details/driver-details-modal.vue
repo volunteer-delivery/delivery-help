@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import { Icon } from '@vicons/utils';
-import { LocalPhoneRound } from '@vicons/material';
+import LocalPhoneRound from '@vicons/material/LocalPhoneRound';
 import type { Driver } from '~/stores/rides-store';
 
 const props = defineProps({

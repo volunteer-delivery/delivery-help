@@ -53,7 +53,9 @@
 <script lang="ts" setup>
 import { Transition } from 'vue';
 import type { Component, FunctionalComponent } from 'vue';
-import { CheckRound, DirectionsCarFilledRound, PlayArrowRound } from '@vicons/material';
+import CheckRound from '@vicons/material/CheckRound';
+import DirectionsCarFilledRound from '@vicons/material/DirectionsCarFilledRound';
+import PlayArrowRound from '@vicons/material/PlayArrowRound';
 import { BadgeColor } from '~/enums';
 
 interface INavItem {

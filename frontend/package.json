@@ -12,7 +12,6 @@
         "@bugsnag/js": "^7.20.0",
         "@bugsnag/plugin-vue": "^7.19.0",
         "@floating-ui/vue": "^0.2.1",
-        "@mdi/js": "^6.6.96",
         "@nuxt/vite-builder": "^3.2.2",
         "@nuxtjs/device": "^3.1.0",
         "@pinia/nuxt": "^0.4.7",

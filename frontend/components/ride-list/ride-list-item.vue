@@ -31,7 +31,8 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import { Icon } from '@vicons/utils';
-import { AccountBoxRound, DirectionsCarRound } from '@vicons/material';
+import AccountBoxRound from '@vicons/material/AccountBoxRound';
+import DirectionsCarRound from '@vicons/material/DirectionsCarRound';
 import { Ride } from '~/stores/rides-store';
 import { DriverDetailsModal } from '#components';
 

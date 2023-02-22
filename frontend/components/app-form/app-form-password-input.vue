@@ -17,7 +17,8 @@
 
 <script lang="ts" setup>
 import { Icon } from '@vicons/utils';
-import { RemoveRedEyeOutlined, RemoveRedEyeSharp } from '@vicons/material';
+import RemoveRedEyeOutlined from '@vicons/material/RemoveRedEyeOutlined';
+import RemoveRedEyeSharp from '@vicons/material/RemoveRedEyeSharp';
 import { InjectionToken } from '~/enums';
 import { IFormFieldModel } from '~/composables/use-form';
 

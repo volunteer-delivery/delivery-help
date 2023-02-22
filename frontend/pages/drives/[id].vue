@@ -3,7 +3,7 @@
         <v-col class="pa-0 pa-sm-3 pt-sm-7" cols="12" sm="8" md="4">
             <v-btn class="mt-n3 mb-md-3 pl-0 pl-md-3 ml-md-n3" text tile elevation="0" @click="$router.back()">
                 <v-icon class="mr-3">
-                    {{ mdiArrowLeft }}
+                    mdiArrowLeft
                 </v-icon>
 
                 Назад
@@ -18,8 +18,6 @@
 </template>
 
 <script setup>
-import { mdiArrowLeft } from '@mdi/js';
-
 const http = useHttpClient();
 const apiCable = useApiCable();
 const ridesStore = useRidesStore();
