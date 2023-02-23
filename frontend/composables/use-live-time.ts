@@ -1,7 +1,7 @@
 import type { Ref } from 'vue';
 
 export function useLiveTime(): Ref<Date> {
-    const now = useState('now', () => Date.now());
+    const now = ref(Date.now());
 
     if (process.client) {
         const intervalId = setInterval(() => now.value = Date.now(), 5000);
