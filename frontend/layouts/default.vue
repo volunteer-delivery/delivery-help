@@ -149,11 +149,11 @@ const NavigationExtra: FunctionalComponent = () => {
 }
 
 .navigation-extra-enter-active {
-    @apply transition-fade duration-200;
+    @apply transition-enter duration-200;
 }
 
 .navigation-extra-leave-active {
-    @apply transition-fade duration-150;
+    @apply transition-opacity duration-150;
 }
 
 .navigation-extra-enter-from {

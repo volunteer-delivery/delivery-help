@@ -30,8 +30,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { IFormModel, IFormFieldModel } from '~/composables/use-form';
+import type { PropType } from 'vue';
 import { InjectionToken } from '~/enums';
+import type { IFormModel, IFormFieldModel } from '~/composables/use-form';
 import type { ElementRef, ElementRefValue } from '~/composables/use-element-ref';
 
 // Dynamic Classes
@@ -43,7 +44,14 @@ import type { ElementRef, ElementRefValue } from '~/composables/use-element-ref'
 const props = defineProps({
     id: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
+    },
+
+    model: {
+        type: Object as PropType<IFormFieldModel<unknown>>,
+        required: false,
+        default: () => null,
     },
 
     label: {
@@ -58,8 +66,17 @@ const props = defineProps({
     },
 });
 
-const formModel = inject<IFormModel<Record<string, unknown>>>(InjectionToken.FORM)!;
-const fieldModel = formModel.field(props.id);
+function resolveFieldModel(): IFormFieldModel<unknown> {
+    if (props.model) return props.model;
+    const formModel = inject<IFormModel<Record<string, unknown>>>(InjectionToken.FORM)!;
+    const fieldModel = formModel.field(props.id);
+
+    if (!fieldModel) throw new Error('No model or id props specified');
+
+    return fieldModel;
+}
+
+const fieldModel = resolveFieldModel();
 
 const fieldRef = ref<ElementRefValue>(null);
 

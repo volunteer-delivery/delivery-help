@@ -1,6 +1,6 @@
 <template>
     <label
-        class="border-2 border-gray-300 hover:border-blue-800 rounded w-6 h-6 flex transition-colors"
+        class="border-2 hover:border-blue-800 rounded w-6 h-6 flex transition-colors"
         :class="wrapperClasses"
     >
         <input
@@ -31,14 +31,12 @@ const props = defineProps({
 
 defineEmits(['update:modelValue']);
 
-const wrapperClasses = computed(() => ({
-    'border-blue-800': props.modelValue,
-}));
+const wrapperClasses = computed(() => props.modelValue ? 'border-blue-800' : 'border-gray-300');
 </script>
 
 <style scoped>
 .checkbox-enter-active {
-    @apply transition-checkbox duration-200;
+    @apply transition-enter duration-200;
 }
 
 .checkbox-enter-from {

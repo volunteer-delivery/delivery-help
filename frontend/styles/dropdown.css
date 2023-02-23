@@ -1,5 +1,5 @@
 .dropdown-enter-active {
-    @apply transition-dropdown duration-200;
+    @apply transition-enter duration-200;
 }
 
 .dropdown-enter-from {

@@ -1,10 +1,13 @@
 <template>
     <AppBackButton class="-mt-2 mb-3" />
-    <RideInfo class="px-2.5" :ride="ride" />
+    <RideInfo class="px-2.5 mb-6" :ride="ride" />
+
+    <div class="px-2.5 mb-6">
+        <RideDetailsStatus :ride="ride" />
+    </div>
 
 <!--    <v-row class="ml-0 mr-0" justify="center" align="center">-->
 <!--        <v-col class="pa-0 pa-sm-3 pt-sm-7" cols="12" sm="8" md="4">-->
-<!--            <DriveDetailsStatusSwitcher class="mb-3" :drive="drive" />-->
 <!--            <DriveDetailsCommentList :drive="drive" :comments="comments" />-->
 <!--        </v-col>-->
 <!--    </v-row>-->

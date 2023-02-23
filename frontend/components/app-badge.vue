@@ -2,13 +2,15 @@
     <div class="relative">
         <slot />
 
-        <p
-            class="badge absolute rounded-full m-0 text-white h-5 min-w-[20px] flex items-center justify-center leading-none text-xs transition-colors z-50"
-            :class="badgeClasses"
-            v-if="show"
-        >
-            <span>{{ content }}</span>
-        </p>
+        <Transition name="badge" :duration="{ enter: 200, leave: 150 }">
+            <p
+                class="badge absolute rounded-full m-0 text-white h-5 min-w-[20px] flex items-center justify-center leading-none text-xs transition-colors z-50"
+                :class="badgeClasses"
+                v-if="show"
+            >
+                <span>{{ content }}</span>
+            </p>
+        </Transition>
     </div>
 </template>
 
@@ -42,3 +44,21 @@ const props = defineProps({
 
 const badgeClasses = computed(() => `bg-${props.color}`);
 </script>
+
+<style scoped>
+.badge-enter-active {
+    @apply transition-enter duration-200;
+}
+
+.badge-enter-from {
+    @apply opacity-0 scale-75;
+}
+
+.badge-leave-active {
+    @apply transition-opacity duration-150;
+}
+
+.badge-leave-to {
+    @apply opacity-0;
+}
+</style>

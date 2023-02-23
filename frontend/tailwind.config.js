@@ -18,7 +18,7 @@ module.exports = {
 
             },
             keyframes: {
-                shake: {
+                'shake': {
                     '59%': {'margin-left': '0'},
                     '60%, 80%': {'margin-left': '2px'},
                     '70%, 90%': {'margin-left': '-2px'}
@@ -35,18 +35,18 @@ module.exports = {
                 },
                 'ripple': {
                     '0%': {
-                        transform: 'scale(0)',
-                        opacity: '0'
+                        'transform': 'scale(0)',
+                        'opacity': '0'
                     },
                     '10%': {
-                        opacity: '1'
+                        'opacity': '1'
                     },
                     '80%': {
-                        opacity: '1'
+                        'opacity': '1'
                     },
                     '100%': {
-                        transform: 'scale(1.2)',
-                        opacity: '0'
+                        'transform': 'scale(1.2)',
+                        'opacity': '0'
                     }
                 }
             },
@@ -54,12 +54,10 @@ module.exports = {
                 'spacing': 'margin, padding',
                 'font-field': 'transform, color, border-color',
                 'button-primary': 'box-shadow, color',
-                'fade': 'transform, opacity',
-                'dropdown': 'transform, opacity',
-                'checkbox': 'transform, opacity'
+                'enter': 'transform, opacity',
             },
             boxShadow: {
-                xl: '0 5px 5px -3px rgb(0 0 0 / 0.2), 0 8px 10px 1px rgb(0 0 0 / 0.14), 0 3px 14px 2px rgb(0 0 0 / 0.12)'
+                'xl': '0 5px 5px -3px rgb(0 0 0 / 0.2), 0 8px 10px 1px rgb(0 0 0 / 0.14), 0 3px 14px 2px rgb(0 0 0 / 0.12)'
             }
         },
     },

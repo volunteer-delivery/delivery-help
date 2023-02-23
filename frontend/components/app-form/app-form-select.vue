@@ -21,8 +21,7 @@
                 >
                     <AppCheckbox
                         class="mr-4"
-                        :model-value="model.data.includes(option.value)"
-                        v-if="Array.isArray(model.data)"
+                        :model-value="isOptionSelected(option)"
                     />
                     <span>{{ option.title || option.value }}</span>
                 </AppButton>
@@ -75,9 +74,17 @@ const dropdownRef = ref(null);
 
 const dropdown = useDropdown(inputRef, dropdownRef);
 
+function isOptionSelected(option: IFormSelectOption): boolean {
+    if (Array.isArray(model.data)) {
+        return model.data.includes(option.value);
+    }
+    return model.data === option.value;
+}
+
 function apply(option: IFormSelectOption): void {
     if (!Array.isArray(model.data)) {
         model.data = option.value;
+        dropdown.close();
         return;
     }
     if (model.data.includes(option.value)) {
