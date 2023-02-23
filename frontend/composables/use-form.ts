@@ -1,5 +1,5 @@
 import type { Ref, UnwrapRef } from 'vue';
-import { AnySchema, ValidationError } from 'yup';
+import { AnySchema, Schema, ValidationError } from 'yup';
 
 export interface IFormAutocompleteOption {
     value: string;
@@ -15,7 +15,7 @@ export interface IFormSelectOption<V = unknown> {
 
 export interface IFormFieldDefinition<V> {
     initial: V;
-    validation?: AnySchema;
+    validation?: Schema;
 }
 
 type IFormFieldErrors = Array<string>;

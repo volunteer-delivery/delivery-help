@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { IFormFieldModel } from '~/composables/use-form';
+import type { IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
 
 defineProps({

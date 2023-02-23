@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { IFormModel } from '~/composables/use-form';
+import type { PropType } from 'vue';
+import type { IFormModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
 
 const props = defineProps({

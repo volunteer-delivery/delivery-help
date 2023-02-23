@@ -43,8 +43,8 @@
 
 <script lang="ts" setup>
 import type { PropType, Ref } from 'vue';
-import type { IFormFieldModel, IFormSelectOption } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
+import type { IFormFieldModel, IFormSelectOption } from '~/composables/use-form';
 import type { ElementRef } from '~/composables/use-element-ref';
 
 const props = defineProps({

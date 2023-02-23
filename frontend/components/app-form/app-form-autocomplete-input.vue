@@ -38,8 +38,8 @@
 
 <script lang="ts" setup>
 import type { PropType, Ref } from 'vue';
-import { IFormAutocompleteOption, IFormFieldModel } from '~/composables/use-form';
 import { InjectionToken } from '~/enums';
+import type { IFormAutocompleteOption, IFormFieldModel } from '~/composables/use-form';
 import type { ElementRef } from '~/composables/use-element-ref';
 
 const props = defineProps({

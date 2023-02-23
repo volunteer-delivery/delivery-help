@@ -7,7 +7,7 @@ export interface ICredentials {
 
 export interface User {
     id: string;
-    username: string;
+    name: string;
 }
 
 export const useAuthStore = defineStore('auth', () => {

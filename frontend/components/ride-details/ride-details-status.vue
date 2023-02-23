@@ -5,19 +5,11 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RideStatus } from '~/enums';
-import { Ride } from '~/stores/ride-details-store';
-import { IFormSelectOption } from '~/composables/use-form';
-
-const props = defineProps({
-    ride: {
-        type: Object as PropType<Ride>,
-        required: true,
-    },
-});
+import type { IFormSelectOption } from '~/composables/use-form';
 
 const ridesStore = useRidesStore();
+const rideDetailsStore = useRideDetailsStore();
 
 const statusOptions: IFormSelectOption[] = [
     {
@@ -35,10 +27,10 @@ const statusOptions: IFormSelectOption[] = [
 ];
 
 const fieldModel = useFormField<RideStatus>({
-    initial: props.ride.status,
+    initial: rideDetailsStore.ride!.status,
 });
 
 watch(toRef(fieldModel, 'data'), (status) => {
-    ridesStore.changeStatus(props.ride, status);
+    ridesStore.changeStatus(rideDetailsStore.ride!, status);
 });
 </script>

@@ -1,19 +1,4 @@
 <template>
-    <v-form class="comment-form" @submit="sendComment">
-        <v-textarea
-            v-model="newComment"
-            label="Додати коментар"
-            rows="1"
-            auto-grow
-        />
-
-        <v-btn class="ml-2 mb-6" color="primary" type="submit" icon text>
-            <v-icon class="comment-form__send-icon">
-                mdiSend
-            </v-icon>
-        </v-btn>
-    </v-form>
-
     <v-list>
         <Comment
             v-for="comment of comments"
@@ -40,21 +25,6 @@ const props = defineProps({
     },
 });
 
-const http = useHttpClient();
-const newComment = ref('');
-
-const now = ref(Date.now());
-const timeUpdater = setInterval(() => now.value = Date.now(), 5000);
-onUnmounted(() => clearInterval(timeUpdater));
-
-function sendComment(event) {
-    event.preventDefault();
-
-    if (!newComment.value) return;
-
-    http.post(`/rides/${this.drive.id}/comments`, { text: newComment.value });
-    newComment.value = '';
-}
 </script>
 
 <style scoped>
