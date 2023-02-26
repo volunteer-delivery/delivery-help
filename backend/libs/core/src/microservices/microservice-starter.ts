@@ -1,7 +1,6 @@
-import {Transport} from '@nestjs/microservices';
-import {INestApplicationContext} from '@nestjs/common';
-import {MicroserviceKey} from "./microservice-api";
-import {ApplicationAdapter, StarterExtension} from "./extensions";
+import { INestApplicationContext } from '@nestjs/common';
+import { MicroserviceKey } from './microservice-api';
+import { ApplicationAdapter, StarterExtension } from './extensions';
 
 export interface MicroserviceStarterConfig<Key extends MicroserviceKey, App extends INestApplicationContext> {
     name: Key;
@@ -22,7 +21,7 @@ export class MicroserviceStarter<Key extends MicroserviceKey, App extends INestA
         await this.config.applicationAdapter.create();
 
         await this.applyExtensions((extension) => {
-            extension.app = this.config.applicationAdapter.app
+            extension.app = this.config.applicationAdapter.app;
         });
 
         await this.applyExtensions((extension) => extension.beforeStart());

@@ -1,100 +1,19 @@
 <template>
-    <v-row class="h-100" justify="center" align="center">
-        <v-col class="pt-5 h-100 d-flex flex-column justify-center" cols="12" sm="8" md="6" lg="4">
-            <v-form class="sign-in__form" lazy-validation ref="form" @submit="signIn">
-                <v-card class="sign-in__card" elevation="1">
-                    <v-card-title>
-                        ВолонтерВантаж ~ Вхід
-                    </v-card-title>
+    <div class="h-full p-4 flex items-center justify-center">
+        <div class="h-3/4 md:h-auto w-full md:max-w-sm">
+            <AppCard class="shadow-none md:shadow-md">
+                <AppCardTitle>
+                    ВолонтерВантаж ~ Вхід
+                </AppCardTitle>
 
-                    <v-card-text>
-                        <v-text-field
-                            label="Користувач"
-                            autocapitalize="off"
-                            v-model="credentials.username"
-                            :rules="$options.validations.username"
-                        />
-
-                        <password-field
-                            label="Пароль"
-                            v-model="credentials.password"
-                            :rules="$options.validations.password"
-                        />
-                    </v-card-text>
-
-                    <v-card-actions>
-                        <v-spacer/>
-
-                        <v-btn class="sign-in__button" color="primary" type="submit" :loading="isSubmitting">
-                            Увійти
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-form>
-        </v-col>
-    </v-row>
+                <SignInForm />
+            </AppCard>
+        </div>
+    </div>
 </template>
 
-<script>
-import { requireField } from '~/validations';
-import { PasswordField } from "~/components/form";
-
-export default {
-    name: 'sign-in',
+<script lang="ts" setup>
+definePageMeta({
     layout: 'auth',
-
-    meta: {
-        auth: 'public'
-    },
-
-    components: {
-        PasswordField
-    },
-
-    validations: {
-        username: [requireField()],
-        password: [requireField()]
-    },
-
-    data: () => ({
-        isSubmitting: false,
-        credentials: {
-            username: '',
-            password: ''
-        }
-    }),
-
-    methods: {
-        async signIn(event) {
-            event.preventDefault();
-            if (!this.$refs.form.validate()) return;
-
-            try {
-                this.isSubmitting = true;
-                await this.$store.dispatch('auth-store/signIn', this.credentials);
-                await this.$router.push('/');
-            } catch (error) {
-                this.$toast.show(error.message);
-            } finally {
-                this.isSubmitting = false;
-            }
-        }
-    }
-};
+});
 </script>
-
-<style>
-.sign-in__button {
-    width: 40%;
-}
-
-@media (max-width: 599px) {
-    .sign-in__form {
-        height: 66%;
-    }
-
-    .sign-in__card.sign-in__card.sign-in__card {
-        box-shadow: none !important;
-    }
-}
-</style>

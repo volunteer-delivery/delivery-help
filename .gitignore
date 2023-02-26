@@ -3,7 +3,7 @@
 .fleet
 .env
 .sshconfig
-.aws-credentails
+.aws-credentials
 .DS_Store
 tmp/*
 !tmp/.keep

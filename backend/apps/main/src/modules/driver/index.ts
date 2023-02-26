@@ -1,1 +1,1 @@
-export {DriverResponse} from './dto';
+export { DriverResponse } from './dto';

@@ -1,8 +1,8 @@
-import {Type} from "@nestjs/common";
-import {Types} from "telegraf";
-import {ISceneContext} from "./base-scene";
+import { Type } from '@nestjs/common';
+import { Types } from 'telegraf';
+import { ISceneContext } from './base-scene';
 
-export type IComposeEvent = Types.UpdateType | Types.MessageSubType
+export type IComposeEvent = Types.UpdateType | Types.MessageSubType;
 export type IComposeAction = string | RegExp;
 export type IComposeHandler = (context: ISceneContext) => void | Promise<void>;
 
@@ -14,25 +14,25 @@ interface EventHandler<TKey> {
 export class ComposerMetadata {
     private static KEY = Symbol(this.name);
 
-    static resolve(Class: Type | Function): ComposerMetadata {
+    public static resolve(Class: Type | Function): ComposerMetadata {
         if (!Reflect.hasMetadata(this.KEY, Class)) {
             Reflect.defineMetadata(this.KEY, this.empty(), Class);
         }
         return Reflect.getMetadata(this.KEY, Class);
     }
 
-    static empty(): ComposerMetadata {
+    private static empty(): ComposerMetadata {
         return new ComposerMetadata();
     }
 
-    readonly events: EventHandler<IComposeEvent>[] = [];
-    readonly actions: EventHandler<IComposeAction>[] = [];
+    public readonly events: EventHandler<IComposeEvent>[] = [];
+    public readonly actions: EventHandler<IComposeAction>[] = [];
 
-    addEvent(key: IComposeEvent, handler: IComposeHandler): void {
+    public addEvent(key: IComposeEvent, handler: IComposeHandler): void {
         this.events.push({ key, handler });
     }
 
-    addAction(key: IComposeAction, handler: IComposeHandler): void {
+    public addAction(key: IComposeAction, handler: IComposeHandler): void {
         this.actions.push({ key, handler });
     }
 }

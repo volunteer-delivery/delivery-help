@@ -1,22 +1,22 @@
-import {Markup} from "telegraf";
-import {Injectable} from "@nestjs/common";
-import {BaseWizardScene, ISceneDefinition} from "../../base";
-import {FromType, NewRideFromComposer} from "./new-ride-from.composer";
-import {NewRideDateComposer} from "./new-ride-date.composer";
-import {INewRideContext} from "./new-ride.context";
-import {NewRideVehicleComposer} from "./new-ride-vehicle.composer";
+import { Markup } from 'telegraf';
+import { Injectable } from '@nestjs/common';
+import { BaseWizardScene, ISceneDefinition } from '../../base';
+import { FromType, NewRideFromComposer } from './new-ride-from.composer';
+import { NewRideDateComposer } from './new-ride-date.composer';
+import { INewRideContext } from './new-ride.context';
+import { NewRideVehicleComposer } from './new-ride-vehicle.composer';
 
 @Injectable()
 export class NewRideScene extends BaseWizardScene<INewRideContext> {
-    id = 'new-ride-wizard';
+    protected id = 'new-ride-wizard';
 
-    defineSteps(): ISceneDefinition<INewRideContext>[] {
+    protected defineSteps(): ISceneDefinition<INewRideContext>[] {
         return [
             this.startFromTypeStep,
             NewRideFromComposer,
             this.startDateStep,
             NewRideDateComposer,
-            NewRideVehicleComposer
+            NewRideVehicleComposer,
         ];
     }
 
@@ -24,9 +24,9 @@ export class NewRideScene extends BaseWizardScene<INewRideContext> {
         await context.reply(
             'Оберіть варіант локації, з якої ви розпочинаєте поїздку:',
             Markup.inlineKeyboard([
-                [Markup.button.callback("Я в Україні", FromType.UKRAINE)],
-                [Markup.button.callback("Я за кордоном", FromType.ABROAD)]
-            ])
+                [Markup.button.callback('Я в Україні', FromType.UKRAINE)],
+                [Markup.button.callback('Я за кордоном', FromType.ABROAD)],
+            ]),
         );
 
         await context.wizard.next();

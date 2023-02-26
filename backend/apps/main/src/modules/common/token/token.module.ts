@@ -1,7 +1,7 @@
-import {JwtModule} from "@nestjs/jwt";
-import {Module} from "@nestjs/common";
-import {TokenService} from "./token.service";
-import {EnvironmentService} from "@app/core/environment";
+import { JwtModule } from '@nestjs/jwt';
+import { Module } from '@nestjs/common';
+import { EnvironmentService } from '@app/core/environment';
+import { TokenService } from './token.service';
 
 @Module({
     imports: [
@@ -9,17 +9,17 @@ import {EnvironmentService} from "@app/core/environment";
             inject: [EnvironmentService],
 
             useFactory: (environmentService: EnvironmentService) => ({
-                secret: environmentService.secret
-            })
-        })
+                secret: environmentService.secret,
+            }),
+        }),
     ],
 
     providers: [
-        TokenService
+        TokenService,
     ],
 
     exports: [
-        TokenService
-    ]
+        TokenService,
+    ],
 })
 export class TokenModule {}

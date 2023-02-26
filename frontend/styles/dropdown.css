@@ -1,0 +1,15 @@
+.dropdown-enter-active {
+    @apply transition-enter duration-200;
+}
+
+.dropdown-enter-from {
+    @apply scale-75 opacity-0;
+}
+
+.dropdown-leave-active {
+    @apply transition-opacity duration-150;
+}
+
+.dropdown-leave-to {
+    @apply opacity-0;
+}

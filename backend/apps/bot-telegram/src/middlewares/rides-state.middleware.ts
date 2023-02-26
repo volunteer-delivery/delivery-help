@@ -1,15 +1,15 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {Context} from "telegraf";
-import {Driver, PrismaService, Ride} from "@app/prisma";
-import {BaseMiddleware, IMiddlewareNext} from "../base";
+import { Inject, Injectable } from '@nestjs/common';
+import { Context } from 'telegraf';
+import { Driver, PrismaService, Ride } from '@app/prisma';
+import { BaseMiddleware, IMiddlewareNext } from '../base';
 
 @Injectable()
 export class RidesStateMiddleware extends BaseMiddleware {
     @Inject()
     private prisma: PrismaService;
 
-    async handle({state}: Context, next: IMiddlewareNext): Promise<void> {
-        state.rides = state.driver ? await this.loadRides(state.driver) : []
+    protected async handle({ state }: Context, next: IMiddlewareNext): Promise<void> {
+        state.rides = state.driver ? await this.loadRides(state.driver) : [];
         return next();
     }
 
@@ -19,8 +19,8 @@ export class RidesStateMiddleware extends BaseMiddleware {
         return query.rides({
             include: {
                 from: true,
-                destination: true
-            }
-        })
+                destination: true,
+            },
+        });
     }
 }

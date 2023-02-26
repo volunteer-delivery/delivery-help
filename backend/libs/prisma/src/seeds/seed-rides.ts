@@ -1,56 +1,56 @@
-import {Driver, Ride, User, RideStatus, Vehicle} from "../client";
-import {client} from "./client-provider";
+import { Driver, Ride, User, RideStatus, Vehicle } from '../client';
+import { client } from './client-provider';
+
+function randomDate(): Date {
+    const start = new Date();
+    const end = new Date();
+    end.setMonth(start.getMonth() + 3);
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
 
 const rides = [
     {
         status: RideStatus.PENDING,
-        from: {country: 'Україна', city: 'Черкаси'},
-        destination: {country: 'Україна', city: 'Чернівці'},
-        departureTime: '2022-04-22',
-        vehicle: Vehicle.CAR
+        from: { country: 'Україна', city: 'Черкаси' },
+        destination: { country: 'Україна', city: 'Чернівці' },
+        vehicle: Vehicle.CAR,
     },
     {
         status: RideStatus.ACTIVE,
-        from: {country: 'Польща'},
-        destination: {country: 'Україна', city: 'Львів'},
-        departureTime: '2022-05-01',
-        vehicle: Vehicle.VAN
+        from: { country: 'Польща' },
+        destination: { country: 'Україна', city: 'Львів' },
+        vehicle: Vehicle.VAN,
     },
     {
         status: RideStatus.FINISHED,
-        from: {country: 'Україна', city: 'Київ'},
-        destination: {country: 'Україна', city: 'Дніпро'},
-        departureTime: '2022-04-26',
-        vehicle: Vehicle.TRUCK
+        from: { country: 'Україна', city: 'Київ' },
+        destination: { country: 'Україна', city: 'Дніпро' },
+        vehicle: Vehicle.TRUCK,
     },
     {
         status: RideStatus.PENDING,
-        from: {country: 'Австралія'},
-        destination: {country: 'Україна', city: 'Одеса'},
-        departureTime: '2022-05-03',
-        vehicle: Vehicle.CAR
+        from: { country: 'Австралія' },
+        destination: { country: 'Україна', city: 'Одеса' },
+        vehicle: Vehicle.CAR,
     },
     {
         status: RideStatus.PENDING,
-        from: {country: 'Україна', city: 'Запоріжжя'},
-        destination: {country: 'Україна', city: 'Луцьк'},
-        departureTime: '2022-04-20',
-        vehicle: Vehicle.CAR
+        from: { country: 'Україна', city: 'Запоріжжя' },
+        destination: { country: 'Україна', city: 'Луцьк' },
+        vehicle: Vehicle.CAR,
     },
     {
         status: RideStatus.PENDING,
-        from: {country: 'Україна', city: 'Житомир'},
-        destination: {country: 'Україна', city: 'Харьків'},
-        departureTime: '2022-04-22',
-        vehicle: Vehicle.CAR
+        from: { country: 'Україна', city: 'Житомир' },
+        destination: { country: 'Україна', city: 'Харьків' },
+        vehicle: Vehicle.CAR,
     },
     {
         status: RideStatus.PENDING,
-        from: {country: 'Україна', city: 'Полтава'},
-        destination: {country: 'Україна', city: 'Суми'},
-        departureTime: '2022-05-05',
-        vehicle: Vehicle.CAR
-    }
+        from: { country: 'Україна', city: 'Полтава' },
+        destination: { country: 'Україна', city: 'Суми' },
+        vehicle: Vehicle.CAR,
+    },
 ];
 
 export function seedRides(user: User, drivers: Driver[]): Promise<Ride[]> {
@@ -59,22 +59,24 @@ export function seedRides(user: User, drivers: Driver[]): Promise<Ride[]> {
 
         return client.ride.create({
             data: {
-                departureTime: new Date(ride.departureTime),
+                departureTime: randomDate(),
                 vehicle: ride.vehicle,
                 status: ride.status,
                 driver: {
-                    connect: { id: drivers[index].id }
+                    connect: {
+                        id: drivers[index].id,
+                    },
                 },
                 from: {
-                    create: ride.from
+                    create: ride.from,
                 },
                 destination: {
-                    create: ride.destination
+                    create: ride.destination,
                 },
                 volunteer: !volunteer ? undefined : {
-                    connect: {id: volunteer}
-                }
-            }
-        })
-    }))
+                    connect: { id: volunteer },
+                },
+            },
+        });
+    }));
 }

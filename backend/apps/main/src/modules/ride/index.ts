@@ -1,1 +1,1 @@
-export {RideModule} from './ride.module';
+export { RideModule } from './ride.module';

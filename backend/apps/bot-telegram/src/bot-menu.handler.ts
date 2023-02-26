@@ -1,15 +1,15 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {Context, Markup} from "telegraf";
-import {BotComposerHelpers} from "./bot-composer.helpers";
-import {IInlineMiddleware, IMiddlewareNext, ISceneContext} from "./base";
-import {BotConnection} from "./bot.connection";
-import {Ride, Address, RideStatus} from "@app/prisma";
+import { Inject, Injectable } from '@nestjs/common';
+import { Context, Markup } from 'telegraf';
+import { Ride, Address, RideStatus } from '@app/prisma';
+import { BotComposerHelpers } from './bot-composer.helpers';
+import { IInlineMiddleware, IMiddlewareNext, ISceneContext, ReplyKeyboardMarkup } from './base';
+import { BotConnection } from './bot.connection';
 
 enum MenuItems {
     PROFILE = 'Мій профіль',
     NEW_RIDE = 'Зареєструвати поїздку',
     RIDE_HISTORY = 'Історія поїздок',
-    ACTIVE_RIDE = 'Переглянути поточні поїздки'
+    ACTIVE_RIDE = 'Переглянути поточні поїздки',
 }
 
 @Injectable()
@@ -25,34 +25,34 @@ export class BotMenuHandler {
             [MenuItems.PROFILE]: this.createProfileHandler(),
             [MenuItems.NEW_RIDE]: this.createNewRideHandler(),
             [MenuItems.RIDE_HISTORY]: this.createRideHistoryHandler(),
-            [MenuItems.ACTIVE_RIDE]: this.createActiveRideHandler()
+            [MenuItems.ACTIVE_RIDE]: this.createActiveRideHandler(),
         };
     }
 
-    registerHandlers(): void {
+    public registerHandlers(): void {
         for (const [event, handler] of Object.entries(this.defineHandlers())) {
             this.connection.hears(event, handler);
         }
     }
 
-    async showMenu(context: Context): Promise<void> {
+    public async showMenu(context: Context): Promise<void> {
         await context.reply('Оберіть дію', this.createMenu(context));
     }
 
-    async hideMenu(context: Context, next: IMiddlewareNext): Promise<void> {
+    public async hideMenu(context: Context, next: IMiddlewareNext): Promise<void> {
         const msg = await context.reply('hide menu', Markup.removeKeyboard());
         await context.deleteMessage(msg.message_id);
         return next();
     }
 
-    private createMenu(context: Context): Markup.Markup<any> {
+    private createMenu(context: Context): Markup.Markup<ReplyKeyboardMarkup> {
         const topMenu = this.helpers.isNonFinishedRides(context) ?
             [[MenuItems.ACTIVE_RIDE], [MenuItems.NEW_RIDE]] :
             [[MenuItems.NEW_RIDE]];
 
         return Markup.keyboard([
             ...topMenu,
-            [MenuItems.PROFILE, MenuItems.RIDE_HISTORY]
+            [MenuItems.PROFILE, MenuItems.RIDE_HISTORY],
         ]).resize();
     }
 
@@ -60,11 +60,11 @@ export class BotMenuHandler {
         return this.helpers.driverOptional(true, async (context) => {
             await context.reply(`Ім'я: ${context.state.driver.name}`);
             await context.reply(`Телефон: ${context.state.driver.phone}`);
-        })
+        });
     }
 
     private createNewRideHandler(): IInlineMiddleware {
-        const enterWizard = (context: ISceneContext) => context.scene.enter('new-ride-wizard');
+        const enterWizard = (context: ISceneContext): Promise<unknown> => context.scene.enter('new-ride-wizard');
         return this.helpers.driverOptional(true, this.hideMenu.bind(this), enterWizard);
     }
 
@@ -77,7 +77,7 @@ export class BotMenuHandler {
             } else {
                 await context.reply('Наразі у вас ще не було зареєстрованих поїздок');
             }
-        }
+        };
     }
 
     private createActiveRideHandler(): IInlineMiddleware {
@@ -87,7 +87,7 @@ export class BotMenuHandler {
                     await context.replyWithHTML(this.formatRideReply(ride, false));
                 }
             }
-        })
+        });
     }
 
     private formatRideReply(ride: Ride & { from: Address, destination: Address }, showStatus = true): string {
@@ -104,6 +104,6 @@ export class BotMenuHandler {
             }[ride.status] || '';
         }
 
-        return `Дата: ${date}\nЗвідки: ${from}\nКуди: ${ride.destination.city}` + status;
-    };
+        return `Дата: ${date}\nЗвідки: ${from}\nКуди: ${ride.destination.city}${status}`;
+    }
 }

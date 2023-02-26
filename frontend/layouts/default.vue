@@ -1,212 +1,172 @@
 <template>
-    <v-app>
-        <v-navigation-drawer v-if="!isBottomNavigation" fixed permanent app>
-            <v-list class="pt-5" nav dense>
-                <v-list-item
-                    v-for="item of $options.navItems"
-                    :key="item.url"
-                    :to="item.url"
-                    :ripple="false"
-                    exact
-                >
-                    <v-list-item-icon>
-                        <v-badge :content="drivesCounter[item.id]" :value="drivesCounter[item.id]">
-                            <v-icon>{{ item.icon }}</v-icon>
-                        </v-badge>
-                    </v-list-item-icon>
+    <BottomBar v-if="device.isMobileOrTablet">
+        <TopBar />
 
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
-            </v-list>
+        <LayoutMain>
+            <slot />
+        </LayoutMain>
 
-            <component
-                v-if="navigationExtra"
-                class="pt-5 pb-5 drawer__navigation-extra"
-                :is="navigationExtra.view"
-            />
-        </v-navigation-drawer>
+        <template #bar>
+            <AppBadge
+                class="bottom-bar-badge"
+                v-for="nav of navItems"
+                :key="nav.id"
+                :content="nav.count"
+                :show="nav.hasCount"
+                :color="nav.badgeColor"
+            >
+                <BottomBarLink
+                    :to="nav.url"
+                    :title="nav.title"
+                    :icon="nav.icon"
+                />
+            </AppBadge>
 
-        <v-main class="layout__main">
-            <v-container>
-                <Nuxt/>
-            </v-container>
-        </v-main>
-
-        <template v-if="isBottomNavigation">
-            <v-bottom-navigation fixed>
-                <v-btn
-                    v-for="item of $options.navItems"
-                    :key="item.url"
-                    :to="item.url"
-                    :ripple="false"
-                    exact
-                >
-                    <span>{{ item.title }}</span>
-
-                    <v-badge :content="drivesCounter[item.id]" :value="drivesCounter[item.id]">
-                        <v-icon>{{ item.icon }}</v-icon>
-                    </v-badge>
-                </v-btn>
-            </v-bottom-navigation>
-
-            <template v-if="navigationExtra">
-                <v-fade-transition>
-                    <component :is="navigationExtra.mobileTrigger" @open="openNavigationExtra"/>
-                </v-fade-transition>
-
-                <v-bottom-sheet v-model="navigationExtraModel">
-                    <v-card tile>
-                        <component
-                            :is="navigationExtra.view"
-                            @close="closeNavigationExtra"
-                        />
-
-                        <v-btn class="layout__close-navigation-extra" icon @click="closeNavigationExtra">
-                            <v-icon>{{ $options.icons.mdiClose }}</v-icon>
-                        </v-btn>
-                    </v-card>
-                </v-bottom-sheet>
-            </template>
+            <NavigationExtra />
         </template>
-    </v-app>
+    </BottomBar>
+
+    <div class="h-full flex flex-col" v-else>
+        <TopBar />
+
+        <SideBar>
+            <template #bar>
+                <AppBadge
+                    class="mb-1 side-bar-badge"
+                    v-for="nav of navItems"
+                    :key="nav.id"
+                    :content="nav.count"
+                    :show="nav.hasCount"
+                    :color="nav.badgeColor"
+                >
+                    <SideBarLink
+                        :to="nav.url"
+                        :title="nav.title"
+                        :icon="nav.icon"
+                    />
+                </AppBadge>
+
+                <NavigationExtra class="sticky bottom-5" />
+            </template>
+
+            <LayoutMain class="px-6">
+                <slot />
+            </LayoutMain>
+        </SideBar>
+    </div>
 </template>
 
-<script>
-import { mdiCar, mdiCheck, mdiClose, mdiPlay } from '@mdi/js';
+<script lang="ts" setup>
+import { Transition } from 'vue';
+import type { Component, FunctionalComponent } from 'vue';
+import CheckRound from '@vicons/material/CheckRound';
+import DirectionsCarFilledRound from '@vicons/material/DirectionsCarFilledRound';
+import PlayArrowRound from '@vicons/material/PlayArrowRound';
+import { BadgeColor } from '~/enums';
 
-let subscriptions = [];
+interface INavItem {
+    id: 'active' | 'pending' | 'done';
+    title: string;
+    icon: Component;
+    url: string;
+    count: string;
+    hasCount: boolean;
+    badgeColor: BadgeColor;
+    active: boolean;
+}
 
-export default {
-    name: 'default',
+type INavOptions = Pick<INavItem, 'id' | 'title' | 'url' | 'icon'>;
 
-    icons: {
-        mdiClose
-    },
+const device = useDevice();
+const route = useRoute();
+const apiCable = useApiCable();
+const ridesStore = useRidesStore();
+const authStore = useAuthStore();
+const navigationStore = useNavigationStore();
 
-    navItems: [
-        {
-            id: 'pending',
-            title: 'Нові',
-            icon: mdiCar,
-            url: '/'
-        },
-        {
-            id: 'active',
-            title: 'Активні',
-            icon: mdiPlay,
-            url: '/active'
-        },
-        {
-            id: 'done',
-            title: 'Завершені',
-            icon: mdiCheck,
-            url: '/done'
-        }
-    ],
+function useNavItem(item: INavOptions): INavItem {
+    const count = ridesStore.counter[item.id];
+    const active = item.url === route.path;
+    return {
+        ...item,
+        active,
+        count,
+        hasCount: !!parseInt(count),
+        badgeColor: active ? BadgeColor.BLUE_800 : BadgeColor.SLATE_600,
+    };
+}
 
-    computed: {
-        isBottomNavigation() {
-            return this.$device.isMobileOrTablet;
-        },
+const navItems = computed((): INavItem[] => [
+    useNavItem({
+        id: 'pending',
+        url: '/',
+        title: 'Нові',
+        icon: DirectionsCarFilledRound,
+    }),
+    useNavItem({
+        id: 'active',
+        url: '/active',
+        title: 'Активні',
+        icon: PlayArrowRound,
+    }),
+    useNavItem({
+        id: 'done',
+        url: '/done',
+        title: 'Завершені',
+        icon: CheckRound,
+    }),
+]);
 
-        navigationExtra() {
-            return this.$store.state['navigation-store'].extra;
-        },
+await useAsyncData(() => Promise.all([
+    ridesStore.load(),
+    authStore.loadCurrentUser(),
+]));
 
-        navigationExtraModel: {
-            get() {
-                return this.isNavigationExtraOpened;
-            },
-            set(toOpened) {
-                toOpened ? this.openNavigationExtra() : this.closeNavigationExtra();
-            }
-        },
+apiCable.on('rides/new', ridesStore.add);
+apiCable.on('rides/update', ridesStore.update);
+apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, ridesStore.update);
 
-        isNavigationExtraOpened() {
-            return this.$store.state['navigation-store'].extraOpened;
-        },
+const LayoutMain: FunctionalComponent = (_, { attrs, slots }) => {
+    const renderAttrs = {
+        ...attrs,
+        class: ['pt-4 pb-24', attrs.class],
+    };
+    return h('main', renderAttrs, slots.default!());
+};
 
-        drivesCounter() {
-            return this.$store.getters['drives-store/counter'];
-        }
-    },
-
-    methods: {
-        openNavigationExtra() {
-            this.$store.commit('navigation-store/openExtra');
-        },
-
-        closeNavigationExtra() {
-            this.$store.commit('navigation-store/closeExtra');
-        }
-    },
-
-    async middleware({ store, $apiCable }) {
-        subscriptions.forEach(unsubscribe => unsubscribe());
-
-        await Promise.all([
-            store.dispatch('drives-store/load'),
-            store.dispatch('auth-store/loadCurrentUser')
-        ]);
-        const { currentUser } = store.state['auth-store'];
-
-        subscriptions = [
-            $apiCable.bindVuexAction('rides/new', 'drives-store/add'),
-            $apiCable.bindVuexAction('rides/update', 'drives-store/update'),
-            $apiCable.bindVuexAction(`users/${currentUser.id}/rides/update`, 'drives-store/update')
-        ];
-    }
+const NavigationExtra: FunctionalComponent = () => {
+    const transitionProps = {
+        name: 'navigation-extra',
+        duration: { enter: 200, leave: 150 },
+    };
+    return h(Transition, transitionProps, () => {
+        return navigationStore.extra ? h(navigationStore.extra) : null;
+    });
 };
 </script>
 
-<style>
-.v-list-item--active .v-icon,
-.v-btn--active .v-icon {
-    color: #3F51B5 !important;
+<style scoped>
+.bottom-bar-badge:deep(.badge) {
+    @apply -top-2 right-0;
 }
 
-.v-bottom-navigation .v-btn {
-    min-width: 80px !important;
-    height: 100% !important;
-    background-color: #fff !important;
+.side-bar-badge:deep(.badge) {
+    @apply -top-1.5 left-8;
 }
 
-.v-bottom-navigation .v-btn.v-btn--active {
-    color: #3F51B5 !important;
-    background-color: #f5f5f5 !important;
+.navigation-extra-enter-active {
+    @apply transition-enter duration-200;
 }
 
-.layout__main {
-    padding-top: 16px !important;
-    padding-bottom: 96px !important;
+.navigation-extra-leave-active {
+    @apply transition-opacity duration-150;
 }
 
-.layout__close-navigation-extra {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+.navigation-extra-enter-from {
+    @apply opacity-0 scale-75 md:scale-95;
 }
 
-.v-navigation-drawer__content {
-    display: flex;
-    flex-direction: column;
-}
-
-.drawer__navigation-extra {
-    margin-top: auto;
-}
-
-.v-bottom-navigation .v-btn::before {
-    display: none;
-}
-
-.v-list-item:not(.v-list-item--active) .v-badge__badge,
-.v-bottom-navigation .v-btn:not(.v-btn--active) .v-badge__badge {
-    background-color: #6f6f6f !important;
-    border-color: #6f6f6f !important;
-}
-
-.toasted {
-    font-family: "Roboto", sans-serif;
+.navigation-extra-leave-to {
+    @apply opacity-0;
 }
 </style>

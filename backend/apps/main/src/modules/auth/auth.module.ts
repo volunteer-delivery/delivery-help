@@ -1,8 +1,8 @@
-import {Module} from "@nestjs/common";
-import {AuthController} from "./auth.controller";
-import {AuthCookieService, SignInService} from "./services";
-import {TokenModule} from "../common/token";
-import {AuthGuard} from "./guard";
+import { Module } from '@nestjs/common';
+import { TokenModule } from '../common/token';
+import { AuthController } from './auth.controller';
+import { AuthCookieService, SignInService } from './services';
+import { AuthGuard } from './guard';
 
 @Module({
     imports: [TokenModule],
@@ -10,10 +10,10 @@ import {AuthGuard} from "./guard";
     providers: [
         SignInService,
         AuthCookieService,
-        AuthGuard
+        AuthGuard,
     ],
     exports: [
-        AuthGuard
-    ]
+        AuthGuard,
+    ],
 })
 export class AuthModule {}

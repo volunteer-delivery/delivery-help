@@ -1,8 +1,8 @@
-import {Inject, Injectable, OnModuleInit, Type} from "@nestjs/common";
-import {Scenes} from "telegraf";
-import {DynamicDependencyResolver} from "@app/core/dynamic-dependency-resolver";
-import {BaseMiddleware, IInlineMiddleware} from "./base-middleware";
-import {BaseComposer} from "./base-composer";
+import { Inject, Injectable, OnModuleInit, Type } from '@nestjs/common';
+import { Scenes } from 'telegraf';
+import { DynamicDependencyResolver } from '@app/core/dynamic-dependency-resolver';
+import { BaseMiddleware, IInlineMiddleware } from './base-middleware';
+import { BaseComposer } from './base-composer';
 
 export type ISceneContext = Scenes.SceneContext;
 export type IWizardSceneContext = Scenes.WizardContext;
@@ -13,19 +13,19 @@ type IStepObject = BaseMiddleware | BaseComposer;
 type IResolvedStep<TContext extends ISceneContext> = IStepObject | IInlineMiddleware<TContext>;
 
 export enum SceneType {
-    WIZZARD = 'WIZZARD'
+    WIZZARD = 'WIZZARD',
 }
 
 @Injectable()
-export abstract class BaseScene<TContext extends ISceneContext = any> implements OnModuleInit {
+export abstract class BaseScene<TContext extends ISceneContext = ISceneContext> implements OnModuleInit {
     @Inject()
     private resolver: DynamicDependencyResolver;
 
-    abstract id: string;
-    abstract type: SceneType;
+    protected abstract id: string;
+    protected abstract type: SceneType;
     protected steps: IResolvedStep<TContext>[] = [];
 
-    async onModuleInit(): Promise<void> {
+    public async onModuleInit(): Promise<void> {
         this.steps = await Promise.all(this.defineSteps().map(this.resolveStep.bind(this)));
     }
 
@@ -39,11 +39,11 @@ export abstract class BaseScene<TContext extends ISceneContext = any> implements
         return Step.bind(this);
     }
 
-    abstract build(): Scenes.BaseScene<TContext>;
-    abstract defineSteps(): ISceneDefinition<TContext>[];
+    public abstract build(): Scenes.BaseScene<TContext>;
+    protected abstract defineSteps(): ISceneDefinition<TContext>[];
 
-    getStep<TStep extends IStepObject>(Step: Type<TStep>): TStep | null {
-        const step = this.steps.find(step => step.constructor === Step) as TStep;
+    public getStep<TStep extends IStepObject>(Step: Type<TStep>): TStep | null {
+        const step = this.steps.find((step) => step.constructor === Step) as TStep;
         return step || null;
     }
 }

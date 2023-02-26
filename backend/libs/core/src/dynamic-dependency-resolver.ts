@@ -1,14 +1,14 @@
-import {Inject, Injectable, OnModuleInit, Type} from "@nestjs/common";
-import {ModuleRef} from "@nestjs/core";
+import { Inject, Injectable, OnModuleInit, Type } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 
 @Injectable()
 export class DynamicDependencyResolver {
     @Inject()
     private moduleRef: ModuleRef;
 
-    resolve<Provider>(provider: Type<Provider>): Promise<Provider>;
-    resolve<Provider>(providers: Type<Provider>[]): Promise<Provider[]>;
-    resolve<Provider>(providers: Type<Provider> | Type<Provider>[]): Promise<Provider | Provider[]> {
+    public resolve<Provider>(provider: Type<Provider>): Promise<Provider>;
+    public resolve<Provider>(providers: Type<Provider>[]): Promise<Provider[]>;
+    public resolve<Provider>(providers: Type<Provider> | Type<Provider>[]): Promise<Provider | Provider[]> {
         if (!Array.isArray(providers)) {
             return this.resolveDependency(providers);
         }
@@ -20,7 +20,7 @@ export class DynamicDependencyResolver {
     }
 
     private async runOnInitHook<Provider>(provider: Provider): Promise<Provider> {
-        await (provider as OnModuleInit).onModuleInit?.()
+        await (provider as OnModuleInit).onModuleInit?.();
         return provider;
     }
 }

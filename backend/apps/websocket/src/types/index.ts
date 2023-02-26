@@ -1,1 +1,1 @@
-export {ISendRequest} from './send-request';
+export { ISendRequest } from './send-request';

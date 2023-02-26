@@ -1,7 +1,7 @@
-import {Injectable} from "@nestjs/common";
-import {Markup} from "telegraf";
-import {BaseComposer, IComposeMatchedContext, OnAction} from "../../base";
-import {INewRideContext} from "./new-ride.context";
+import { Injectable } from '@nestjs/common';
+import { Markup } from 'telegraf';
+import { BaseComposer, IComposeMatchedContext, OnAction } from '../../base';
+import { INewRideContext } from './new-ride.context';
 
 const daysOfWeek = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 
@@ -26,7 +26,7 @@ export class NewRideDateComposer extends BaseComposer {
     @OnAction(/PICK_DATE_[\d-]+/g)
     private async pickDate(context: INewRideContext & IComposeMatchedContext): Promise<void> {
         await context.deleteMessage();
-        const date = context.match[0].replace("PICK_DATE_", "");
+        const date = context.match[0].replace('PICK_DATE_', '');
         context.scene.state.departureTime = date;
         await context.reply(`Ви вказали, що ваша поїздка розпочнеться ${date}`);
 
@@ -35,18 +35,18 @@ export class NewRideDateComposer extends BaseComposer {
             Markup.inlineKeyboard([
                 [Markup.button.callback('Легковий автомобіль ( < 2т)', 'SET_CAR')],
                 [Markup.button.callback('Вантажний автомобіль ( < 10т)', 'SET_VAN')],
-                [Markup.button.callback('Фура ( > 10т)', 'SET_TRUCK')]
-            ])
+                [Markup.button.callback('Фура ( > 10т)', 'SET_TRUCK')],
+            ]),
         );
         await context.wizard.next();
     }
 
-    async showDatePicker(context: INewRideContext): Promise<void> {
+    public async showDatePicker(context: INewRideContext): Promise<void> {
         const keyBoard = [];
         const date = new Date(context.scene.state.datePickerFirstDate);
 
         if (date > context.scene.state.datePickerToday) {
-            keyBoard.push([{text: 'Попередні дати', callback_data: 'PREV_DATE_RANGE'}]);
+            keyBoard.push([{ text: 'Попередні дати', callback_data: 'PREV_DATE_RANGE' }]);
         }
 
         for (let i = 0; i < 3; i++) {
@@ -57,7 +57,7 @@ export class NewRideDateComposer extends BaseComposer {
 
                 keyBoardRow.push({
                     text: `${dateStr} ${daysOfWeek[date.getDay()]}`,
-                    callback_data: `PICK_DATE_${dateStr}`
+                    callback_data: `PICK_DATE_${dateStr}`,
                 });
 
                 date.setDate(date.getDate() + 1);
@@ -65,11 +65,11 @@ export class NewRideDateComposer extends BaseComposer {
             keyBoard.push(keyBoardRow);
         }
 
-        keyBoard.push([{text: 'Наступні дати', callback_data: 'NEXT_DATE_RANGE'}]);
+        keyBoard.push([{ text: 'Наступні дати', callback_data: 'NEXT_DATE_RANGE' }]);
 
         await context.reply(
             'Оберіть варіант дати, коли ви розпочинаєте поїздку:',
-            Markup.inlineKeyboard(keyBoard)
+            Markup.inlineKeyboard(keyBoard),
         );
     }
 }

@@ -1,7 +1,7 @@
-import {Inject} from "@nestjs/common";
-import {ConfigService} from "@nestjs/config";
-import {MicroserviceKey} from "../microservices";
-import {Environment, IEnvironmentVars} from "./environment-vars";
+import { Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { MicroserviceKey } from '../microservices';
+import { Environment, IEnvironmentVars } from './environment-vars';
 
 export class EnvironmentService {
     @Inject()
@@ -16,7 +16,7 @@ export class EnvironmentService {
     }
 
     public get frontendOrigin(): string {
-        return this.configService.getOrThrow('FRONTEND_ORIGIN')
+        return this.configService.getOrThrow('FRONTEND_ORIGIN');
     }
 
     public getMicroserviceHost(microservice: MicroserviceKey): string {

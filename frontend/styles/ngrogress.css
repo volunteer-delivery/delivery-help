@@ -1,0 +1,12 @@
+#nprogress {
+    @apply pointer-events-none;
+}
+
+#nprogress .bar {
+    @apply bg-blue-800 fixed z-[1031] top-0 left-0 w-full h-0.5;
+}
+
+#nprogress .peg {
+    @apply block absolute right-0 w-[100px] h-full opacity-100 rotate-[3deg] translate-x-0 -translate-y-1;
+    box-shadow: 0 0 10px theme('colors.blue.800'), 0 0 5px theme('colors.blue.800');
+}

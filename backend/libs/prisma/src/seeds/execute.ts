@@ -1,7 +1,7 @@
 import { client } from './client-provider';
-import { seedUser } from "./seed-user";
-import { seedDrivers } from "./seed-drivers";
-import { seedRides } from "./seed-rides";
+import { seedUser } from './seed-user';
+import { seedDrivers } from './seed-drivers';
+import { seedRides } from './seed-rides';
 
 (async (): Promise<void> => {
     const user = await seedUser();

@@ -1,10 +1,10 @@
-import {BaseComposer, OnAction, OnEvent} from "../../base";
-import {Injectable} from "@nestjs/common";
-import {INewRideContext} from "./new-ride.context";
+import { Injectable } from '@nestjs/common';
+import { BaseComposer, OnAction, OnEvent } from '../../base';
+import { INewRideContext } from './new-ride.context';
 
 export enum FromType {
-    UKRAINE = "FROM_UKRAINE",
-    ABROAD = "FROM_ABROAD"
+    UKRAINE = 'FROM_UKRAINE',
+    ABROAD = 'FROM_ABROAD',
 }
 
 @Injectable()
@@ -12,7 +12,7 @@ export class NewRideFromComposer extends BaseComposer {
     @OnAction(FromType.UKRAINE)
     private async onFromUkraine(context: INewRideContext): Promise<void> {
         await context.deleteMessage();
-        context.scene.state.enterCity = true
+        context.scene.state.enterCity = true;
         await context.reply('Звідки ви будете їхати?');
     }
 
@@ -42,7 +42,7 @@ export class NewRideFromComposer extends BaseComposer {
 
     private async leave(context: INewRideContext): Promise<void> {
         await context.reply('Зазначте кінцевий населений пункт:');
-        await context.reply('(Наприклад: Україна, Черкаси)')
+        await context.reply('(Наприклад: Україна, Черкаси)');
         await context.wizard.next();
     }
 }

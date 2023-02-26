@@ -1,14 +1,14 @@
-import {CanActivate, ExecutionContext, Inject, Injectable} from "@nestjs/common";
-import {Reflector} from "@nestjs/core";
-import {PrismaService, User} from "@app/prisma";
-import {ISignedRequest} from "@app/core/types";
-import {Response} from "express";
-import {TokenService} from "../../common/token";
-import {AuthCookieService, IAuthTokenPayload} from "../services";
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { PrismaService, User } from '@app/prisma';
+import { ISignedRequest } from '@app/core/types';
+import { Response } from 'express';
+import { TokenService } from '../../common/token';
+import { AuthCookieService, IAuthTokenPayload } from '../services';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    static readonly PUBLIC_API_METADATA = Symbol('publicEndpoint');
+    public static readonly PUBLIC_API_METADATA = Symbol('publicEndpoint');
 
     @Inject()
     private reflector: Reflector;
@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
     @Inject()
     private cookieService: AuthCookieService;
 
-    async canActivate(context: ExecutionContext): Promise<boolean> {
+    public async canActivate(context: ExecutionContext): Promise<boolean> {
         const http = context.switchToHttp();
         const request = http.getRequest<ISignedRequest>();
         const response = http.getResponse<Response>();
@@ -49,6 +49,6 @@ export class AuthGuard implements CanActivate {
 
     private async fetchUserByToken(token: string): Promise<User | null> {
         const tokenPayload = token && await this.tokenService.decodeOrNull<IAuthTokenPayload>(token);
-        return tokenPayload && await this.prisma.user.findUnique({ where: { id: tokenPayload.userId } })
+        return tokenPayload && await this.prisma.user.findUnique({ where: { id: tokenPayload.userId } });
     }
 }

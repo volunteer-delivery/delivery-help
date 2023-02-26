@@ -1,6 +1,6 @@
-import {Injectable} from "@nestjs/common";
-import {ClientProxy} from "@nestjs/microservices";
-import {firstValueFrom} from "rxjs";
+import { Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 export type MicroserviceKey = 'WEBSOCKET' | 'BOT_TELEGRAM';
 

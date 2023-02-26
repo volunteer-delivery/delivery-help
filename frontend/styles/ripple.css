@@ -1,0 +1,26 @@
+@layer components {
+    .ripple {
+        --ripple-size: 0px;
+        --ripple-x: 0px;
+        --ripple-y: 0px;
+        --ripple-duration: 0ms;
+    }
+
+    .ripple::after {
+        content: "";
+        width: calc(var(--ripple-size));
+        height: calc(var(--ripple-size));
+        left: var(--ripple-x);
+        top: var(--ripple-y);
+
+        @apply animate-ripple absolute pointer-events-none rounded-full overflow-clip;
+    }
+
+    .ripple-slate-50::after {
+        @apply bg-slate-50/[.2];
+    }
+
+    .ripple-blue-800::after {
+        @apply bg-blue-800/[.2];
+    }
+}

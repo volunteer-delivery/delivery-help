@@ -1,16 +1,16 @@
-import {start, REPLServer} from 'repl';
-import {readFileSync, writeFileSync, existsSync} from 'fs';
-import {PrismaClient} from "../client";
+import { start, REPLServer } from 'repl';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { PrismaClient } from '../client';
 
 const HISTORY_LOCATION = '/app-tmp/delivery-help-console-history';
 
 class Execute {
     private replServer: REPLServer;
 
-    async start(): Promise<void> {
+    public async start(): Promise<void> {
         global.db = new PrismaClient();
         this.replServer = start();
-        this.setupHistory()
+        this.setupHistory();
     }
 
     private setupHistory(): void {

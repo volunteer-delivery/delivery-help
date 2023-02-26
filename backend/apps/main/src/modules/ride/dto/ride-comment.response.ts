@@ -1,22 +1,23 @@
-import {RideComment, User} from "@app/prisma";
-import {Exclude} from "class-transformer";
-import {UserResponse} from "../../user/dto";
+import { RideComment, User } from '@app/prisma';
+import { Exclude } from 'class-transformer';
+import { UserResponse } from '../../user/dto';
 
 export interface RideCommentResponseAttrs extends RideComment {
     author: User;
 }
 
 export class RideCommentResponse implements RideComment {
-    id: string;
-    text: string;
-    createdAt: Date;
+    public id: string;
+    public text: string;
+    public createdAt: Date;
 
     @Exclude()
-    authorId: string;
-    author: User;
+    public authorId: string;
+
+    public author: User;
 
     @Exclude()
-    rideId: string;
+    public rideId: string;
 
     constructor(comment: RideCommentResponseAttrs) {
         Object.assign(this, comment);

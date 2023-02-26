@@ -1,13 +1,13 @@
-import {NestFactory} from '@nestjs/core';
-import {ValidationPipe} from "@nestjs/common";
-import {PrismaService} from "@app/prisma";
-import {ErrorTracker, ErrorTrackerInterceptor} from "@app/core/error-tracker";
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { PrismaService } from '@app/prisma';
+import { ErrorTracker, ErrorTrackerInterceptor } from '@app/core/error-tracker';
 import * as cookieParser from 'cookie-parser';
-import {MainModule} from './main.module';
-import {AuthGuard} from "./modules/auth";
-import {EnvironmentService} from "@app/core/environment";
+import { EnvironmentService } from '@app/core/environment';
+import { MainModule } from './main.module';
+import { AuthGuard } from './modules/auth';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
     ErrorTracker.init();
 
     const app = await NestFactory.create(MainModule);
@@ -23,8 +23,8 @@ async function bootstrap() {
 
     app.enableCors({
         origin: environmentService.frontendOrigin,
-        credentials: true
-    })
+        credentials: true,
+    });
 
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalInterceptors(app.get(ErrorTrackerInterceptor));

@@ -1,8 +1,8 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {EventPattern} from "@nestjs/microservices";
-import {BotConnection} from "./bot.connection";
-import { BotMicroserviceEvent } from "./bot.microservice-api";
-import {ISendMessageRequest} from "./types";
+import { Inject, Injectable } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
+import { BotConnection } from './bot.connection';
+import { BotMicroserviceEvent } from './bot.microservice-api';
+import { ISendMessageRequest } from './types';
 
 @Injectable()
 export class BotController {
@@ -10,7 +10,7 @@ export class BotController {
     private botConnection: BotConnection;
 
     @EventPattern(BotMicroserviceEvent.SEND_MESSAGE)
-    public sendMessage(event: ISendMessageRequest) {
+    public sendMessage(event: ISendMessageRequest): void {
         this.botConnection.sendMessage(event.chatId, event.message);
     }
 }

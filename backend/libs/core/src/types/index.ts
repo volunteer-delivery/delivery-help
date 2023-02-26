@@ -1,1 +1,1 @@
-export {ISignedRequest} from './signed-request';
+export { ISignedRequest } from './signed-request';
