@@ -1,6 +1,6 @@
 <template>
-    <header class="border-b border-b-gray-200 pr-1 flex items-center justify-between">
-        <div class="p-2 md:p-3 flex items-center">
+    <header class="border-b border-b-gray-200 pr-1.5 flex items-center justify-between">
+        <div class="px-4 py-2 md:py-3 flex items-center">
             <img class="h-8 w-8" src="/logo.svg" alt="logo">
 
             <h1 class="ml-4 font-medium text-xl md:text-2xl">
