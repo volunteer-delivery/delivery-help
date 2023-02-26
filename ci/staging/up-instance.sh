@@ -111,3 +111,5 @@ curl -X PUT "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/dns_
      >> /dev/null;
 
 echo "DNS updated"
+
+echo "Instance IP $instance_ip";
