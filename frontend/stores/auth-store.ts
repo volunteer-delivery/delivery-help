@@ -16,10 +16,16 @@ export const useAuthStore = defineStore('auth', () => {
     const currentUser = ref<User | null>(null);
 
     async function signIn(credentials: ICredentials): Promise<void> {
-        await http.post<ICredentials>('auth/sign-in', {
+        const response = await http.post<ICredentials, { user: User }>('auth/sign-in', {
             username: credentials.username,
             password: credentials.password,
         });
+        currentUser.value = response!.user;
+    }
+
+    async function signOut(): Promise<void> {
+        await http.post('auth/sign-out');
+        location.reload();
     }
 
     async function loadCurrentUser(): Promise<void> {
@@ -31,5 +37,5 @@ export const useAuthStore = defineStore('auth', () => {
         nuxt.$errorTracker.setUser(user);
     }
 
-    return { currentUser, signIn, loadCurrentUser };
+    return { currentUser, signIn, signOut, loadCurrentUser };
 });

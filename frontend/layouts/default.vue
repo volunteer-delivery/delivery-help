@@ -1,5 +1,7 @@
 <template>
     <BottomBar v-if="device.isMobileOrTablet">
+        <TopBar />
+
         <LayoutMain>
             <slot />
         </LayoutMain>
@@ -24,30 +26,34 @@
         </template>
     </BottomBar>
 
-    <SideBar v-else>
-        <template #bar>
-            <AppBadge
-                class="mb-1 side-bar-badge"
-                v-for="nav of navItems"
-                :key="nav.id"
-                :content="nav.count"
-                :show="nav.hasCount"
-                :color="nav.badgeColor"
-            >
-                <SideBarLink
-                    :to="nav.url"
-                    :title="nav.title"
-                    :icon="nav.icon"
-                />
-            </AppBadge>
+    <div class="h-full flex flex-col" v-else>
+        <TopBar />
 
-            <NavigationExtra />
-        </template>
+        <SideBar>
+            <template #bar>
+                <AppBadge
+                    class="mb-1 side-bar-badge"
+                    v-for="nav of navItems"
+                    :key="nav.id"
+                    :content="nav.count"
+                    :show="nav.hasCount"
+                    :color="nav.badgeColor"
+                >
+                    <SideBarLink
+                        :to="nav.url"
+                        :title="nav.title"
+                        :icon="nav.icon"
+                    />
+                </AppBadge>
 
-        <LayoutMain class="px-6">
-            <slot />
-        </LayoutMain>
-    </SideBar>
+                <NavigationExtra class="sticky bottom-5" />
+            </template>
+
+            <LayoutMain class="px-6">
+                <slot />
+            </LayoutMain>
+        </SideBar>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -123,7 +129,7 @@ apiCable.on(`users/${authStore.currentUser!.id}/rides/update`, ridesStore.update
 const LayoutMain: FunctionalComponent = (_, { attrs, slots }) => {
     const renderAttrs = {
         ...attrs,
-        class: ['pt-4 pb-24 h-full', attrs.class],
+        class: ['pt-4 pb-24', attrs.class],
     };
     return h('main', renderAttrs, slots.default!());
 };

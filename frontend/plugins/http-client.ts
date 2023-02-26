@@ -39,7 +39,7 @@ export class HttpClient {
         return this.fetch<Response>(url, { method: 'GET', params });
     }
 
-    public async post<Body extends object, Response = null>(url: string, body: Body): Promise<Response | null> {
+    public async post<Body extends object = {}, Response = null>(url: string, body: Body = {} as Body): Promise<Response | null> {
         return this.fetch<Response>(url, { method: 'POST', body });
     }
 
