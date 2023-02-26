@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center">
+    <div class="flex items-center w-full">
         <input
             class="border-none py-1.5 w-full outline-none grow bg-transparent"
             :type="type"
