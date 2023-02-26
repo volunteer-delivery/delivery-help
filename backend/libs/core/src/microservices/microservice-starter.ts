@@ -1,4 +1,3 @@
-import { Transport } from '@nestjs/microservices';
 import { INestApplicationContext } from '@nestjs/common';
 import { MicroserviceKey } from './microservice-api';
 import { ApplicationAdapter, StarterExtension } from './extensions';

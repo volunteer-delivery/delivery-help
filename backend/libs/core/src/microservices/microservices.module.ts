@@ -8,7 +8,7 @@ type IncludeMicroservices<Key extends MicroserviceKey, ApiClassType extends Type
 
 export class MicroservicesFactoryModule {
     public static create<Key extends MicroserviceKey, ApiClassType extends Type<MicroserviceApi>>(microservices: IncludeMicroservices<Key, ApiClassType>): DynamicModule {
-        const providers: Provider[] = [];
+        const providers: Provider<MicroserviceApi>[] = [];
 
         for (const serviceKey in microservices) {
             const ApiClass = microservices[serviceKey] as ApiClassType;
@@ -18,15 +18,14 @@ export class MicroservicesFactoryModule {
                 inject: [EnvironmentService, DynamicDependencyResolver],
 
                 async useFactory(environmentService: EnvironmentService, dependencyResolver: DynamicDependencyResolver) {
-                    const client = ClientProxyFactory.create({
+                    const api = await dependencyResolver.resolve(ApiClass);
+                    api.setClient(ClientProxyFactory.create({
                         transport: Transport.TCP,
                         options: {
                             host: environmentService.getMicroserviceHost(serviceKey),
                             port: 8080,
                         },
-                    });
-                    const api = await dependencyResolver.resolve(ApiClass);
-                    api.setClient(client);
+                    }));
                     return api;
                 },
             });
