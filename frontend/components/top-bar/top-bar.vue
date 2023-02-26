@@ -3,7 +3,7 @@
         <div class="p-2 md:p-3 flex items-center">
             <img class="h-8 w-8" src="/logo.svg" alt="logo">
 
-            <h1 class="hidden md:block ml-4 font-medium text-2xl">
+            <h1 class="ml-4 font-medium text-xl md:text-2xl">
                 ВолонтерВантаж
             </h1>
         </div>
