@@ -13,8 +13,6 @@ x-api-common: &backend-common
   env_file: .env
   depends_on:
     - postgres
-  networks:
-    - application
 
 services:
   nginx:
@@ -29,8 +27,6 @@ services:
       - backend-main
       - backend-websocket
       - backend-bot-telegram
-    networks:
-      - application
 
   frontend:
     restart: always
@@ -42,8 +38,6 @@ services:
     env_file: .env
     ports:
       - '24678:24678'
-    networks:
-      - application
 
   backend-main:
     <<: *backend-common
@@ -67,12 +61,7 @@ services:
     volumes:
       - data-postgres:/var/lib/postgresql/data
     env_file: .env
-    networks:
-      - application
 
 volumes:
   data-postgres:
     driver: local
-
-networks:
-  application:
