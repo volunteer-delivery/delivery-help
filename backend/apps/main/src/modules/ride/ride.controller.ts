@@ -9,18 +9,11 @@ import {
     Patch,
     UseInterceptors,
 } from '@nestjs/common';
-import { Driver, PrismaService, Ride, RideStatus, User } from '@app/prisma';
-import { BotMicroserviceApi } from '@app/bot-telegram/bot.microservice-api';
-import { WebsocketMicroserviceApi } from '@app/websocket/websocket.microservice-api';
+import { PrismaService, Ride, User } from '@app/prisma';
 import { CurrentUser } from '../auth';
 import { ISuccessResponse } from '../common/types';
-import { RideListResponse, RideResponse, RideResponseAttrs, UpdateStatusRequest } from './dto';
-
-const CHANGE_STATUS: Record<RideStatus, string> = {
-    [RideStatus.PENDING]: '',
-    [RideStatus.ACTIVE]: 'Інформацію про вашу поїздку оброблено і тепер вона активна. Бажаємо гарної дороги 🙌🏻',
-    [RideStatus.FINISHED]: 'Ваша поїздка завершилася. Дякуємо за допомогу! Слава Україні 💙💛',
-};
+import { RideListResponse,  UpdateStatusRequest } from './dto';
+import { UpdateRideStatusService } from './services';
 
 @Controller('rides')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -29,10 +22,7 @@ export class RideController {
     private prisma: PrismaService;
 
     @Inject()
-    private websocketMicroservice: WebsocketMicroserviceApi;
-
-    @Inject()
-    private botMicroservice: BotMicroserviceApi;
+    private updateStatusService: UpdateRideStatusService;
 
     @Get()
     public async getRides(@CurrentUser() user: User): Promise<{ rides: Ride[] }> {
@@ -65,39 +55,12 @@ export class RideController {
 
         if (!ride) throw new NotFoundException('Ride not found');
 
-        const updated = await this.prisma.ride.update({
-            where: { id: rideId },
-            data: {
-                status: body.status,
-                volunteer: {
-                    connect: { id: currentUser.id },
-                },
-            },
-            include: {
-                driver: true,
-                from: true,
-                destination: true,
-            },
+        await this.updateStatusService.update({
+            ride,
+            status: body.status,
+            user: currentUser,
         });
 
-        const socketUpdateUserId = ride.status === RideStatus.PENDING ? null : currentUser.id;
-        await this.broadcastUpdateRide(socketUpdateUserId, updated);
-        await this.notifyNewStatus(updated);
-
         return { success: true };
-    }
-
-    private async broadcastUpdateRide(userId: string | null, ride: RideResponseAttrs): Promise<void> {
-        const namespace = userId ? `users/${userId}/rides` : 'rides';
-        await this.websocketMicroservice.broadcast(`${namespace}/update`, new RideResponse(ride));
-    }
-
-    private async notifyNewStatus(ride: Ride & { driver: Driver }): Promise<void> {
-        const telegramId = ride.driver?.telegramId;
-        const message = CHANGE_STATUS[ride.status];
-
-        if (telegramId && message) {
-            await this.botMicroservice.sendMessage(telegramId, message);
-        }
     }
 }
