@@ -29,7 +29,7 @@
     <div class="h-full flex flex-col" v-else>
         <TopBar />
 
-        <SideBar>
+        <SideBar class="grow">
             <template #bar>
                 <AppBadge
                     class="mb-1 side-bar-badge"
