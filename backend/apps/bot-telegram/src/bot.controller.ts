@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { BotConnection } from './bot.connection';
 import { BotMicroserviceEvent } from './bot.microservice-api';
 import { ISendMessageRequest } from './types';
 
-@Injectable()
+@Controller()
 export class BotController {
     @Inject()
     private botConnection: BotConnection;
