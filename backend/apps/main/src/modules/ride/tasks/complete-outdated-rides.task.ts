@@ -6,8 +6,8 @@ import { UpdateRideStatusService } from '../services';
 @Injectable()
 export class CompleteOutdatedRidesTask implements ISchedulerTask {
     private logger = new Logger(this.constructor.name);
-    public name = 'CompleteOutdatedRidesTask';
-    public cron = '* * * * *';
+    public name = this.constructor.name;
+    public cron = '0 10 * * *';
 
     @Inject()
     private prisma: PrismaService;
