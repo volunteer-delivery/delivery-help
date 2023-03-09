@@ -7,7 +7,6 @@ LABEL org.opencontainers.image.source $CR_LABEL
 
 WORKDIR /app
 
-RUN npm run build:seed
 RUN npm run build:console
 
 
