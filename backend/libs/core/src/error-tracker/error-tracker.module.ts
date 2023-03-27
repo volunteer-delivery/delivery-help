@@ -5,7 +5,13 @@ import { ErrorTrackerInterceptor } from './error-tracker.interceptor';
 @Global()
 @Module({
     providers: [
-        { provide: ErrorTracker, useFactory: (): IErrorTracker => ErrorTracker.init() },
+        {
+            provide: ErrorTracker,
+            useFactory(): IErrorTracker {
+                ErrorTracker.init();
+                return ErrorTracker.instance;
+            },
+        },
         ErrorTrackerInterceptor,
     ],
     exports: [
